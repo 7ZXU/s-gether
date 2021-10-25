@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import {Route, Switch} from "react-router-dom";
 import FeedPage from "./pages/FeedPage";
@@ -16,6 +17,20 @@ function App() {
             </Switch>
         </div>
     );
+=======
+import './App.css';
+import Main from './Pages/Main';
+import Login from './Pages/Login';
+import MyPage from './Pages/MyPage';
+import Register from './Pages/Register';
+
+function App() {
+  return (
+    <>
+      <MyPage />
+    </>
+  );
+>>>>>>> main
 }
 
 export default App;
