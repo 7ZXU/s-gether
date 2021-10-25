@@ -1,12 +1,17 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const MenuList = styled.div`
-  height: 500px;
-`;
+import CustomButton from './CustomButton';
 
 function SelectMenu() {
-  return <MenuList></MenuList>;
+  return (
+    <div className="menu-list-container">
+      <div className="menu-list">
+        <CustomButton>Info.</CustomButton>
+        <CustomButton>Charge</CustomButton>
+        <CustomButton>Penalty & Reward</CustomButton>
+        <CustomButton>Setting</CustomButton>
+      </div>
+    </div>
+  );
 }
 
 export default SelectMenu;
