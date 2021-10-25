@@ -35,17 +35,18 @@ const StyledLink = styled.p`
   }
 `;
 
-function LoginForm() {
+function RegisterForm() {
   return (
     <>
-      <InputText name="email" placeholder="ID..." />
-      <InputText name="password" placeholder="PW..." type="password" />
-      <Button>로그인</Button>
+      <InputText name="email" placeholder="ID" />
+      <InputText name="password" placeholder="PW" type="password" />
+      <InputText name="password" placeholder="Check PW" type="password" />
+      <Button>회원가입</Button>
       <Aligner>
-        <StyledLink>아이디가 없으신가요?</StyledLink>
+        <StyledLink>로그인 하기</StyledLink>
       </Aligner>
     </>
   );
 }
 
-export default LoginForm;
+export default RegisterForm;

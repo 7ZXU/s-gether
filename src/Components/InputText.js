@@ -21,7 +21,7 @@ const Input = styled.input`
 function InputText({ ...rest }) {
   return (
     <Wrapper>
-      <Input {...rest} />
+      <Input {...rest} autoComplete="off" />
     </Wrapper>
   );
 }
