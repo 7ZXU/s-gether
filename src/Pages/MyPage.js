@@ -1,11 +1,16 @@
 import React from 'react';
 import UserBlock from '../Components/UserBlock';
+import SelectMenu from '../Components/SelectMenu';
 import './MyPage.css';
 
 function MyPage() {
   return (
     <div className="mypage-container">
-      <UserBlock></UserBlock>
+      <div className="user-menu">
+        <UserBlock></UserBlock>
+        <SelectMenu></SelectMenu>
+      </div>
+      <div className="menu-detail"></div>
     </div>
   );
 }
