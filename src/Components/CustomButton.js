@@ -40,10 +40,10 @@ const Button = styled.div`
   }
 `;
 
-function CustomButton({ children }) {
+function CustomButton({ children, ...rest }) {
   return (
     <Wrapper>
-      <Button>{children}</Button>
+      <Button {...rest}>{children}</Button>
     </Wrapper>
   );
 }
