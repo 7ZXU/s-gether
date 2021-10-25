@@ -1,9 +1,14 @@
-import logo from './logo.svg';
 import './App.css';
 import Main from './Pages/Main';
+import Login from './Pages/Login';
+import MyPage from './Pages/MyPage';
 
 function App() {
-  return <Main />;
+  return (
+    <>
+      <MyPage />
+    </>
+  );
 }
 
 export default App;
