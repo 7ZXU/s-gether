@@ -4,6 +4,7 @@ import InputText from './InputText';
 import styled from 'styled-components';
 
 const Button = styled.button`
+  cursor: pointer;
   width: 100%;
   border: 2px solid #000000;
   color: #ffffff;
@@ -15,17 +16,38 @@ const Button = styled.button`
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   margin-top: 1.5rem;
+
+  &:hover {
+    background-color: #ffffff;
+    color: #000000;
+  }
+`;
+
+const Aligner = styled.div`
+  margin-top: 10px;
+  text-align: right;
+`;
+
+const StyledLink = styled.p`
+  color: #888888;
+  cursor: pointer;
+  &:hover {
+    color: #000000;
+  }
 `;
 
 const Register = styled.input``;
 
 function LoginForm() {
   return (
-    <div>
+    <>
       <InputText name="email" placeholder="ID..." />
       <InputText name="password" placeholder="PW..." type="password" />
       <Button>로그인</Button>
-    </div>
+      <Aligner>
+        <StyledLink>아이디가 없으신가요?</StyledLink>
+      </Aligner>
+    </>
   );
 }
 

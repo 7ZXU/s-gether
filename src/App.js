@@ -6,7 +6,7 @@ import MyPage from './Pages/MyPage';
 function App() {
   return (
     <>
-      <MyPage />
+      <Login />
     </>
   );
 }
