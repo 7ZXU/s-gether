@@ -11,7 +11,8 @@ function Register() {
         <img className="box-img" src={box} alt="로고 박스" />
         <img className="check-img" src={logo} alt="체크 로고" />
       </div>
-      <div className="login-form">
+      <div className="register-form">
+        <h1>Create Account</h1>
         <RegisterForm />
       </div>
     </div>
