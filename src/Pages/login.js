@@ -2,7 +2,7 @@ import React from 'react';
 import LoginForm from '../Components/LoginForm';
 import box from '../img/box.png';
 import logo from '../img/logo.png';
-import './Login.css';
+import '../css/Login.css';
 
 function login() {
   return (

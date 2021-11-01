@@ -1,7 +1,7 @@
 import React from 'react';
 import box from '../img/box.png';
 import logo from '../img/logo.png';
-import './Main.css';
+import '../css/Main.css';
 
 function Main() {
   return (

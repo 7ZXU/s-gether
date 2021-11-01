@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './UserBlock.css';
+import '../css/UserBlock.css';
 import test from '../img/example.jpg';
 
 function UserBlock() {

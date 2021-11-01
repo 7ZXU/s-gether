@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import UserBlock from '../Components/UserBlock';
 import Header from '../Components/Header';
 import CustomButton from '../Components/CustomButton';
-import './MyPage.css';
+import '../css/MyPage.css';
 
 function MyPage() {
   // const select = useContext(SelectedMenu);
