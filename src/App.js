@@ -5,8 +5,8 @@ import Main from './pages/Main';
 import Login from './pages/Login';
 import MyPage from './pages/MyPage';
 import Register from './pages/Register';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import FeedPage from "./pages/FeedPage";
+import ImagePage from "./pages/ImagePage";
 
 function App() {
   return (
@@ -18,6 +18,8 @@ function App() {
         <Route exact path="/feed" component={FeedPage} />
         <Route exact path="/mypage" component={MyPage} />
         <Route exact path="/challenges" component={ChanllengePage} />
+
+        <Route exact path="/feed/image" component={ImagePage} />
       </Switch>
     </div>
   );
