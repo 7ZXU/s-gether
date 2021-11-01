@@ -1,8 +1,8 @@
 import React from 'react';
 import RegisterForm from '../components/RegisterForm';
-import box from '../img/box.png';
-import logo from '../img/logo.png';
-import './Register.css';
+import box from '../assets/box.png';
+import logo from '../assets/logo.png';
+import '../css/Register.css';
 import { Link } from 'react-router-dom';
 
 function Register() {

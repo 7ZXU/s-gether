@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './UserBlock.css';
-import test from '../img/example.jpg';
+import '../css/UserBlock.css';
+import test from '../assets/example.jpg';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 function UserBlock() {

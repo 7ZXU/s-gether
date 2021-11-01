@@ -1,5 +1,5 @@
 import React from 'react'
-import './AddChanllengePopup.css'
+import '../css/AddChanllengePopup.css'
 
 function AddChanllengePopup(props) {
     return (props.trigger)?(

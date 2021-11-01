@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CustomButton from './CustomButton';
-import './InfoContainer.css';
+import '../css/InfoContainer.css';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 function InfoContainer() {

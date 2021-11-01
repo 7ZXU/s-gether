@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './PenaltyRewardContainer.css';
+import '../css/PenaltyRewardContainer.css';
 
 function PenaltyRewardContainer() {
   const [penalty, setPenalty] = useState(2000);

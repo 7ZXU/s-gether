@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './ChargeContainer.css';
+import '../css/ChargeContainer.css';
 
 function ChargeContainer() {
   const [money, setMoney] = useState(10000);

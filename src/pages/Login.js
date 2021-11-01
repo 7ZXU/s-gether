@@ -1,10 +1,10 @@
 import React from 'react';
 import LoginForm from '../components/LoginForm';
-import box from '../img/box.png';
-import logo from '../img/logo.png';
-import './Login.css';
+import box from '../assets/box.png';
+import logo from '../assets/logo.png';
+import '../css/Login.css';
 import { Link } from 'react-router-dom';
-import Register from './Register';
+import Register from './Register.js';
 
 function login() {
   return (

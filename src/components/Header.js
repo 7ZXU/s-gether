@@ -1,5 +1,5 @@
 import React from 'react';
-import './Header.css';
+import '../css/Header.css';
 
 function Header() {
   return (
@@ -8,8 +8,8 @@ function Header() {
         <div className="header-items">
           <nav>
             <a href="/feed">Feed</a>
-            <a href=".">My Challenge</a>
-            <a href=".">Search Challenge</a>
+            <a href="/myChallenge">My Challenge</a>
+            <a href="/challenges">Search Challenge</a>
             <a href="/mypage">My page</a>
           </nav>
         </div>

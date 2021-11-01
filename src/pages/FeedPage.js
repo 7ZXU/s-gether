@@ -6,10 +6,6 @@ import Calendar from '../components/Calendar';
 import Friends from '../components/Friends';
 import CheckboxList from '../components/CheckboxList';
 import Slide from '../components/Slide';
-// import Calendar from '../Components/Calendar';
-// import Friends from '../Components/Friends';
-// import CheckboxList from '../Components/CheckboxList';
-// import Slide from '../Components/Slide';
 
 const FeedWrap = styled.div`
   display: flex;

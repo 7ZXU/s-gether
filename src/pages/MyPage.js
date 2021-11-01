@@ -6,7 +6,7 @@ import InfoContainer from '../components/InfoContainer';
 import ChargeContainer from '../components/ChargeContainer';
 import PenaltyRewardContainer from '../components/PenaltyRewardContainer';
 import SettingContainer from '../components/SettingContainer';
-import './MyPage.css';
+import '../css/MyPage.css';
 
 function MyPage() {
   // const select = useContext(SelectedMenu);

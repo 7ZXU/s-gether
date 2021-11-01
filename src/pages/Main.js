@@ -1,7 +1,7 @@
 import React from 'react';
-import box from '../img/box.png';
-import logo from '../img/logo.png';
-import './Main.css';
+import box from '../assets/box.png';
+import logo from '../assets/logo.png';
+import '../css/Main.css';
 import Login from './Login';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';

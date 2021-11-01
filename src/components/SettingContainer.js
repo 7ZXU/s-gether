@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
-import './SettingContainer.css';
+import '../css/SettingContainer.css';
 
 function SettingContainer() {
   const [checked, setChecked] = useState([0]);
