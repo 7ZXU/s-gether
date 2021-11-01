@@ -1,82 +1,82 @@
-.Background{
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 980;
-    top: 0;
-    overflow: hidden;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #6c567b;
-    opacity: 0.8;
+.Background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 980;
+  top: 0;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #6c567b;
+  opacity: 0.8;
 }
 
-form{
-    margin-left: 10%;
-    position: absolute;
-    top: 20%;
-    left: 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 990;
-    width: 800px;
-    height: 600px;
-    border-radius: 5px;
-    box-shadow: 1px 2px 5px 1px black;
+#challenge__back__form {
+  margin-left: 10%;
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 990;
+  width: 800px;
+  height: 600px;
+  border-radius: 5px;
+  box-shadow: 1px 2px 5px 1px black;
 
-    background: white;
+  background: white;
 }
 
-form > button{
-    padding-top: 20px;
-    background: none;
-    outline: none;
-    border: none;
-    color: black;
-    margin-left: 1rem;
-    margin-top: 1rem;
-    font-size: 1.5rem;
-    display: flex;
+#challenge__back__form > button {
+  padding-top: 20px;
+  background: none;
+  outline: none;
+  border: none;
+  color: black;
+  margin-left: 1rem;
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  display: flex;
 
-    cursor: pointer;
-    transition: 0.1s background ease-in;
+  cursor: pointer;
+  transition: 0.1s background ease-in;
 }
-form > .subm{
-    padding-top: 20px;
-    background: none;
-    outline: none;
-    border: none;
-    color: black;
-    margin-left: -300px;
-    margin-top: 50px;
-    font-size: 1.5rem;
-    display: flex;
-    cursor: pointer;
-    transition: 0.1s background ease-in;
+#challenge__back__form > .subm {
+  padding-top: 20px;
+  background: none;
+  outline: none;
+  border: none;
+  color: black;
+  margin-left: -300px;
+  margin-top: 50px;
+  font-size: 1.5rem;
+  display: flex;
+  cursor: pointer;
+  transition: 0.1s background ease-in;
 }
-form > .cancel{
-    padding-top: 20px;
-    background: none;
-    outline: none;
-    border: none;
-    color: red;
-    margin-left: 300px;
-    margin-top: -100px;
-    font-size: 1.5rem;
-    display: flex;
-    cursor: pointer;
-    transition: 0.1s background ease-in;
+#challenge__back__form > .cancel {
+  padding-top: 20px;
+  background: none;
+  outline: none;
+  border: none;
+  color: red;
+  margin-left: 300px;
+  margin-top: -100px;
+  font-size: 1.5rem;
+  display: flex;
+  cursor: pointer;
+  transition: 0.1s background ease-in;
 }
-form > .Presee{
-    background-color: #efefef;
-    width: 450px;
-    height: 450px;
-    max-width: 450px;
-    max-height: 450px;
-    object-fit:fill;
+#challenge__back__form > .Presee {
+  background-color: #efefef;
+  width: 450px;
+  height: 450px;
+  max-width: 450px;
+  max-height: 450px;
+  object-fit: fill;
 }

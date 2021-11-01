@@ -15,9 +15,9 @@ const ChallengeBack = (onInsertToggle) => {
   return (
     <div>
       <div className="Background" onClick={onInsertToggle}></div>
-      <form>
+      <form id="challenge__back__form">
         사진 추가
-        <img className="Presee" src={fileUrl} />
+        <img className="Presee" src={fileUrl} alt="추가사진" />
         <input
           type="file"
           accept="image/*"

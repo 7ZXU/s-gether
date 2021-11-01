@@ -5,12 +5,14 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Calendar from '../components/Calendar';
 import Friends from '../components/Friends';
 import CheckboxList from '../components/CheckboxList';
-import Slide from '../components/Slide';
+import Thumbnail from '../components/Thumbnail';
+import ChallengeCard from '../components/ChallengeCard';
+import HeaderNav from '../components/Header';
 
 const FeedWrap = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 100px 100px;
+  margin: 200px 200px;
 `;
 
 const Header = styled.div`
@@ -21,11 +23,14 @@ const Header = styled.div`
 
 const Body = styled.div`
   display: flex;
+  justify-content: space-between;
 `;
 
 const CalendarWrap = styled.div`
   display: flex;
   flex-direction: column;
+  width: 40%;
+  justify-content: space-around;
 `;
 
 const User = styled.text`
@@ -39,32 +44,62 @@ const CheckboxListWrap = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 20px;
+  width: 20%;
+`;
+
+const ChallengeWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  width: 20%;
+`;
+const Plus = styled.button`
+  background: transparent;
+  border: none;
+  font-size: 100px;
+  text-align: center;
 `;
 
 const Login = styled(AccountCircleIcon)``;
 
 function FeedPage() {
   const [user, setUser] = useState('김지수');
+  const SLIDE_COUNT = 10;
+  const slides = Array.from(Array(SLIDE_COUNT).keys());
 
   return (
     <FeedWrap>
       <Header>
         <Friends />
 
-        <Login sx={{ fontSize: 50 }}>login</Login>
+        <Link to="/mypage">
+          <Login sx={{ fontSize: 50 }}>login</Login>
+        </Link>
       </Header>
       <Body>
         <CalendarWrap>
           <User>{user}</User>
-          <Calendar></Calendar>
+          <Calendar />
+          {/* <Slide></Slide> */}
           <Link to="/feed/image">
-            <Slide></Slide>
+            <Thumbnail slides={slides} num={3} />
           </Link>
         </CalendarWrap>
         <CheckboxListWrap>
           <h1>Todo</h1>
           <CheckboxList />
         </CheckboxListWrap>
+        <ChallengeWrap>
+          <h1>Challenge</h1>
+          <Link to="/myChallenge">
+            <ChallengeCard />
+          </Link>
+          <ChallengeCard />
+          <ChallengeCard />
+          <Link to="/challenges">
+            <Plus>+</Plus>
+          </Link>
+        </ChallengeWrap>
       </Body>
     </FeedWrap>
   );

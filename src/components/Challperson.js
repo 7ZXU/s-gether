@@ -3,6 +3,25 @@ import { MdAddCircle } from 'react-icons/md';
 import '../css/Challperson.css';
 import Pchart from './Pie.js';
 import { useState } from 'react';
+import styled from 'styled-components';
+
+const Form = styled.form`
+  margin-left: 10%;
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 990;
+  width: 1200px;
+  height: 1000px;
+  border-radius: 5px;
+  box-shadow: 1px 2px 5px 1px black;
+
+  background: white;
+`;
 
 const Challperson = (onInsertToggle, name) => {
   const [todos] = useState([
@@ -32,7 +51,7 @@ const Challperson = (onInsertToggle, name) => {
   return (
     <div>
       <div className="Background" onClick={onInsertToggle}></div>
-      <form>
+      <Form>
         <div className="Na">곽무진</div>
         <div className="Chart">
           <Pchart />
@@ -49,7 +68,7 @@ const Challperson = (onInsertToggle, name) => {
             </div>
           </div>
         </div>
-      </form>
+      </Form>
     </div>
   );
 };

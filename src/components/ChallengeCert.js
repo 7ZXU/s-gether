@@ -7,6 +7,9 @@ import Certcheck from './Certcheck';
 import { ImageList } from '@mui/material';
 import { ImageListItem } from '@mui/material';
 import img1 from '../assets/1.jpg';
+import img2 from '../assets/2.jpg';
+import img3 from '../assets/3.jpg';
+import img4 from '../assets/4.jpg';
 
 const Cert = ({ Cday, cert }) => {
   const [insertToggle, setInsertToggle] = useState(false);
@@ -14,25 +17,25 @@ const Cert = ({ Cday, cert }) => {
   const [itemData, setitemdata] = useState([
     {
       id: 1,
-      img: require('..\\assets\\1.jpg'),
+      img: img1,
       ischecked: false,
       isgood: false,
     },
     {
       id: 2,
-      img: require('..\\assets\\2.jpg'),
+      img: img2,
       ischecked: false,
       isgood: false,
     },
     {
       id: 3,
-      img: require('..\\assets\\3.jpg'),
+      img: img3,
       ischecked: false,
       isgood: false,
     },
     {
       id: 4,
-      img: require('..\\assets\\4.jpg'),
+      img: img4,
       ischecked: false,
       isgood: false,
     },
@@ -43,7 +46,7 @@ const Cert = ({ Cday, cert }) => {
   const onInsertToggle2 = () => {
     setInsertToggle2((prev) => !prev);
   };
-  const [cimg, imgchange] = useState(require('..\\assets\\2.jpg'));
+  const [cimg, imgchange] = useState(img2);
   const onInsertImage = (inp) => {
     imgchange(inp.target.src);
   };
@@ -99,7 +102,7 @@ const Cert = ({ Cday, cert }) => {
       {insertToggle2 && (
         <div>
           <div className="Check" onClick={onInsertToggle2}></div>
-          <form>
+          <form id="challenge__cert__form">
             <img className="image" src={cimg} alt="img" />
             <div className="font">확인 </div>
             <button

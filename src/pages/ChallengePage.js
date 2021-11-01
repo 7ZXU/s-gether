@@ -13,6 +13,7 @@ import StudyList from '../components/StudyList';
 import WorkoutList from '../components/WorkoutList';
 import ProjectList from '../components/ProjectList';
 import RoutineList from '../components/RoutineList';
+import Header from '../components/Header';
 
 function ChanllengePage() {
   const [selected, setSelected] = useState('Study');
@@ -26,10 +27,7 @@ function ChanllengePage() {
   return (
     <div className="chanllengePage">
       <div className="navigator">
-        <IconButton>
-          <ArrowBackIosNewIcon />
-          My Feed
-        </IconButton>
+        <Header />
       </div>
       <div className="addChanllenge">
         <IconButton onClick={() => setButtonPopup(true)}>
@@ -94,7 +92,7 @@ function ChanllengePage() {
         >
           {selected}
           {buttonPopup.toString()}
-          {function () {
+          {(function () {
             switch (selected) {
               case 'Study':
                 return <StudyList />;
@@ -104,8 +102,10 @@ function ChanllengePage() {
                 return <ProjectList />;
               case 'Workout':
                 return <WorkoutList />;
+              default:
+                throw new Error('error');
             }
-          }}
+          })()}
         </Box>
       </div>
       <div className="cardinfo">

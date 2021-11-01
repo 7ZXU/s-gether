@@ -1,51 +1,51 @@
-.ChallengeCerts{
-    margin-left: -120px;
-    border-radius: 5px;
-    box-shadow: 1px 2px 5px 1px black;
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    width: 700px;
-    height: 200px;
+.ChallengeCerts {
+  margin-left: -120px;
+  border-radius: 5px;
+  box-shadow: 1px 2px 5px 1px black;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  width: 700px;
+  height: 200px;
 }
 
-.add-button{
-    margin-top: auto;
-    margin-left: auto;
-    margin-bottom: auto;
-    margin-right: auto;
-    bottom: 0;
-    z-index: 100;
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
-    font-size: 5rem;
-    color: black;
-  }
-  .add-button2{
-    margin-top: auto;
-    margin-left: 40px;
-    margin-bottom: auto;
-    margin-right: auto;
-    bottom: 0;
-    z-index: 100;
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
-    font-size: 5rem;
-    color: black;
-  }
-.certimage{
-    width: 150px;
-    height: 150px;
-    max-width: 150px;
-    max-height: 150px;
-    object-fit: cover;
-    border-radius: 5px;
-    cursor: pointer;
+.add-button {
+  margin-top: auto;
+  margin-left: auto;
+  margin-bottom: auto;
+  margin-right: auto;
+  bottom: 0;
+  z-index: 100;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  font-size: 5rem;
+  color: black;
+}
+.add-button2 {
+  margin-top: auto;
+  margin-left: 40px;
+  margin-bottom: auto;
+  margin-right: auto;
+  bottom: 0;
+  z-index: 100;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  font-size: 5rem;
+  color: black;
+}
+.certimage {
+  width: 150px;
+  height: 150px;
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.Check{
+.Check {
   position: absolute;
   top: 0;
   left: 0;
@@ -60,25 +60,25 @@
   background: #6c567b;
   opacity: 0.8;
 }
-.image{
+.image {
   width: 550px;
   height: 550px;
   max-width: 550px;
   max-height: 550px;
-  object-fit:fill;
+  object-fit: fill;
   margin-top: 40px;
 }
 
-.font{
+.font {
   font-size: 3rem;
   color: black;
 }
-.indicater{
+.indicater {
   margin-top: -150px;
   margin-left: 130px;
 }
 
-form{
+#challenge__cert__form {
   margin-left: 10%;
   position: absolute;
   top: 3%;
@@ -93,7 +93,7 @@ form{
   background: white;
 }
 
-form > .yes{
+#challenge__cert__form > .yes {
   background: none;
   outline: none;
   border: none;
@@ -105,7 +105,10 @@ form > .yes{
   transition: 0.1s background ease-in;
 }
 
-form > .no{
+#challenge__cert__form > .no {
+  background: none;
+  outline: none;
+  border: none;
 
   display: flex;
   cursor: pointer;

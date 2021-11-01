@@ -1,83 +1,72 @@
-.chanllengePage{
-    background-color: white;
-    height : 100vh;
-    width: 100vw;
-    display: grid;
-    grid-template : 0.5fr 0.5fr 1fr 0.5fr 3fr/ 1fr 1fr 1fr 1fr 1fr;
-    gap: 0.1%;
-    grid-template-areas:
-    "navigator  addChanllenge addChanllenge addChanllenge addChanllenge"
-    "myChanllenge hotChanllenge hotChanllenge hotChanllenge hotChanllenge "
-    "myChanllenge hotCardList hotCardList hotCardList hotCardList "
-    "myChanllenge chanllenges chanllenges chanllenges chanllenges "
-    "myChanllenge studyCategory specificList specificList cardinfo"
-    ;
+.chanllengePage {
+  background-color: white;
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template: 0.5fr 0.5fr 1fr 0.5fr 3fr/ 1fr 1fr 1fr 1fr 1fr;
+  gap: 0.1%;
+  grid-template-areas:
+    '.  navigator navigator navigator addChanllenge'
+    'myChanllenge hotChanllenge hotChanllenge hotChanllenge hotChanllenge '
+    'myChanllenge hotCardList hotCardList hotCardList hotCardList '
+    'myChanllenge chanllenges chanllenges chanllenges chanllenges '
+    'myChanllenge studyCategory specificList specificList cardinfo';
 }
 
-.navigator{
-
-    grid-area : navigator;
-    padding-left: 2%;
-    display : flex;
-    flex-direction: row;
+.navigator {
+  grid-area: navigator;
+  padding-left: 2%;
+  display: flex;
+  flex-direction: row;
 }
 
-.addChanllenge{
-
-    grid-area : addChanllenge;
-    display : flex;
-    padding-top: 2%;
-    padding-right : 1%;
-    flex-direction: column;    
-    align-items: flex-end;
+.addChanllenge {
+  grid-area: addChanllenge;
+  display: flex;
+  padding-top: 2%;
+  padding-right: 1%;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.myChanllenge{
-    border-color: seagreen;
-    border-width: 2em;
-    grid-area : myChanllenge;
-    
-    padding-right : 1%;
-    flex-direction: row;    
-    align-items: flex-end;
+.myChanllenge {
+  border-color: seagreen;
+  border-width: 2em;
+  grid-area: myChanllenge;
+
+  padding-right: 1%;
+  flex-direction: row;
+  align-items: flex-end;
 }
 
-.hotChanllenge{
-
-    grid-area : hotChanllenge
+.hotChanllenge {
+  grid-area: hotChanllenge;
 }
 
-.hotCardList{
-
-    grid-area : hotCardList
+.hotCardList {
+  grid-area: hotCardList;
 }
 
-.chanllenges{
-
-    grid-area : chanllenges
+.chanllenges {
+  grid-area: chanllenges;
 }
 
-.cardinfo{
- 
-    grid-area : card
+.cardinfo {
+  grid-area: card;
 }
 
-.studyCategory{
+.studyCategory {
+  grid-area: studyCategory;
 
-    grid-area : studyCategory;
-    
-    align-items: center;
+  align-items: center;
 }
 
-.specificList{
-  
-    grid-area : specificList;
-    flex-direction: row;    
-    align-items: center;
+.specificList {
+  grid-area: specificList;
+  flex-direction: row;
+  align-items: center;
 }
 
-.cardinfo{
-   
-    grid-area : cardinfo;
-    
+.cardinfo {
+  grid-area: cardinfo;
 }
