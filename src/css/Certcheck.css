@@ -1,0 +1,64 @@
+.Check{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 980;
+    top: 0;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #6c567b;
+    opacity: 0.8;
+}
+.image{
+    width: 550px;
+    height: 550px;
+    max-width: 550px;
+    max-height: 550px;
+    object-fit:fill;
+    margin-top: 40px;
+}
+
+.font{
+    font-size: 3rem;
+    color: black;
+}
+
+form{
+    margin-left: 10%;
+    position: absolute;
+    top: 3%;
+    left: 20%;
+    display: flex;
+    flex-direction: column;
+    z-index: 990;
+    width: 800px;
+    height: 800px;
+    border-radius: 5px;
+    box-shadow: 1px 2px 5px 1px black;
+    background: white;
+}
+
+form > .yes{
+    background: none;
+    outline: none;
+    border: none;
+    color: green;
+    margin-top: 0px;
+    margin-right: 450px;
+    display: flex;
+    cursor: pointer;
+    transition: 0.1s background ease-in;
+}
+
+form > .no{
+
+    display: flex;
+    cursor: pointer;
+    margin-top: -120px;
+    margin-right: -450px;
+    transition: 0.1s background ease-in;
+}
