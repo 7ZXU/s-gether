@@ -1,7 +1,0 @@
-{
-    "host": "psy-computer.crufy7yefjsc.us-east-2.rds.amazonaws.com",
-    "user": "admin",
-    "password": "teamBdatabase",
-    "port": "3306",
-    "database": "management"
-}
