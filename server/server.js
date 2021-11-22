@@ -4,6 +4,8 @@ const db = require('./config/db');
 const port = 5000
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const bcrypt = require('bcrypt')
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -22,7 +24,8 @@ app.set('port', process.env.PORT || port);
 app.post('/Register', (req, res) =>{
     const usrId = req.body.usrId;
     const usrPw = req.body.usrPassword;
-    db.query(`INSERT INTO management.user (id, password) VALUES ("${usrId}", "${usrPw}")`);
+    const hashedusrPw = bcrypt.hashSync(usrPw, 10)
+    db.query(`INSERT INTO management.user (id, password) VALUES ("${usrId}", "${hashedusrPw}")`);
 })
 
 app.get('/api/user', (req,res)=> {
