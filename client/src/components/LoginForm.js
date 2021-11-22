@@ -47,27 +47,7 @@ const StyledLink = styled(Link)`
 
 function LoginForm({ to }) {
 
-  const [user, setuser] = useState([
-    
-  ]);
-  
-  
-   useEffect (async() => {
-    try{
-      const res = await axios.get('http://localhost:5000/api/user')
-      const _inputData = await res.data.map((rowData) => ({
-              id: rowData.id,
-              password: rowData.password,
-              name: rowData.name,
-              nickname: rowData.nickname,
-              email: rowData.email
-            })
-      )
-      setuser(user.concat(_inputData))
-    } catch(e){
-      console.error(e.message)
-    }
-  }, []);
+
   
   const [inputId, setInputId] = useState('')
       const [inputPw, setInputPw] = useState('')
@@ -81,14 +61,6 @@ function LoginForm({ to }) {
       }
    
 
-      const onClickLogin = () => {
-        const userss = user.find((user) => user.id === inputId);
-        if (!userss || userss.password !== inputPw) {
-          onInsertToggle2();
-        }
-        else {onInsertToggle(); return userss}
-      }
-
       const [valid, setvalid] = useState(false)
       const onInsertToggle = () => {
         setvalid((prev) => !prev);
@@ -97,7 +69,8 @@ function LoginForm({ to }) {
 
       const [notvalid, setnotvalid] = useState(false)
       const onInsertToggle2 = () => {
-        setnotvalid((prev) => !prev);
+        if(notvalid == false){
+        setnotvalid((prev) => !prev);}
       };
 
       const enterId = (e) => {
@@ -110,6 +83,12 @@ function LoginForm({ to }) {
           })
           .then((response) => {
             console.log(response.data);
+            if(response.data.result == 'ok'){
+              onInsertToggle();
+            }
+            else{
+              onInsertToggle2();
+            }
           })
           .catch((error) => {
             console.log(error);
@@ -121,7 +100,8 @@ function LoginForm({ to }) {
       <InputText name="email" placeholder="ID..." value={inputId} onChange={handleInputId} />
       <InputText name="password" placeholder="PW..." type="password" value={inputPw} onChange={handleInputPw} />
       <Button id = {inputId} password = {inputPw} onClick={enterId} >로그인</Button>
-      
+      {valid && <Redirect to={to}/>}
+      {notvalid && <div>id 또는 비밀번호를 확인해 주세요</div>}
 
       <Aligner>
         {/* <StyledLink to={to}>아이디가 없으신가요?</StyledLink> */}

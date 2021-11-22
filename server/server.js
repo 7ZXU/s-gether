@@ -72,14 +72,16 @@ app.post("/api/user2", (req, res) => {
               expiresIn: "1h",
             }
           );
-          res.cookie("user", accessToken);
+          res.cookie("user", accessToken);*/
           res.status(201).json({
-            result: "ok",
-            accessToken,
-          });*/
+            result: "ok"//,
+            //accessToken,
+          });
         } else {
             console.log("아니다");
-          //res.status(400).json({ error: 'invalid user' });
+            res.status(201).json({
+              result: "not ok"
+            });
         }
       }
     });
