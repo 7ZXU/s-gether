@@ -19,6 +19,7 @@ const Input = styled.input`
 `;
 
 function InputText({ ...rest }) {
+  
   return (
     <Wrapper>
       <Input {...rest} autoComplete="off" />

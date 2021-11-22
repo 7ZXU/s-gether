@@ -3,7 +3,7 @@ import Item from './item';
 import Carousel from 'react-elastic-carousel';
 import Typography from '@mui/material/Typography';
 import studyBackground from '../assets/studyBackground.jpg';
-import '../css/Card.css';
+import '../css/card.css';
 
 const breakPoints = [
   { width: 1, itemsToShow: 1 },

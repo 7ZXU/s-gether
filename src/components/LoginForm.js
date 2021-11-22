@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import InputText from './InputText';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { formControlUnstyledClasses } from "@mui/core";
+
+
 
 const Button = styled.button`
   cursor: pointer;
@@ -38,10 +41,14 @@ const StyledLink = styled(Link)`
 `;
 
 function LoginForm({ to }) {
+  
+
+  
   return (
     <>
-      <InputText name="email" placeholder="ID..." />
+      <InputText name="email" placeholder="ID..."    />
       <InputText name="password" placeholder="PW..." type="password" />
+ 
       <Link to={to}>
         <Button>로그인</Button>
       </Link>

@@ -9,7 +9,10 @@ import FeedPage from './pages/FeedPage';
 import ImagePage from './pages/ImagePage';
 import MyChallenge from './pages/Template';
 
+import axios from 'axios';
+
 function App() {
+ 
   return (
     <div className="App">
       <Switch>

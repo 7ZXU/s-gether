@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import InputText from './InputText';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+
+
 
 const Button = styled.button`
   cursor: pointer;
@@ -37,13 +39,43 @@ const StyledLink = styled.p`
 `;
 
 function RegisterForm({ to }) {
+  const [id, setId] = useState('');
+  const [pw, setPw] = useState('');
+  const typeId = (e) =>{
+    setId(e.target.value);
+  }
+  const typePw = (e) =>{
+    setPw(e.target.value)
+  }
+
+  const registerRequest = ()=>{
+    const post ={
+      usrId : id,
+      usrPassword : pw
+    };
+    
+    fetch("http://localhost:8000/Register", {
+      mode: 'cors',
+      method : "POST",
+      headers : {
+        "Content-type" : "application/json",
+      },
+      body : JSON.stringify(post),
+    })
+    .then((res)=>res.json())
+    .then((json)=>{
+      this.setState({
+        testbody : json.text,
+      });
+    });
+  };
   return (
     <>
-      <InputText name="email" placeholder="ID" />
-      <InputText name="password" placeholder="PW" type="password" />
+      <InputText name="email" placeholder="ID" onChange={typeId }/>
+      <InputText name="password" placeholder="PW" type="password"  onChange={typePw}  />
       <InputText name="password" placeholder="Check PW" type="password" />
       <Link to={to}>
-        <Button>회원가입</Button>
+        <Button onClick = {registerRequest}>회원가입</Button>
       </Link>
       <Aligner>{/* <StyledLink>로그인 하기</StyledLink> */}</Aligner>
     </>

@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import '../css/ChanllengePage.css';
-import Card from '../components/Card';
+import Card from '../components/card';
 import HotCardList from '../components/HotCardList';
 import CustomButton from '../components/CustomButton';
 import SpecificCard from '../components/SpecificCard';
 import Box from '@mui/material/Box';
-import AddChanllengePopup from '../components/AddChanllengePopup';
 import StudyList from '../components/StudyList';
 import WorkoutList from '../components/WorkoutList';
 import ProjectList from '../components/ProjectList';

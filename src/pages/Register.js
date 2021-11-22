@@ -6,6 +6,7 @@ import '../css/Register.css';
 import { Link } from 'react-router-dom';
 
 function Register() {
+  
   return (
     <div className="container">
       <div className="Logo">
