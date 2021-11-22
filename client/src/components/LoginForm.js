@@ -100,13 +100,28 @@ function LoginForm({ to }) {
         setnotvalid((prev) => !prev);
       };
 
+      const enterId = (e) => {
+        const userId = inputId;
+        const userPassword = inputPw;
+        axios
+          .post("http://localhost:5000/api/user2", {
+            userId,
+            userPassword,
+          })
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      };
+
   return (
     <>
       <InputText name="email" placeholder="ID..." value={inputId} onChange={handleInputId} />
       <InputText name="password" placeholder="PW..." type="password" value={inputPw} onChange={handleInputPw} />
-      <Button id = {inputId} password = {inputPw} onClick={onClickLogin} >로그인</Button>
-      {valid && <Redirect to={to}/>}
-      {notvalid && <div>id 또는 비밀번호를 확인해 주세요</div>}
+      <Button id = {inputId} password = {inputPw} onClick={enterId} >로그인</Button>
+      
 
       <Aligner>
         {/* <StyledLink to={to}>아이디가 없으신가요?</StyledLink> */}
@@ -117,6 +132,8 @@ function LoginForm({ to }) {
 
 export default LoginForm;
 
-/*<Link to={to}>
-        <Button>로그인</Button>
-      </Link>*/
+/*{valid && <Redirect to={to}/>}
+      {notvalid && <div>id 또는 비밀번호를 확인해 주세요</div>}
+      
+      const userId = inputId;
+        const userPassword = inputPw;*/
