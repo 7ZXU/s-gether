@@ -1,7 +1,7 @@
 const express = require("express"); 
 const app = express();
 const db = require('./config/db');
-const port = 8000
+const port = 5000
 const cors = require("cors");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,6 +23,17 @@ app.post('/Register', (req, res) =>{
 
     db.query(`INSERT INTO management.user (id, password) VALUES ("${usrId}", "${usrPw}")`);
 })
+
+
+app.get('/api/user', (req,res)=> {
+    db.query(
+        "SELECT * FROM management.user",
+        (err, rows, fields) => {
+            res.send(rows);
+        }
+
+    )
+});
 
 app.listen(port, ()=>{
     console.log(`Connect at http://localhost:${port}`);

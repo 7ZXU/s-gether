@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from 'react';
 import InputText from './InputText';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { formControlUnstyledClasses } from "@mui/core";
-
-
+import { Link, Redirect } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Button = styled.button`
   cursor: pointer;
@@ -40,18 +39,75 @@ const StyledLink = styled(Link)`
   cursor: pointer;
 `;
 
-function LoginForm({ to }) {
-  
 
+
+    
+
+
+
+function LoginForm({ to }) {
+
+  const [user, setuser] = useState([
+    
+  ]);
   
+  
+   useEffect (async() => {
+    try{
+      const res = await axios.get('http://localhost:5000/api/user')
+      const _inputData = await res.data.map((rowData) => ({
+              id: rowData.id,
+              password: rowData.password,
+              name: rowData.name,
+              nickname: rowData.nickname,
+              email: rowData.email
+            })
+      )
+      setuser(user.concat(_inputData))
+    } catch(e){
+      console.error(e.message)
+    }
+  }, []);
+  
+  const [inputId, setInputId] = useState('')
+      const [inputPw, setInputPw] = useState('')
+   
+      const handleInputId = (e) => {
+          setInputId(e.target.value)
+      }
+   
+      const handleInputPw = (e) => {
+          setInputPw(e.target.value)
+      }
+   
+
+      const onClickLogin = () => {
+        const userss = user.find((user) => user.id === inputId);
+        if (!userss || userss.password !== inputPw) {
+          onInsertToggle2();
+        }
+        else {onInsertToggle(); return userss}
+      }
+
+      const [valid, setvalid] = useState(false)
+      const onInsertToggle = () => {
+        setvalid((prev) => !prev);
+      };
+      
+
+      const [notvalid, setnotvalid] = useState(false)
+      const onInsertToggle2 = () => {
+        setnotvalid((prev) => !prev);
+      };
+
   return (
     <>
-      <InputText name="email" placeholder="ID..."    />
-      <InputText name="password" placeholder="PW..." type="password" />
- 
-      <Link to={to}>
-        <Button>로그인</Button>
-      </Link>
+      <InputText name="email" placeholder="ID..." value={inputId} onChange={handleInputId} />
+      <InputText name="password" placeholder="PW..." type="password" value={inputPw} onChange={handleInputPw} />
+      <Button id = {inputId} password = {inputPw} onClick={onClickLogin} >로그인</Button>
+      {valid && <Redirect to={to}/>}
+      {notvalid && <div>id 또는 비밀번호를 확인해 주세요</div>}
+
       <Aligner>
         {/* <StyledLink to={to}>아이디가 없으신가요?</StyledLink> */}
       </Aligner>
@@ -60,3 +116,7 @@ function LoginForm({ to }) {
 }
 
 export default LoginForm;
+
+/*<Link to={to}>
+        <Button>로그인</Button>
+      </Link>*/

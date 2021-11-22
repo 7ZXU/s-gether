@@ -54,7 +54,7 @@ function RegisterForm({ to }) {
       usrPassword : pw
     };
     
-    fetch("http://localhost:8000/Register", {
+    fetch("http://localhost:5000/Register", {
       mode: 'cors',
       method : "POST",
       headers : {
