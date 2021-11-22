@@ -108,6 +108,8 @@ function LoginForm({ to }) {
 
 export default LoginForm;
 
-/*<Link to={to}>
-        <Button>로그인</Button>
-      </Link>*/
+/*{valid && <Redirect to={to}/>}
+      {notvalid && <div>id 또는 비밀번호를 확인해 주세요</div>}
+      
+      const userId = inputId;
+        const userPassword = inputPw;*/
