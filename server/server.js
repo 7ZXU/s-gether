@@ -5,6 +5,10 @@ const port = 5000
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt')
+const cookie = require('cookie');
+const jwt = require("jsonwebtoken");
+
+const YOUR_SECRET_KEY = "abcd";
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -26,15 +30,63 @@ app.post('/Register', (req, res) =>{
     db.query(`INSERT INTO management.user (id, password) VALUES ("${usrId}", "${hashedusrPw}")`);
 })
 
-app.get('/api/user', (req,res)=> {
-    db.query(
-        "SELECT * FROM management.user",
-        (err, rows, fields) => {
-            res.send(rows);
-        }
+app.post('/api/feed', (req, res) =>{
+    const token = req.body.token;
+    console.log("?");
+    console.log(req.body);
+    console.log(token);
+    const id = jwt.decode(token,YOUR_SECRET_KEY );
+    console.log(id);
+    res.status(201).json({
+        result: "ok",
+        id : id['userId'],
+    });
+    db.query(`INSERT INTO management.user (id, password) VALUES ("${usrId}", "${hashedusrPw}")`);
+})
 
-    )
-});
+app.post("/api/login", (req, res) => {
+    let isUser = false;
+    
+    const { inputId, inputPassword } = req.body;
+    const userId = req.body['inputId']
+    const userPassword = req.body['inputPw']
+    const sql = `SELECT id, password FROM management.user`;
+    db.query(sql, (err, rows, fields) => {
+      if (err) {
+        console.log(err);
+      } else {
+     
+        rows.forEach((info) => {
+          if (info.id === userId && info.password,userPassword) {
+          
+            isUser = true;
+          } else {
+  
+            return;
+          }
+        });
+        if (isUser) {
+          const accessToken = jwt.sign(
+            {
+              userId,
+            },
+            YOUR_SECRET_KEY,
+            {
+              expiresIn: "1h",
+            }
+          );
+          
+          res.cookie("user", accessToken);
+          res.status(201).json({
+            result: "ok",
+            accessToken,
+          });
+        } else {
+          res.status(400).json({ error: 'invalid user' });
+        }
+      }
+    });
+  });
 
 app.listen(port, ()=>{
     console.log(`Connect at http://localhost:${port}`);

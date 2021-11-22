@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import InputText from './InputText';
+import {setCookie, getCookie} from '../cookie';
 import styled from 'styled-components';
 import { Link, Redirect } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { getTouchRippleUtilityClass } from '@mui/material';
 
 const Button = styled.button`
   cursor: pointer;
@@ -47,58 +48,48 @@ const StyledLink = styled(Link)`
 
 function LoginForm({ to }) {
 
-  const [user, setuser] = useState([
-    
-  ]);
-  
-  
-   useEffect (async() => {
-    try{
-      const res = await axios.get('http://localhost:5000/api/user')
-      const _inputData = await res.data.map((rowData) => ({
-              id: rowData.id,
-              password: rowData.password,
-              name: rowData.name,
-              nickname: rowData.nickname,
-              email: rowData.email
-            })
-      )
-      setuser(user.concat(_inputData))
-    } catch(e){
-      console.error(e.message)
-    }
-  }, []);
-  
+  const [user, setuser] = useState([]);
   const [inputId, setInputId] = useState('')
-      const [inputPw, setInputPw] = useState('')
-   
-      const handleInputId = (e) => {
-          setInputId(e.target.value)
-      }
-   
-      const handleInputPw = (e) => {
-          setInputPw(e.target.value)
-      }
-   
+  const [inputPw, setInputPw] = useState('')
+  
+  const onClickLogin = ()=>{
+  
+    axios
+      .post("http://localhost:5000/api/login", {
+        inputId,
+        inputPw,
+      })
+      .then((response) => {
+        const token = response['data']['accessToken'];
+        
+        setCookie('myToken', token);
+        
+        onInsertToggle();
+      })
+      .catch((error) => {
+        console.log(error);
+        onInsertToggle2();
+      });
+  };
 
-      const onClickLogin = () => {
-        const userss = user.find((user) => user.id === inputId);
-        if (!userss || userss.password !== inputPw) {
-          onInsertToggle2();
-        }
-        else {onInsertToggle(); return userss}
-      }
+  const handleInputId = (e) => {
+      setInputId(e.target.value)
+  }
 
-      const [valid, setvalid] = useState(false)
-      const onInsertToggle = () => {
-        setvalid((prev) => !prev);
-      };
-      
+  const handleInputPw = (e) => {
+      setInputPw(e.target.value)
+  }
 
-      const [notvalid, setnotvalid] = useState(false)
-      const onInsertToggle2 = () => {
-        setnotvalid((prev) => !prev);
-      };
+  const [valid, setvalid] = useState(false)
+  const onInsertToggle = () => {
+    setvalid((prev) => !prev);
+  };
+  
+
+  const [notvalid, setnotvalid] = useState(false)
+  const onInsertToggle2 = () => {
+    setnotvalid((prev) => !prev);
+  };
 
   return (
     <>

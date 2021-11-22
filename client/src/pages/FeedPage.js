@@ -8,6 +8,8 @@ import CheckboxList from '../components/CheckboxList';
 import Thumbnail from '../components/Thumbnail';
 import ChallengeCard from '../components/ChallengeCard';
 import HeaderNav from '../components/Header';
+import {setCookie, getCookie} from '../cookie';
+import axios from 'axios';
 
 const FeedWrap = styled.div`
   display: flex;
@@ -63,7 +65,22 @@ const Plus = styled.button`
 const Login = styled(AccountCircleIcon)``;
 
 function FeedPage() {
-  const [user, setUser] = useState('김지수');
+  const [user, setUser] = useState('');
+  const token = getCookie('myToken');
+  
+  axios
+      .post("http://localhost:5000/api/feed", {
+        token: token
+      })
+      .then((response) => {
+        const id = response['data']['id'];
+        console.log(response['data'])
+        console.log(id);
+        setUser(id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   const SLIDE_COUNT = 10;
   const slides = Array.from(Array(SLIDE_COUNT).keys());
 
