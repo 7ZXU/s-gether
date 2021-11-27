@@ -32,16 +32,11 @@ app.post('/Register', (req, res) =>{
 
 app.post('/api/feed', (req, res) =>{
     const token = req.body.token;
-    console.log("?");
-    console.log(req.body);
-    console.log(token);
     const id = jwt.decode(token,YOUR_SECRET_KEY );
-    console.log(id);
     res.status(201).json({
         result: "ok",
         id : id['userId'],
     });
-    db.query(`INSERT INTO management.user (id, password) VALUES ("${usrId}", "${hashedusrPw}")`);
 })
 
 app.post("/api/login", (req, res) => {

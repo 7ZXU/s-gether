@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -67,20 +67,23 @@ const Login = styled(AccountCircleIcon)``;
 function FeedPage() {
   const [user, setUser] = useState('');
   const token = getCookie('myToken');
+  console.log(token)
+  useEffect(async ()=>{
+    axios
+    .post("http://localhost:5000/api/feed", {
+      token: token
+    })
+    .then((response) => {
+      const id = response['data']['id'];
+      console.log(response['data'])
+      console.log(id);
+      setUser(id);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  })
   
-  axios
-      .post("http://localhost:5000/api/feed", {
-        token: token
-      })
-      .then((response) => {
-        const id = response['data']['id'];
-        console.log(response['data'])
-        console.log(id);
-        setUser(id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   const SLIDE_COUNT = 10;
   const slides = Array.from(Array(SLIDE_COUNT).keys());
 
