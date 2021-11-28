@@ -12,8 +12,10 @@ import WorkoutList from '../components/WorkoutList';
 import ProjectList from '../components/ProjectList';
 import RoutineList from '../components/RoutineList';
 import Header from '../components/Header';
+import AddChanllengePopup from '../components/AddChanllengePopup';
 
 function ChanllengePage() {
+  
   const [selected, setSelected] = useState('Study');
   const [buttonPopup, setButtonPopup] = useState(false);
 
@@ -24,6 +26,7 @@ function ChanllengePage() {
 
   return (
     <div className="chanllengePage">
+      <div>{buttonPopup && <AddChanllengePopup/>}</div>
       <div className="navigator">
         <Header />
       </div>
@@ -33,6 +36,7 @@ function ChanllengePage() {
           AddChanllenge
         </IconButton>
       </div>
+      
       <div className="myChanllenge">
         <h1>My Chanllenges</h1>
         <br></br>
@@ -42,6 +46,7 @@ function ChanllengePage() {
           <Card></Card>
         </Box>
       </div>
+      
       <div className="hotChanllenge">
         <h1>Hot Chanllenges</h1>
       </div>

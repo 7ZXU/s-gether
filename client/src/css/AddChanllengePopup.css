@@ -15,7 +15,7 @@
     padding : 32px;
     width : 100%;
     max-width : 640px;
-    background-color: #FFF;
+    background-color: rgb(202, 29, 29);
 }
 
 .popup-inner .close-btn{
