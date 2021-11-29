@@ -7,8 +7,7 @@ import Friends from '../components/Friends';
 import CheckboxList from '../components/CheckboxList';
 import Thumbnail from '../components/Thumbnail';
 import ChallengeCard from '../components/ChallengeCard';
-import HeaderNav from '../components/Header';
-import { setCookie, getCookie } from '../cookie';
+import { getCookie } from '../cookie';
 import axios from 'axios';
 
 const FeedWrap = styled.div`
