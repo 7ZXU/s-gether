@@ -4,7 +4,7 @@
     left : 0;
     width : 100%;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,13 +13,21 @@
 .popup-inner{
     position: relative;
     padding : 32px;
-    width : 100%;
+    width : 50%;
+    height:  80%;
     max-width : 640px;
-    background-color: rgb(202, 29, 29);
+    background-color: rgb(105, 97, 97);
 }
 
 .popup-inner .close-btn{
     position :absolute;
     top: 16px;
     right: 16px;
+}
+
+.popup-inner.inputText{
+    position : fixed;
+    padding : 20%;
+    width : 50%;
+    height : 10%
 }

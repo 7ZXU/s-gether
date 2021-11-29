@@ -12,7 +12,8 @@ import WorkoutList from '../components/WorkoutList';
 import ProjectList from '../components/ProjectList';
 import RoutineList from '../components/RoutineList';
 import Header from '../components/Header';
-import AddChanllengePopup from '../components/AddChanllengePopup';
+import ChallengePopup from '../components/ChallengePopup';
+
 
 function ChanllengePage() {
   
@@ -24,34 +25,9 @@ function ChanllengePage() {
   const onClickRoutine = () => setSelected('Routine');
   const onClickProject = () => setSelected('Project');
 
-  return (
-    <div className="chanllengePage">
-      <div>{buttonPopup && <AddChanllengePopup/>}</div>
-      <div className="navigator">
-        <Header />
-      </div>
-      <div className="addChanllenge">
-        <IconButton onClick={() => setButtonPopup(true)}>
-          <AddIcon />
-          AddChanllenge
-        </IconButton>
-      </div>
-      
-      <div className="myChanllenge">
-        <h1>My Chanllenges</h1>
-        <br></br>
-        <br></br>
-
-        <Box sx={{ border: 2, borderRadius: 1 }}>
-          <Card></Card>
-        </Box>
-      </div>
-      
-      <div className="hotChanllenge">
-        <h1>Hot Chanllenges</h1>
-      </div>
-      <div className="hotCardList">
-        <Box
+  const CardList = () =>{
+    return(
+      <Box
           sx={{
             border: 2,
             borderRadius: 2,
@@ -62,6 +38,46 @@ function ChanllengePage() {
         >
           <HotCardList></HotCardList>
         </Box>
+    )
+  }
+
+  const myChanllengeCard = () => {
+    return(
+      <Box sx={{ border: 2, borderRadius: 1 }}>
+        <Card></Card>
+      </Box>
+    )
+  }
+  return (
+    <div className="chanllengePage">
+      <div className="navigator">
+        <Header />
+      </div>
+      <div className="addChanllenge">
+        <IconButton onClick={() => setButtonPopup(true)}>
+          <AddIcon />
+            AddChanllenge
+          </IconButton>
+          {buttonPopup &&
+        
+              <ChallengePopup onClose={setButtonPopup}/>
+         
+          }
+      </div>
+      
+      <div className="myChanllenge">
+        <h1>My Chanllenges</h1>
+        <br></br>
+        <br></br>
+        {!buttonPopup && <myChanllengeCard/>};
+        
+      </div>
+      
+      <div className="hotChanllenge">
+        <h1>Hot Chanllenges</h1>
+      </div>
+      <div className="hotCardList">
+        {!buttonPopup && <CardList/>}
       </div>
       <div className="chanllenges">
         <h1>Looking for a chanllenge members</h1>
