@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
+
+
 // const {
 //   default: roundToNearestMinutesWithOptions,
 // } = require('date-fns/fp/roundToNearestMinutesWithOptions/index');
@@ -30,6 +32,7 @@ app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
+
 app.set('port', process.env.PORT || port);
 
 app.post('/Register', (req, res) => {
@@ -65,14 +68,14 @@ app.post('/api/login', (req, res) => {
 
   const userId = req.body.inputId;
   const userPassword = req.body.inputPw;
-  const sql = 'SELECT id, password FROM management.user';
+  const sql = 'SELECT user_id, password FROM management.user_info';
   db.query(sql, (err, rows, fields) => {
     if (err) {
       0;
       console.log(err);
     } else {
       rows.forEach((info) => {
-        if (info.id === userId && info.password === userPassword) {
+        if (info.user_id === userId && info.password === userPassword) {
           isUser = true;
         } else {
           return;
