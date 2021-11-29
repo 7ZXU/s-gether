@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -8,7 +8,7 @@ import CheckboxList from '../components/CheckboxList';
 import Thumbnail from '../components/Thumbnail';
 import ChallengeCard from '../components/ChallengeCard';
 import HeaderNav from '../components/Header';
-import {setCookie, getCookie} from '../cookie';
+import { setCookie, getCookie } from '../cookie';
 import axios from 'axios';
 
 const FeedWrap = styled.div`
@@ -67,20 +67,27 @@ const Login = styled(AccountCircleIcon)``;
 function FeedPage() {
   const [user, setUser] = useState('');
   const token = getCookie('myToken');
-  
-  axios
-      .post("http://localhost:5000/api/feed", {
-        token: token
-      })
-      .then((response) => {
-        const id = response['data']['id'];
-        console.log(response['data'])
-        console.log(id);
-        setUser(id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
+  useEffect(() => {
+    console.log(token);
+    async function loadData() {
+      await axios
+        .post('http://localhost:5000/api/feed', {
+          token: token,
+        })
+        .then((res) => {
+          const nickname = res.data.id;
+          console.log(res.data);
+          console.log(nickname);
+          setUser(nickname);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    loadData();
+  });
+
   const SLIDE_COUNT = 10;
   const slides = Array.from(Array(SLIDE_COUNT).keys());
 
