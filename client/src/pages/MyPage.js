@@ -6,12 +6,13 @@ import InfoContainer from '../components/InfoContainer';
 import ChargeContainer from '../components/ChargeContainer';
 import PenaltyRewardContainer from '../components/PenaltyRewardContainer';
 import SettingContainer from '../components/SettingContainer';
+import { getCookie } from '../cookie';
 import '../css/MyPage.css';
 
 function MyPage() {
-  // const select = useContext(SelectedMenu);
-  // console.log(select);
   const [selected, setSelected] = useState('Info');
+  const token = getCookie('myToken');
+  console.log('mypage: ' + token);
 
   const onClickInfo = () => setSelected('Info');
   const onClickCharge = () => setSelected('Charge');

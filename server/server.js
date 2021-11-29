@@ -65,14 +65,14 @@ app.post('/api/login', (req, res) => {
 
   const userId = req.body.inputId;
   const userPassword = req.body.inputPw;
-  const sql = 'SELECT id, password FROM management.user';
+  const sql = 'SELECT user_id, password FROM management.user_info';
   db.query(sql, (err, rows, fields) => {
     if (err) {
       0;
       console.log(err);
     } else {
       rows.forEach((info) => {
-        if (info.id === userId && info.password === userPassword) {
+        if (info.user_id === userId && info.password === userPassword) {
           isUser = true;
         } else {
           return;
@@ -96,6 +96,79 @@ app.post('/api/login', (req, res) => {
       } else {
         res.status(400).json({ error: 'invalid user' });
       }
+    }
+  });
+});
+
+/* mypage의 Info 불러오기 */
+app.post('/api/mypage/info', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  const sql = `SELECT name, nickname, birth, email, phone_number FROM management.user_info WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log(row[0]);
+      const name = row[0].name;
+      const nickname = row[0].nickname;
+      const birth = row[0].birth;
+      const email = row[0].email;
+      const phone_number = row[0].phone_number;
+
+      res.status(201).json({
+        result: 'ok',
+        name: name,
+        nickname: nickname,
+        birth: birth,
+        email: email,
+        phone_number: phone_number,
+      });
+    }
+  });
+});
+
+/* mypage UserBlock에서 닉네임 불러오기 */
+app.post('api/mypage/nickname', (req, res) => {
+  const token = req.body.token;
+  let nickname;
+
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  const sql = `SELECT nickname FROM management.user_info WHERE user_id = '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+    } else {
+      nickname = row[0].nickname;
+    }
+    res.status(201).json({
+      result: 'ok',
+      nickname: nickname,
+    });
+  });
+});
+
+/* mypage의 Charge 불러오기 */
+app.post('/api/mypage/charge', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  let history = [];
+  let history_data = {};
+
+  const sql = `SELECT transaction_date, money, current_balance FROM management.transaction_history WHERE user_id= '${id.userId}' AND transaction_type = 0 ORDER BY transaction_date`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log(row);
+      history = row;
+      res.status(201).json({
+        result: 'ok',
+        history: row,
+      });
     }
   });
 });
