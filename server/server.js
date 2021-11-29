@@ -49,6 +49,8 @@ app.post('/api/feed', (req, res) => {
   let nickname;
 
   const id = jwt.decode(token, YOUR_SECRET_KEY);
+  console.log("디코드", jwt.decode(token, YOUR_SECRET_KEY));
+  
   const sql = `SELECT nickname FROM management.user_info WHERE user_id = '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
     if (err) {
@@ -60,7 +62,27 @@ app.post('/api/feed', (req, res) => {
       result: 'ok',
       id: nickname,
     });
+
   });
+
+});
+
+app.post('/api/todo', (req, res) => {
+  const todo = req.body.todo;
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  console.log(todo, token);
+
+  db.query(
+
+    `INSERT INTO management.plan (plan_date, plan_todo, plan_check, user_id) VALUES (NOW(), "${todo}", "false", "${id.userId}") `
+
+  )
+})
+
+app.post('/api/todo', (req, res) => {
+  let todo = req
+  console.log(todo);
 });
 
 app.post('/api/login', (req, res) => {

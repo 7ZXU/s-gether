@@ -10,6 +10,8 @@ import ChallengeCard from '../components/ChallengeCard';
 import HeaderNav from '../components/Header';
 import { setCookie, getCookie } from '../cookie';
 import axios from 'axios';
+import TodoModal from '../components/TodoModal';
+import {Button} from '@mui/material';
 
 const FeedWrap = styled.div`
   display: flex;
@@ -91,6 +93,10 @@ function FeedPage() {
   const SLIDE_COUNT = 10;
   const slides = Array.from(Array(SLIDE_COUNT).keys());
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {setOpen(true); console.log(open);};
+ 
+
   return (
     <FeedWrap>
       <Header>
@@ -112,6 +118,8 @@ function FeedPage() {
         <CheckboxListWrap>
           <h1>Todo</h1>
           <CheckboxList />
+          <TodoModal open={open} user={user}/>
+          <Button onClick={handleOpen}>ADD TODO</Button>
         </CheckboxListWrap>
         <ChallengeWrap>
           <h1>Challenge</h1>
