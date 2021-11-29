@@ -1,26 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomButton from './CustomButton';
 import '../css/InfoContainer.css';
+import { getCookie } from '../cookie.js';
+import axios from 'axios';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 function InfoContainer() {
-  // TODO: 상태관리? redux로 백엔드 연동했을 때 값 유지
-  const [name, setName] = useState('');
-  const [birth, setBirth] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
+  const token = getCookie('myToken');
+
+  const [info, setInfo] = useState({
+    name: '',
+    birth: '',
+    phone: '',
+    email: '',
+  });
+
+  useEffect(() => {
+    console.log('info: ' + token);
+    async function loadInfo() {
+      await axios
+        .post('http://localhost:5000/api/mypage/info', {
+          token: token,
+        })
+        .then((res) => {
+          console.log('Info data: ' + res.data);
+          setInfo({
+            name: res.data.name,
+            birth: res.data.birth,
+            phone: res.data.phone,
+            email: res.data.email,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    loadInfo();
+  }, []);
 
   const onChangeName = (e) => {
-    setName(e.target.value);
+    setInfo({
+      ...info,
+      name: e.target.value,
+    });
+    // setName(e.target.value);
   };
   const onChangeBirth = (e) => {
-    setBirth(e.target.value);
+    setInfo({
+      ...info,
+      birth: e.target.value,
+    });
+    //setBirth(e.target.value);
   };
   const onChangePhone = (e) => {
-    setPhone(e.target.value);
+    setInfo({
+      ...info,
+      phone: e.target.value,
+    });
+    //setPhone(e.target.value);
   };
   const onChangeEmail = (e) => {
-    setEmail(e.target.value);
+    setInfo({
+      ...info,
+      email: e.target.value,
+    });
+    //setEmail(e.target.value);
   };
 
   return (
@@ -38,7 +82,8 @@ function InfoContainer() {
               autoComplete="off"
               id="username"
               name="username"
-              value={name}
+              value={info.name ? info.name : ''}
+              placeholder="이름을 입력하세요"
               class="form-control"
             />
           </div>
@@ -54,7 +99,8 @@ function InfoContainer() {
               autoComplete="off"
               id="birth"
               name="birth"
-              value={birth}
+              value={info.birth ? info.birth : ''}
+              placeholder="생년월일을 입력하세요"
               class="form-control"
             />
           </div>
@@ -70,7 +116,8 @@ function InfoContainer() {
               autoComplete="off"
               id="phone"
               name="phone"
-              value={phone}
+              value={info.phone ? info.phone : ''}
+              placeholder="전화번호를 입력하세요"
               class="form-control"
             />
           </div>
@@ -86,7 +133,8 @@ function InfoContainer() {
               autoComplete="off"
               id="email"
               name="email"
-              value={email}
+              value={info.email ? info.email : ''}
+              placeholder="이메일을 입력하세요"
               class="form-control"
             />
           </div>
