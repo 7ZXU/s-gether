@@ -76,10 +76,12 @@ function FeedPage() {
           token: token,
         })
         .then((res) => {
-          const nickname = res.data.id;
+          if (res.data.nickname == null) {
+            setUser(res.data.id);
+          } else {
+            setUser(res.data.nickname);
+          }
           console.log(res.data);
-          console.log(nickname);
-          setUser(nickname);
         })
         .catch((err) => {
           console.log(err);

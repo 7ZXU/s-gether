@@ -35,9 +35,10 @@ app.set('port', process.env.PORT || port);
 app.post('/Register', (req, res) => {
   const usrId = req.body.usrId;
   const usrPw = req.body.usrPassword;
-  const hashedusrPw = bcrypt.hashSync(usrPw, 10);
+  // 복호화하는 부분에 대해 아직 해결 못했으므로 일단 그냥 pw 저장
+  // const hashedusrPw = bcrypt.hashSync(usrPw, 10);
   db.query(
-    `INSERT INTO management.user (id, password) VALUES ("${usrId}", "${hashedusrPw}")`
+    `INSERT INTO management.user_info (user_id, password) VALUES ("${usrId}", "${usrPw}")`
   );
 });
 
@@ -55,7 +56,8 @@ app.post('/api/feed', (req, res) => {
     }
     res.status(201).json({
       result: 'ok',
-      id: nickname,
+      nickname: nickname,
+      id: id.userId,
     });
   });
 });
@@ -65,6 +67,8 @@ app.post('/api/login', (req, res) => {
 
   const userId = req.body.inputId;
   const userPassword = req.body.inputPw;
+
+  //
   const sql = 'SELECT user_id, password FROM management.user_info';
   db.query(sql, (err, rows, fields) => {
     if (err) {
