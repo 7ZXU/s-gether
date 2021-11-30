@@ -9,9 +9,9 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 
 
-function createData(name, startDate, endDate) {
-    return { name, startDate, endDate };
-  }
+function createData(name, startDate, endDate,max_participants, fee, id) {
+    return { name, startDate, endDate, max_participants, fee , id};
+}
  
 function ProjectList(props) {
     const {setCard} = props;
@@ -39,7 +39,7 @@ function ProjectList(props) {
         if(data['category'] === "Project"){
             
             if(typeof data['startDate'] != "undefined" && typeof data['endDate'] != "undefined" ){
-                rows.push(createData(data['name'],  data['startDate'].split('T')[0], data['endDate'].split('T')[0]))
+                rows.push(createData(data['name'],  data['startDate'].split('T')[0], data['endDate'].split('T')[0], data['max_participants'], data['fee'], data['id']))
             }
         }
     }

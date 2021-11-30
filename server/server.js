@@ -45,7 +45,8 @@ app.get('/api/getChallengeList', (req, res) =>{
         challenge.push({"id" : info["challenge_id"], "name" : info['challenge_name'], "startDate" : info['date_start'], "endDate" : info['date_finish'], "category": info['category'],
         "max_participants" : info['max_participants'], "fee" : info["participation_fee"]
         })
-    })};
+    })
+  };
     res.status(201).json({
       data : challenge,
       result: "ok",
@@ -54,37 +55,28 @@ app.get('/api/getChallengeList', (req, res) =>{
 
 })
 
-app.get('/api/getMyChallengeList', (req, res) =>{
-  const token = req.body.token;
-  const userId = jwt.decode(token,YOUR_SECRET_KEY );
-  const sql = `SELECT user_id, challenge_id FROM management.challenge`;
-  const myChallenge = [];
-  console.log(req.body);
-  db.query(sql, (err, rows, fields) => {
-      if (err) {
-        console.log(err);
-      } else {
-     
-        rows.forEach((info) => {
-          if (info.user_id === userId) {
-            isUser = true;
-          } else {
-  
-            return;
-          }
-        
-        if (isUser) {
-          const myListquery = `SELECT * FROM management.challenge_info WHERE = challenge_id = {${info.challenge_id}} `
-          const myListresponse = db.query(myListquery);
-          console.log(myListresponse)
-        } else {
-          res.status(400).json({ error: 'invalid user' });
-        }
-       });
-      }
-    });
 
-})
+app.get('/api/getMyChallengeList', (req, res) =>{
+  challenge =[]
+  const token = req.query['token'];
+  const userId = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
+  const sql_query = `SELECT * FROM management.challenge_info WHERE challenge_id IN (SELECT challenge_id FROM management.challenge WHERE user_id = "${userId}" ) `
+  db.query(sql_query, (err, rows, fields)=>{
+    if (err) {
+      console.log(err);
+    } else {
+      rows.forEach((info) => {
+          challenge.push({"id" : info["challenge_id"], "name" : info['challenge_name'], "startDate" : info['date_start'], "endDate" : info['date_finish'], "category": info['category'],
+          "max_participants" : info['max_participants'], "fee" : info["participation_fee"]
+          })
+      });
+    }
+    res.status(201).json({
+      data : challenge,
+      result: "ok",
+    });
+  });
+});
 
 app.post('/api/feed', (req, res) =>{
     const token = req.body.token;
@@ -106,8 +98,8 @@ app.post('/api/upLoadChallenge', (req, res) =>{
   const Fee = body['EntryFee']
   
   const type = body['type']
-  db.query(`INSERT INTO management.challenge_info (challenge_name, date_finish, date_start, category, participation_fee, max_participants, challenge_image) VALUES 
-  ("${name}","${EndDate}",  "${StartDate}","${type}","${Fee}","${Num}", "${img})`);
+  db.query(`INSERT INTO management.challenge_info (challenge_name, date_finish, date_start, category, participation_fee, max_participants, challenge_image, current_participants) VALUES 
+  ("${name}","${EndDate}",  "${StartDate}","${type}","${Fee}","${Num}", "${img}", "${0} )`);
 
 })
 
@@ -115,8 +107,9 @@ app.post('/api/enrollChallenge', (req, res) =>{
   const token = req.body.token;
   const data = req.body.data;
   const id = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
-  db.query(`INSERT INTO management.challenge (user_id, challenge_id) VALUES 
-  ("${id}","${data['id']}")`);
+  console.log(data);
+  db.query(`INSERT INTO management.challenge (user_id, challenge_id) VALUES ("${id}","${data['id']}")`);
+  
 })
 
 app.post("/api/login", (req, res) => {

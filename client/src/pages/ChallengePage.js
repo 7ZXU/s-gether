@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import '../css/ChanllengePage.css';
-import Card from '../components/card';
+import MyCard from '../components/MyCard';
 import HotCardList from '../components/HotCardList';
 import Box from '@mui/material/Box';
 import StudyList from '../components/StudyList';
@@ -22,6 +22,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import studyBackground from '../assets/studyBackground.jpg';
 
+
 function ChanllengePage() {
   const defaultdata = {"name" : "Empty", "startDate" : "00T", "endDate" : "00T", "max_participants" : "00", "fee" : "00"}
   const [selected, setSelected] = useState('Study');
@@ -32,19 +33,15 @@ function ChanllengePage() {
   const onClickWorkout = () => setSelected('Workout');
   const onClickRoutine = () => setSelected('Routine');
   const onClickProject = () => setSelected('Project');
+  
 
-
-  const MyCard = () => {
+  const MyCardList = () => {
     return(
       <Box sx={{ border: 2, borderRadius: 1 }}>
-        <Card></Card>
+        <MyCard></MyCard>
       </Box>
     )
   };
-  
-  
-
-  
 
   const theme = createTheme({
     palette: {
@@ -147,7 +144,7 @@ function ChanllengePage() {
       <div className="myChanllenge">
         
         <h1>My Chanllenges</h1>
-        {!buttonPopup && <MyCard/>};
+        {!buttonPopup && <MyCardList/>};
         
       </div>
       

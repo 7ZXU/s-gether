@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import studyBackground from '../assets/studyBackground.jpg';
 import '../css/hotCardList.css';
 import axios from 'axios';
-import card from './card';
 
 const breakPoints = [
   { width: 1, itemsToShow: 1 },
@@ -18,8 +17,7 @@ function HotCardList() {
   const [dataList, setdata] = useState([]);
  
   useEffect(async  ()=>{
-    const response = axios
-    .get("http://localhost:5000/api/getChallengeList", {
+    const response = axios.get("http://localhost:5000/api/getChallengeList", {
  
     })
     .then((response) => {
