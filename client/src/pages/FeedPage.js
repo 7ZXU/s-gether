@@ -7,8 +7,7 @@ import Friends from '../components/Friends';
 import CheckboxList from '../components/CheckboxList';
 import Thumbnail from '../components/Thumbnail';
 import ChallengeCard from '../components/ChallengeCard';
-import HeaderNav from '../components/Header';
-import { setCookie, getCookie } from '../cookie';
+import { getCookie } from '../cookie';
 import axios from 'axios';
 import TodoModal from '../components/TodoModal';
 import {Button} from '@mui/material';
@@ -78,10 +77,12 @@ function FeedPage() {
           token: token,
         })
         .then((res) => {
-          const nickname = res.data.id;
+          if (res.data.nickname == null) {
+            setUser(res.data.id);
+          } else {
+            setUser(res.data.nickname);
+          }
           console.log(res.data);
-          console.log(nickname);
-          setUser(nickname);
         })
         .catch((err) => {
           console.log(err);
