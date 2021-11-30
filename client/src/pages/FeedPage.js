@@ -67,7 +67,6 @@ const Login = styled(AccountCircleIcon)``;
 function FeedPage() {
   const [user, setUser] = useState('');
   const token = getCookie('myToken');
-  console.log(token)
   useEffect(async ()=>{
     axios
     .post("http://localhost:5000/api/feed", {

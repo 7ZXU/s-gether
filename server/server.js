@@ -51,8 +51,38 @@ app.get('/api/getChallengeList', (req, res) =>{
       result: "ok",
     });
   });
+
+})
+
+app.get('/api/getMyChallengeList', (req, res) =>{
+  const token = req.body.token;
+  const userId = jwt.decode(token,YOUR_SECRET_KEY );
+  const sql = `SELECT user_id, challenge_id FROM management.challenge`;
+  const myChallenge = [];
+  console.log(req.body);
+  db.query(sql, (err, rows, fields) => {
+      if (err) {
+        console.log(err);
+      } else {
+     
+        rows.forEach((info) => {
+          if (info.user_id === userId) {
+            isUser = true;
+          } else {
   
-  
+            return;
+          }
+        
+        if (isUser) {
+          const myListquery = `SELECT * FROM management.challenge_info WHERE = challenge_id = {${info.challenge_id}} `
+          const myListresponse = db.query(myListquery);
+          console.log(myListresponse)
+        } else {
+          res.status(400).json({ error: 'invalid user' });
+        }
+       });
+      }
+    });
 
 })
 

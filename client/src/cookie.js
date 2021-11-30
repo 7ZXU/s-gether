@@ -5,7 +5,7 @@ let after1m = new Date();
 const cookies = new Cookies()
 
 export const setCookie = ( name, value) =>{
-    after1m.setMinutes(now.getMinutes() +1);
+    after1m.setMinutes(now.getMinutes() +5);
     return cookies.set(name, value, { expires:after1m})
 }
 

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Item from '../components/item';
 import Carousel from 'react-elastic-carousel';
 import Typography from '@mui/material/Typography';
 import studyBackground from '../assets/studyBackground.jpg';
 import {setCookie, getCookie} from '../cookie';
+import jwt from "jsonwebtoken";
+import axios from 'axios';
 import '../css/card.css';
 
 const breakPoints = [
@@ -14,8 +16,18 @@ const breakPoints = [
 ];
 
 function card() {
-  const token = getCookie('myToken')
+  const token = getCookie('myToken');
   console.log(token);
+  axios.get("http://localhost:5000/api/getMyChallengeList", {
+      data : token
+  })
+  .then((response) => {
+    
+  })
+  .catch((error) => {
+      console.log(error);
+  });
+  
   return (
     <div className="card">
       <Carousel breakPoints={breakPoints}>
