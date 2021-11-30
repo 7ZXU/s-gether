@@ -3,6 +3,7 @@
     top :0;
     left : 0;
     width : 100%;
+    height : 100%;
     height: 100vh;
     background-color: rgb(255, 255, 255);
     display: flex;
@@ -12,22 +13,38 @@
 
 .popup-inner{
     position: relative;
+    text-align : center;
     padding : 32px;
-    width : 50%;
-    height:  80%;
-    max-width : 640px;
-    background-color: rgb(105, 97, 97);
+    width : 70%;
+    height:  90%;
+    max-width : 350px;
+
+    background-color: rgba(97, 100, 105, 0.349);
 }
 
-.popup-inner .close-btn{
-    position :absolute;
-    top: 16px;
-    right: 16px;
-}
+
 
 .popup-inner.inputText{
-    position : fixed;
-    padding : 20%;
-    width : 50%;
-    height : 10%
+    display: flex;
+    flex-direction: row;
+    
 }
+
+.popup-inner.ImageUpload{
+    position: relative;
+    text-align : center;
+    max-height: 100px;
+
+    
+}
+
+
+/* display: grid;
+grid-template: 3fr 1fr 1fr 1fr 1fr 1fr 2fr/1fr;
+gap: 0.1%;
+grid-template-areas:
+'imageupload'
+'inputText'
+'inputText '
+'inputText'
+'close-btn'; */

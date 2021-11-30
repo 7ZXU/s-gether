@@ -82,7 +82,7 @@ function FeedPage() {
     .catch((error) => {
       console.log(error);
     });
-  })
+  }, [])
   
   const SLIDE_COUNT = 10;
   const slides = Array.from(Array(SLIDE_COUNT).keys());

@@ -1,8 +1,9 @@
 import React from 'react';
-import Item from './item';
+import Item from '../components/item';
 import Carousel from 'react-elastic-carousel';
 import Typography from '@mui/material/Typography';
 import studyBackground from '../assets/studyBackground.jpg';
+import {setCookie, getCookie} from '../cookie';
 import '../css/card.css';
 
 const breakPoints = [
@@ -13,6 +14,8 @@ const breakPoints = [
 ];
 
 function card() {
+  const token = getCookie('myToken')
+  console.log(token);
   return (
     <div className="card">
       <Carousel breakPoints={breakPoints}>

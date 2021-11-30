@@ -3,7 +3,7 @@
   height: 100vh;
   width: 100vw;
   display: grid;
-  grid-template: 0.5fr 0.5fr 1fr 0.5fr 3fr/ 1fr 1fr 1fr 1fr 1fr;
+  grid-template: 0.5fr 0.5fr 1fr 0.5fr 3fr/ 1fr 1fr 1fr 1fr 2fr;
   gap: 0.1%;
   grid-template-areas:
     '.  navigator navigator navigator addChanllenge'
@@ -69,4 +69,7 @@
 
 .cardinfo {
   grid-area: cardinfo;
+  display: flex;
+  flex-direction: column;
+
 }
