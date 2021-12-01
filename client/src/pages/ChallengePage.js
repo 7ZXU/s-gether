@@ -106,7 +106,7 @@ function ChanllengePage() {
             <CardMedia
               component="img"
               height = "50%"
-              image= {studyBackground} 
+              image= {data['img']} 
               alt="Paella dish"
             />
             <CardContent align = "center">

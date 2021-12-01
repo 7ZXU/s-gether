@@ -34,12 +34,14 @@ function HotCardList() {
   <SpecificItem key = {key}>
     <img
       className="studyBackground-img"
-      src={studyBackground}
+      src={data['img'] ? data['img'] : studyBackground }
       alt="card 사진"
       heigth="200"
       width="200"
       align="center"
     />
+    {console.log(data['img'] ? data['img'].split(',')[1] : studyBackground)}
+    {console.log(data['img'])}
     <Typography variant="h5" component="div" align="center">
       {data['name']}
     </Typography>

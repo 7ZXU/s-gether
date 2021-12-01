@@ -42,7 +42,7 @@ app.get('/api/getChallengeList', (req, res) =>{
       console.log(err);
     } else {
       rows.forEach((info) => {
-        challenge.push({"id" : info["challenge_id"], "name" : info['challenge_name'], "startDate" : info['date_start'], "endDate" : info['date_finish'], "category": info['category'],
+        challenge.push({"img" : info['challenge_image'], "id" : info["challenge_id"], "name" : info['challenge_name'], "startDate" : info['date_start'], "endDate" : info['date_finish'], "category": info['category'],
         "max_participants" : info['max_participants'], "fee" : info["participation_fee"]
         })
     })
@@ -90,16 +90,17 @@ app.post('/api/feed', (req, res) =>{
 app.post('/api/upLoadChallenge', (req, res) =>{
 
   const body = req.body.params;
-  const img =  fetch(body['image']).then(r => r.blob());
+  const img =  body['img'];
   const name = body['Name']
   const StartDate = body['StartDate']
   const EndDate = body['EndDate']
   const Num = body['PeopleNum']
   const Fee = body['EntryFee']
-  
+
   const type = body['type']
+  console.log(body['img'])
   db.query(`INSERT INTO management.challenge_info (challenge_name, date_finish, date_start, category, participation_fee, max_participants, challenge_image, current_participants) VALUES 
-  ("${name}","${EndDate}",  "${StartDate}","${type}","${Fee}","${Num}", "${img}", "${0} )`);
+  ("${name}","${EndDate}",  "${StartDate}","${type}","${Fee}","${Num}", "${img}", "${0}" )`);
 
 })
 
