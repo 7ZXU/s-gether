@@ -68,7 +68,6 @@ app.post('/api/login', (req, res) => {
   const userId = req.body.inputId;
   const userPassword = req.body.inputPw;
 
-  //
   const sql = 'SELECT user_id, password FROM management.user_info';
   db.query(sql, (err, rows, fields) => {
     if (err) {
@@ -156,12 +155,10 @@ app.post('/api/mypage/nickname', (req, res) => {
 });
 
 /* mypage의 Charge 불러오기 */
+// todo: 스터디 참여(type = 2)할 경우 잔액에서 - 해줘야 함.
 app.post('/api/mypage/charge', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
-
-  let history = [];
-  let history_data = {};
 
   const sql = `SELECT transaction_date, money, current_balance FROM management.transaction_history WHERE user_id= '${id.userId}' AND transaction_type = 0 ORDER BY transaction_date`;
   db.query(sql, (err, row, fields) => {
@@ -170,10 +167,52 @@ app.post('/api/mypage/charge', (req, res) => {
       res.status(400).json({ error: 'sql error' });
     } else {
       console.log(row);
-      history = row;
+      // history = row;
       res.status(201).json({
         result: 'ok',
         history: row,
+      });
+    }
+  });
+});
+
+/* penalty와 reward 불러오기 */
+// penalty
+app.post('/api/mypage/penalty', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const sql = `SELECT transaction_date, money FROM management.transaction_history WHERE user_id='${id.userId}' AND transaction_type = 3 ORDER BY transaction_date`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log('penalty: ' + row);
+      // const penalty = row; // penalty 내역
+      res.status(201).json({
+        result: 'ok',
+        penalty: row,
+      });
+    }
+  });
+});
+
+// reward
+app.post('/api/mypage/rewards', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const sql = `SELECT transaction_date, money FROM management.transaction_history WHERE user_id='${id.userId}' AND transaction_type = 1 ORDER BY transaction_date`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log('reward: ' + row);
+      res.status(201).json({
+        result: 'ok',
+        rewards: row,
       });
     }
   });

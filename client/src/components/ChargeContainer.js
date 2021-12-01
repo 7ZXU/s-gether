@@ -57,21 +57,24 @@ function ChargeContainer() {
           </div>
         </div>
         <span className="explanation">
-          * 현재 은행 연동을 지원하지 않으므로 가입 시 잔액을 10,000으로 설정
+          * 현재 은행 연동을 지원하지 않습니다.
         </span>
       </section>
 
       <section className="history__container">
         <h1>Charge History</h1>
-        {history
-          ? history.map((cur, index) => {
-              return (
-                <p>
-                  날짜: {cur.transaction_date} 금액: {cur.money} &nbsp;
-                </p>
-              );
-            })
-          : '내역 불러오는 중'}
+        {history ? (
+          history.map((cur, index) => {
+            return (
+              <p>
+                날짜: {cur.transaction_date.slice(0, 10)} 금액: {cur.money}{' '}
+                &nbsp;
+              </p>
+            );
+          })
+        ) : (
+          <p>내역 불러오는 중...</p>
+        )}
       </section>
     </div>
   );
