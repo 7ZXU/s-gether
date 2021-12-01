@@ -7,11 +7,8 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
+const { application } = require('express');
 
-
-// const {
-//   default: roundToNearestMinutesWithOptions,
-// } = require('date-fns/fp/roundToNearestMinutesWithOptions/index');
 
 const YOUR_SECRET_KEY = 'abcd';
 
@@ -47,9 +44,8 @@ app.post('/Register', (req, res) => {
 app.post('/api/feed', (req, res) => {
   const token = req.body.token;
   let nickname;
-
   const id = jwt.decode(token, YOUR_SECRET_KEY);
-  console.log("디코드", jwt.decode(token, YOUR_SECRET_KEY));
+  // console.log("디코드", jwt.decode(token, YOUR_SECRET_KEY));
   
   const sql = `SELECT nickname FROM management.user_info WHERE user_id = '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
@@ -64,8 +60,31 @@ app.post('/api/feed', (req, res) => {
     });
 
   });
-
 });
+
+app.post('/api/todolist', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  let list;
+
+  const sql = `SELECT * FROM management.plan WHERE user_id = "${id.userId}"`; 
+
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+  } else {
+    // console.log( 'todolist', row);
+    list = row;
+    console.log('list', list);
+  }
+  res.status(201).json({
+    result: list,
+  });
+
+
+  })
+
+})
 
 app.post('/api/todo', (req, res) => {
   const todo = req.body.todo;
@@ -80,10 +99,44 @@ app.post('/api/todo', (req, res) => {
   )
 })
 
-app.post('/api/todo', (req, res) => {
-  let todo = req
-  console.log(todo);
+app.post('/api/delete', (req, res) => {
+  const user = req.body.user;
+  const idx = req.body.idx;
+
+  const sql = `DELETE FROM management.plan WHERE idx="${idx}" AND user_id="${user}" `
+
+  db.query(sql, (err, row, fields) => {
+    if(err){
+      console.log(err);
+    } else {
+      console.log("delete", idx);
+    }
+  })
 });
+
+app.post('/api/check', (req, res) => {
+  const user = req.body.user;
+  const checked = req.body.checked;
+  const idx = req.body.idx;
+
+  console.log(idx, checked, user);
+  
+  const sql = `UPDATE management.plan SET plan_check="${checked}" WHERE idx="${idx}" AND user_id="${user}"`
+
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("무한대");
+    }
+  });
+
+  // db.query(
+
+
+  // )
+
+})
 
 app.post('/api/login', (req, res) => {
   let isUser = false;
