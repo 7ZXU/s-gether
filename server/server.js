@@ -158,23 +158,65 @@ app.post('/api/mypage/saveInfo', (req, res) => {
   });
 });
 
-/* mypage UserBlock에서 닉네임 불러오기 */
+/* mypage UserBlock에서 닉네임, 이미지 불러오기 */
 app.post('/api/mypage/nickname', (req, res) => {
   const token = req.body.token;
   let nickname;
 
   const id = jwt.decode(token, YOUR_SECRET_KEY);
-  const sql = `SELECT nickname FROM management.user_info WHERE user_id = '${id.userId}'`;
+  const sql = `SELECT nickname, user_image FROM management.user_info WHERE user_id = '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
     } else {
-      nickname = row[0].nickname;
       console.log(nickname);
       res.status(201).json({
         result: 'ok',
-        nickname: nickname,
+        nickname: row[0].nickname,
+        image: row[0].user_image,
         id: id.userId,
+      });
+    }
+  });
+});
+
+/* 닉네임 변경 or 등록 */
+app.post('/api/mypage/saveNickname', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  console.log(req.body.nickname);
+
+  const nickname = req.body.nickname ? "'" + req.body.nickname + "'" : null;
+
+  const sql = `UPDATE management.user_info SET nickname = ${nickname} WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      res.status(201).json({
+        result: 'ok',
+      });
+    }
+  });
+});
+
+/* userBlock 이미지 등록 */
+app.post('api/mypage/savePhoto', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  console.log(req.body.nickname);
+
+  const image = req.body.image ? "'" + req.body.image + "'" : null;
+
+  const sql = `UPDATE management.user_info SET user_image = ${image} WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      res.status(201).json({
+        result: 'ok',
       });
     }
   });

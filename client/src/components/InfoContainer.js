@@ -36,25 +36,6 @@ function InfoContainer() {
   }
 
   useEffect(() => {
-    console.log('info: ' + token);
-    // async function loadInfo() {
-    //   await axios
-    //     .post('http://localhost:5000/api/mypage/info', {
-    //       token: token,
-    //     })
-    //     .then((res) => {
-    //       console.log('Info data: ' + res.data);
-    //       setInfo({
-    //         name: res.data.name,
-    //         birth: res.data.birth,
-    //         phone: res.data.phone,
-    //         email: res.data.email,
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // }
     loadInfo();
   }, []);
 
@@ -128,7 +109,7 @@ function InfoContainer() {
           name="userbirth"
           autoComplete="off"
           value={info.birth ? info.birth : ''}
-          placeholder="2021-01-01 형태로 입력하세요"
+          placeholder="2021-01-01 형태로 입력"
         />
         <InputWithLabel
           label="전화번호"

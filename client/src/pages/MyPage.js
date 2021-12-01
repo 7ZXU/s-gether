@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UserBlock from '../components/UserBlock';
 import Header from '../components/Header';
 import CustomButton from '../components/CustomButton';
@@ -19,6 +19,16 @@ function MyPage() {
   const onClickPenalty = () => setSelected('Penalty & Reward');
   const onClickSetting = () => setSelected('Setting');
   console.log(selected);
+
+  useEffect(() => {
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (token) {
+      console.log('토큰 있음');
+    } else {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    }
+  }, []);
 
   return (
     <>
