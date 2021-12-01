@@ -2,8 +2,10 @@ import React from 'react';
 import { MdAddCircle } from 'react-icons/md';
 import '../css/Challperson.css';
 import Pchart from './Pie.js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { getCookie } from '../cookie';
+import axios from 'axios';
 
 const Form = styled.form`
   margin-left: 10%;
@@ -48,13 +50,101 @@ const Challperson = (onInsertToggle, name) => {
     },
   ]);
 
+  const [cimg, setcimg] = useState('');
+
+  const [challenges, setchallenges] = useState('');
+
+  const [Cinfo, setCinfo] = useState({
+    name: 'challenge',
+    date_start: '2021-11-1',
+    date_end: '2021-11-30'
+  });
+
+  const [user, setUser] = useState('');
+  const [dnum, setdnum] = useState(0);
+
+
+  const token = getCookie('myToken');
+
+
+  useEffect(() => {
+    async function loadData() {
+      await axios
+        .post('http://localhost:5000/api/challenge_ing', {
+          token: token,
+          challenge_id: 10, //실험용
+        })
+        .then((res) => {
+          if(res.data.result === 'not ok'){
+            console.log("no progress");
+          }
+          else{
+            let tnum = 0;
+            res.data.rows.map((all) =>
+            all.done === true 
+              ? tnum++
+              : ''
+            )
+            console.log(tnum);
+            setdnum(tnum);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData2() {
+      await axios
+        .post('http://localhost:5000/api/challenge_info', {
+          token: token,
+          challenge_id: 10 //실험용
+        })
+        .then((res) => {
+          //console.log("-------------challenge_image---------------");
+          //console.log(res.data);
+          setcimg(res.data.image);
+          //console.log("-------------challenge_image---------------");
+          setCinfo({
+            name: res.data.name,
+            date_start: res.data.start.substring(0,10),
+            date_end: res.data.end.substring(0,10)
+          });
+
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    
+
+    async function loadData3() {
+      await axios
+        .post('http://localhost:5000/api/feed', {
+          token: token,
+        })
+        .then((res) => {
+          const nickname = res.data.id;
+          setUser(nickname);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+
+    loadData();
+    loadData2();
+    loadData3();
+  },[]);  
+
   return (
     <div>
-      <div className="Background" onClick={onInsertToggle}></div>
+      <div className="Background" onClick={() =>onInsertToggle}></div>
       <Form>
         <div className="Na">곽무진</div>
         <div className="Chart">
-          <Pchart />
+          <Pchart start= {Cinfo.date_start} end= {Cinfo.date_end} done= {dnum} />
           <div className="Border">
             <div className="Todo">
               {todos.map((todo) => (

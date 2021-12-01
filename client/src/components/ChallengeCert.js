@@ -6,12 +6,57 @@ import ChallengeBack from './ChallengeBack';
 import Certcheck from './Certcheck';
 import { ImageList } from '@mui/material';
 import { ImageListItem } from '@mui/material';
+import { getCookie } from '../cookie';
+import axios from 'axios';
+import styled from 'styled-components';
+
 import img1 from '../assets/1.jpg';
 import img2 from '../assets/2.jpg';
 import img3 from '../assets/3.jpg';
 import img4 from '../assets/4.jpg';
 
+const Form = styled.form`
+  margin-left: 10%;
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 990;
+  width: 1200px;
+  height: 1000px;
+  border-radius: 5px;
+  box-shadow: 1px 2px 5px 1px black;
+
+  background: white;
+`;
+
 const Cert = ({ Cday, cert }) => {
+  /*const token = getCookie('myToken');
+
+  useEffect(() => {
+    console.log(token);
+    async function loadData() {
+      await axios
+        .post('http://localhost:5000/api/challenge_ing', {
+          token: token,
+        })
+        .then((res) => {
+          const nickname = res.data.id;
+          console.log(res.data);
+          console.log(nickname);
+          setUser(nickname);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    loadData();
+  });*/
+
+
   const [insertToggle, setInsertToggle] = useState(false);
   const [insertToggle2, setInsertToggle2] = useState(false);
   const [itemData, setitemdata] = useState([
@@ -40,6 +85,8 @@ const Cert = ({ Cday, cert }) => {
       isgood: false,
     },
   ]);
+
+
   const onInsertToggle = () => {
     setInsertToggle((prev) => !prev);
   };
@@ -102,7 +149,7 @@ const Cert = ({ Cday, cert }) => {
       {insertToggle2 && (
         <div>
           <div className="Check" onClick={onInsertToggle2}></div>
-          <form id="challenge__cert__form">
+          <form>
             <img className="image" src={cimg} alt="img" />
             <div className="font">확인 </div>
             <button

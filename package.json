@@ -10,13 +10,17 @@
         "axios": "^0.24.0",
         "bcrypt": "^5.0.1",
         "body-parser": "^1.19.0",
+        "browser-image-compression": "^1.0.17",
         "cookie": "^0.4.1",
         "cors": "^2.8.5",
         "express": "^4.16.4",
         "jsonwebtoken": "^8.5.1",
         "mysql": "^2.18.1",
         "node": "^17.0.1",
-        "nodemon": "^2.0.14"
+        "nodemon": "^2.0.14",
+        "react-live-clock": "^5.3.1",
+        "react-native-image-resizer": "^1.4.5",
+        "react-native-image-to-blob": "^0.0.6"
     },
     "devDependencies": {
         "concurrently": "^4.1.2"

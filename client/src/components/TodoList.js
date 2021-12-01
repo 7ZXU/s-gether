@@ -1,11 +1,11 @@
 import React from 'react';
 import TodoItem from './TodoItem';
 import '../css/TodoList.css';
-
+//(todos.length === 0) && 
 const Todolist = ({ todos }) => {
   return (
     <div className="TodoList">
-      {todos.map((todo) => (
+      {todos && todos.map((todo) => (
         <TodoItem todo={todo} key={todo.id} />
       ))}
     </div>
