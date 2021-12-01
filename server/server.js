@@ -358,9 +358,10 @@ app.post('/api/certupload', (req, res) => {
   const formdata = req.body.formdata;
   const config = req.body.config;
   const user_id = req.body.user_name;
+  const challenge_date = req.body.challenge_id;
 
-const sql = `UPDATE management.challenge_ing SET is_cert = 0 `;
-//const sql = `UPDATE management.challenge_ing SET challenge_image = '${formdata}' WHERE challenge_id = '${challenge_id}' AND user_id = '${user_id}'`;
+//const sql = `UPDATE management.challenge_ing SET is_cert = 0 `;
+const sql = `UPDATE management.challenge_ing SET challenge_image = '${formdata}' WHERE challenge_id = '${challenge_id}' AND user_id = '${user_id}' AND challenge_date = '${challenge_date}'`;
 db.query(sql, (err, rows, fields) => {
   if (err) {
     console.log("DB저장 실패");
