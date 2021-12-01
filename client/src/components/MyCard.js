@@ -27,7 +27,6 @@ function MyCard() {
       }
     })
     .then((response) => {
-      console.log(response['data']['data'])
       setdata(response['data']['data'])
     })
     .catch((error) => {
@@ -41,7 +40,7 @@ function MyCard() {
     <SpecificItem key = {key}>
       <img
         className="studyBackground-img"
-        src={studyBackground}
+        src={data['img']}
         alt="card 사진"
         heigth="200"
         width="200"

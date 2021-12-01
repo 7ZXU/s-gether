@@ -54,6 +54,7 @@ function ChanllengePage() {
   });
   
   const CardList = () =>{
+    console.log("카드리스트 챌린지 ")
     return(
       <Box
           sx={{
@@ -64,7 +65,7 @@ function ChanllengePage() {
             align: 'center',
           }}
         >
-          <HotCardList></HotCardList>
+          <HotCardList/>
         </Box>
     )
   };
@@ -106,7 +107,7 @@ function ChanllengePage() {
             <CardMedia
               component="img"
               height = "50%"
-              image= {data['img']} 
+              image= {data['img'] ? data['img'] : studyBackground} 
               alt="Paella dish"
             />
             <CardContent align = "center">
@@ -117,7 +118,7 @@ function ChanllengePage() {
                 Date : {data['startDate'].split('T')[0]} ~ {data['endDate'].split('T')[0]}
               </Typography>
               <Typography variant="h8" component="div" align="center">
-                People : 0/{data['max_participants']}
+                People : {data['current_participants']}/{data['max_participants']}
               </Typography>
               <Typography variant="h8" component="div" align="center">
                 Point : {data['fee']}
@@ -144,7 +145,7 @@ function ChanllengePage() {
       <div className="myChanllenge">
         
         <h1>My Chanllenges</h1>
-        {!buttonPopup && <MyCardList/>};
+          {!buttonPopup && <MyCardList/>};
         
       </div>
       

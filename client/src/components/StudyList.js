@@ -10,8 +10,8 @@ import axios from 'axios';
 import { DH_CHECK_P_NOT_SAFE_PRIME } from 'constants';
 
 
-function createData(name, startDate, endDate,max_participants, fee, id) {
-    return { name, startDate, endDate, max_participants, fee , id};
+function createData(img,name, startDate, endDate,max_participants, current_pariticipants, fee, id) {
+    return { img,name, startDate, endDate, max_participants,current_pariticipants, fee , id};
   }
  
 function StudyList(props) {
@@ -41,7 +41,8 @@ function StudyList(props) {
         const data = dataList[i]
         if(data['category'] === "Study"){
             if(typeof data['startDate'] != "undefined" && typeof data['endDate'] != "undefined" ){
-                rows.push(createData(data['name'],  data['startDate'].split('T')[0], data['endDate'].split('T')[0], data['max_participants'], data['fee'], data['id']))
+                rows.push(createData(data['img'],data['name'],  data['startDate'].split('T')[0], data['endDate'].split('T')[0], data['max_participants'], 
+                data['current_participants'],data['fee'], data['id']))
             }
         }
     }

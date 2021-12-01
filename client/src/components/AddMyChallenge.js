@@ -40,7 +40,7 @@ function AddMyChallenge(props)  {
                         <CardMedia
                         component="img"
                         height = "50%"
-                        image= {studyBackground} 
+                        image= {cardData['img']} 
                         alt="Paella dish"
                         />
                         <CardContent align = "center">
