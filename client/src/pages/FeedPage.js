@@ -11,6 +11,7 @@ import axios from "axios";
 import { Button, Modal, Fade, Box, Backdrop, List } from "@mui/material";
 import { getCookie } from "../cookie";
 
+
 const FeedWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -77,10 +78,12 @@ function FeedPage() {
           token: token,
         })
         .then((res) => {
-          const nickname = res.data.id;
-          // console.log(res.data);
-          // console.log(nickname);
-          setUser(nickname);
+          if (res.data.nickname == null) {
+            setUser(res.data.id);
+          } else {
+            setUser(res.data.nickname);
+          }
+          console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
