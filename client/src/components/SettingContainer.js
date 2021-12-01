@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import '../css/SettingContainer.css';
+import { getCookie } from '../cookie.js';
+import axios from 'axios';
 
 function SettingContainer() {
-  const [checked, setChecked] = useState([0]);
+  const [checked, setChecked] = useState({
+    permission_friend: 0,
+    permission_id: 0,
+    permission_challenge: 0,
+  });
+  const token = getCookie('myToken');
+
+  useEffect(() => {});
 
   return (
     <div className="setting__container">
@@ -40,7 +49,7 @@ function SettingContainer() {
             </ListItemIcon>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group clearfix">
           <button type="submit" class="btn-submit">
             설정 저장
           </button>

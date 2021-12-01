@@ -107,6 +107,7 @@ app.post('/api/login', (req, res) => {
 app.post('/api/mypage/info', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
+
   const sql = `SELECT name, nickname, birth, email, phone_number FROM management.user_info WHERE user_id= '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
     if (err) {
@@ -120,13 +121,38 @@ app.post('/api/mypage/info', (req, res) => {
       const email = row[0].email;
       const phone_number = row[0].phone_number;
 
+      console.log(phone_number);
+
       res.status(201).json({
         result: 'ok',
         name: name,
         nickname: nickname,
         birth: birth,
         email: email,
-        phone_number: phone_number,
+        phone: phone_number,
+      });
+    }
+  });
+});
+
+/* Info 저장하기 */
+app.post('/api/mypage/saveInfo', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const name = req.body.name ? "'" + req.body.name + "'" : null;
+  const birth = req.body.birth ? "'" + req.body.birth + "'" : null;
+  const phone = req.body.phone ? "'" + req.body.phone + "'" : null;
+  const email = req.body.email ? "'" + req.body.email + "'" : null;
+
+  const sql = `UPDATE management.user_info SET name = ${name}, birth = ${birth}, email = ${email}, phone_number = ${phone} WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      res.status(201).json({
+        result: 'ok',
       });
     }
   });
@@ -213,6 +239,27 @@ app.post('/api/mypage/rewards', (req, res) => {
       res.status(201).json({
         result: 'ok',
         rewards: row,
+      });
+    }
+  });
+});
+
+/* Setting 정보 불러오기 */
+app.post('/api/mypage/setting', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  const sql = `SELECT permission_friend, permission_id, permission_challenge FROM management.user_info WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log(row[0]);
+      res.status(201).json({
+        result: 'ok',
+        permission_friend: row[0].permission_friend,
+        permission_id: row[0].permission_id,
+        permission_challenge: row[0].permission_challenge,
       });
     }
   });

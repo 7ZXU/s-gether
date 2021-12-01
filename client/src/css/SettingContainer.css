@@ -20,3 +20,13 @@
 .setting__items__li {
   width: 200px;
 }
+
+.clearfix::after {
+  content: '';
+  clear: both;
+  display: block;
+}
+
+.btn-submit {
+  float: right;
+}
