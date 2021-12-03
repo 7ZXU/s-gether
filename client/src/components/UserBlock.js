@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import '../css/UserBlock.css';
-import defaultUSer from '../assets/defaultUser.png';
+import defaultUser from '../assets/defaultUser.png';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { getCookie } from '../cookie.js';
 import axios from 'axios';
 import Modal from './Modal';
 
 function UserBlock() {
   const [username, setUsername] = useState('');
-  const [userImage, setUserImage] = useState('');
+  const [userImage, setUserImage] = useState(null);
+  const [uploadFile, setUploadFile] = useState({
+    file: null,
+    fileName: null,
+  });
   const [modalOpen, setModalOpen] = useState(false);
   const token = getCookie('myToken');
+  const [uploadImage, setUploadImage] = useState(false);
 
   const openModal = () => {
     setModalOpen(true);
@@ -31,6 +37,7 @@ function UserBlock() {
             setUsername(res.data.id);
           } else {
             setUsername(res.data.nickname);
+            setUserImage(res.data.image);
           }
           console.log('이미지: ' + res.data.image);
           console.log(res.data);
@@ -65,34 +72,70 @@ function UserBlock() {
       });
   }
 
+  // useEffect(() => {
+  //   console.log('이미지 정보');
+  //   console.log(uploadFile.file, uploadFile.fileName);
+  // }, [uploadFile]);
+
   const onLoadImage = (e) => {
     if (e.target.files.length) {
       const imgTarget = e.target.files[0];
+      setUploadFile({
+        file: e.target.files[0],
+        fileName: e.target.value,
+      });
+      console.log(e.target.files[0]);
+      console.log('fileName: ' + e.target.value);
       const fileReader = new FileReader();
       fileReader.readAsDataURL(imgTarget);
       fileReader.onload = function (e) {
         setUserImage(e.target.result);
+        setUploadImage(true);
       };
+      console.log('이미지 업로드');
     } else {
-      console.log('이미지추가');
+      console.log('이미지추가 x');
     }
   };
 
-  async function saveImage(input) {
-    await axios.post('http:');
+  function saveImage() {
+    console.log('이미지 저장 호출');
+    const url = 'http://localhost:5000/api/mypage/savePhoto';
+    const formData = new FormData();
+    formData.append('token', token);
+    formData.append('image', uploadFile.file);
+
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
+
+    if (uploadImage) {
+      axios
+        .post(url, formData, config)
+        .then((res) => console.log(res.data.result));
+    } else {
+      console.log('이미지 안올림');
+    }
   }
 
   return (
     <div className="user-container-box">
       <div className="user-photo">
-        <img src={userImage ? userImage : defaultUSer} alt="사용자 이미지" />
+        <label className="input-profile-img" for="input-file">
+          <img src={userImage ? userImage : defaultUser} alt="사용자 이미지" />
+        </label>
+        <input
+          type="file"
+          id="input-file"
+          accept="image/jpg,impge/png,image/jpeg,image/gif,image/png"
+          name="profile_img"
+          onChange={onLoadImage}
+          style={{ display: 'none' }}
+        ></input>
       </div>
-      <input
-        type="file"
-        accept="image/jpg,impge/png,image/jpeg,image/gif"
-        name="profile_img"
-        onChange={onLoadImage}
-      ></input>
+      <SaveAltIcon className="save-icon" onClick={saveImage} />
 
       <div className="user-name">
         <p>{username}</p>

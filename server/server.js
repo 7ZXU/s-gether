@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const upload = multer({ dest: './server/upload' }); // 파일 업로드 할 폴더
 // const {
 //   default: roundToNearestMinutesWithOptions,
 // } = require('date-fns/fp/roundToNearestMinutesWithOptions/index');
@@ -15,6 +17,7 @@ const YOUR_SECRET_KEY = 'abcd';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use('/image', express.static('./server/upload')); // 클라이언트 입장에서 /image 라는 경로로 접근하도록 설정
 
 app.use(cors());
 app.use(function (req, res, next) {
@@ -202,12 +205,13 @@ app.post('/api/mypage/saveNickname', (req, res) => {
 });
 
 /* userBlock 이미지 등록 */
-app.post('api/mypage/savePhoto', (req, res) => {
+app.post('/api/mypage/savePhoto', upload.single('image'), (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
-  console.log(req.body.nickname);
 
-  const image = req.body.image ? "'" + req.body.image + "'" : null;
+  // const image = req.body.image ? "'" + req.body.image + "'" : null;
+  const image = "'" + '/image/' + req.file.filename + "'";
+  console.log(image);
 
   const sql = `UPDATE management.user_info SET user_image = ${image} WHERE user_id= '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
@@ -218,6 +222,7 @@ app.post('api/mypage/savePhoto', (req, res) => {
       res.status(201).json({
         result: 'ok',
       });
+      console.log(row);
     }
   });
 });
