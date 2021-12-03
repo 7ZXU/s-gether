@@ -6,14 +6,34 @@ import { getCookie } from '../cookie.js';
 import axios from 'axios';
 
 function SettingContainer() {
+  const token = getCookie('myToken');
   const [checked, setChecked] = useState({
     permission_friend: 0,
     permission_id: 0,
     permission_challenge: 0,
   });
-  const token = getCookie('myToken');
 
-  useEffect(() => {});
+  async function loadSetting() {
+    await axios
+      .post('http://localhost:5000/api/mypage/setting', {
+        token: token,
+      })
+      .then((res) => {
+        console.log(res.data.result);
+        setChecked({
+          permission_friend: res.data.permission_friend,
+          permission_id: res.data.permission_id,
+          permission_challenge: res.data.permission_challenge,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    loadSetting();
+  }, []);
 
   return (
     <div className="setting__container">

@@ -9,9 +9,13 @@ function PenaltyRewardContainer() {
 
   const token = getCookie('myToken');
 
-  // penalty & rewards 불러오기
-  useEffect(() => {
-    async function loadPenalty() {
+  // penalty 불러오기
+  async function loadPenalty() {
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (!token) {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    } else {
       await axios
         .post('http://localhost:5000/api/mypage/penalty', {
           token: token,
@@ -26,7 +30,15 @@ function PenaltyRewardContainer() {
           console.log(err);
         });
     }
-    async function loadRewards() {
+  }
+
+  // rewards 불러오기
+  async function loadRewards() {
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (!token) {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    } else {
       await axios
         .post('http://localhost:5000/api/mypage/rewards', {
           token: token,
@@ -41,6 +53,8 @@ function PenaltyRewardContainer() {
           console.log(err);
         });
     }
+  }
+  useEffect(() => {
     loadRewards();
     loadPenalty();
   }, []);

@@ -22,20 +22,26 @@ function ChargeContainer() {
 
   // 잔액 불러오기
   async function loadCharge() {
-    await axios
-      .post('http://localhost:5000/api/mypage/charge', {
-        token: token,
-      })
-      .then((res) => {
-        console.log(res.data.result);
-        console.log(res.data.history);
-        if (res.data.history.length !== 0) {
-          setHistory(res.data.history);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (!token) {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    } else {
+      await axios
+        .post('http://localhost:5000/api/mypage/charge', {
+          token: token,
+        })
+        .then((res) => {
+          console.log(res.data.result);
+          console.log(res.data.history);
+          if (res.data.history.length !== 0) {
+            setHistory(res.data.history);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   // 충전하기

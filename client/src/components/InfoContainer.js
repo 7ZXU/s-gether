@@ -3,8 +3,6 @@ import InputWithLabel from './InputWithLabel';
 import '../css/InfoContainer.css';
 import { getCookie } from '../cookie.js';
 import axios from 'axios';
-import CustomButton from './CustomButton';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 function InfoContainer() {
   const token = getCookie('myToken');
@@ -17,22 +15,28 @@ function InfoContainer() {
   });
 
   async function loadInfo() {
-    await axios
-      .post('http://localhost:5000/api/mypage/info', {
-        token: token,
-      })
-      .then((res) => {
-        console.log('Info data: ' + res.data);
-        setInfo({
-          name: res.data.name,
-          birth: res.data.birth,
-          phone: res.data.phone,
-          email: res.data.email,
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (!token) {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    } else {
+      await axios
+        .post('http://localhost:5000/api/mypage/info', {
+          token: token,
+        })
+        .then((res) => {
+          console.log('Info data: ' + res.data);
+          setInfo({
+            name: res.data.name,
+            birth: res.data.birth,
+            phone: res.data.phone,
+            email: res.data.email,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    }
   }
 
   useEffect(() => {
