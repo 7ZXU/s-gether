@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import '../css/PenaltyRewardContainer.css';
 import { getCookie } from '../cookie.js';
 import axios from 'axios';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
 
 function PenaltyRewardContainer() {
   const [penaltyHistory, setPenaltyHistory] = useState('');
@@ -91,18 +96,29 @@ function PenaltyRewardContainer() {
             <span>{penaltyHistory ? calPenalty() : 0} 원</span>
           </div>
           <div className="penalty__history">
-            {penaltyHistory ? (
-              penaltyHistory.map((cur, index) => {
-                return (
-                  <p>
-                    날짜: {cur.transaction_date.slice(0, 10)} 금액: {cur.money}{' '}
-                    원 &nbsp;
-                  </p>
-                );
-              })
-            ) : (
-              <p>내역 불러오는 중...</p>
-            )}
+            <Table className="penalty_history_table">
+              <TableBody>
+                {penaltyHistory ? (
+                  penaltyHistory.map((cur, index) => {
+                    return (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          '&:last-child td, &:last-child th': { border: 0 },
+                        }}
+                      >
+                        <TableCell align="center">
+                          {cur.transaction_date}
+                        </TableCell>
+                        <TableCell align="center">{cur.money}</TableCell>
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <p>내역 불러오는 중...</p>
+                )}
+              </TableBody>
+            </Table>
           </div>
         </div>
       </section>
@@ -116,18 +132,29 @@ function PenaltyRewardContainer() {
             <span>{rewardHistory ? calRewards() : 0} 원</span>
           </div>
           <div className="reward__history">
-            {rewardHistory ? (
-              rewardHistory.map((cur, index) => {
-                return (
-                  <p>
-                    날짜: {cur.transaction_date.slice(0, 10)} 금액: {cur.money}{' '}
-                    원 &nbsp;
-                  </p>
-                );
-              })
-            ) : (
-              <p>내역 불러오는 중...</p>
-            )}
+            <Table className="reward_history_table">
+              <TableBody>
+                {rewardHistory ? (
+                  rewardHistory.map((cur, index) => {
+                    return (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          '&:last-child td, &:last-child th': { border: 0 },
+                        }}
+                      >
+                        <TableCell align="center">
+                          {cur.transaction_date}
+                        </TableCell>
+                        <TableCell align="center">{cur.money}</TableCell>
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <p>내역 불러오는 중...</p>
+                )}
+              </TableBody>
+            </Table>
           </div>
         </div>
       </section>

@@ -3,6 +3,11 @@ import '../css/ChargeContainer.css';
 import { getCookie } from '../cookie.js';
 import Modal from './Modal';
 import axios from 'axios';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
 
 function ChargeContainer() {
   const [money, setMoney] = useState(0);
@@ -10,7 +15,6 @@ function ChargeContainer() {
   const [history, setHistory] = useState('');
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [uploadImage, setUploadImage] = useState(false);
 
   const openModal = () => {
     setModalOpen(true);
@@ -107,18 +111,33 @@ function ChargeContainer() {
 
       <section className="history__container">
         <h1>Charge History</h1>
-        {history ? (
-          history.map((cur, index) => {
-            return (
-              <p>
-                날짜: {cur.transaction_date.slice(0, 10)} 금액: {cur.money}{' '}
-                &nbsp;
-              </p>
-            );
-          })
-        ) : (
-          <p>내역 불러오는 중...</p>
-        )}
+        <Table className="charge_history_table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">날짜</TableCell>
+              <TableCell align="center">금액</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {history ? (
+              history.map((cur, index) => {
+                return (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 },
+                    }}
+                  >
+                    <TableCell align="center">{cur.transaction_date}</TableCell>
+                    <TableCell align="center">{cur.money}</TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <p>내역 불러오는 중...</p>
+            )}
+          </TableBody>
+        </Table>
       </section>
     </div>
   );
