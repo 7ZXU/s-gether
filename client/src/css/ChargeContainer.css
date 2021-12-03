@@ -67,3 +67,9 @@
 .history__container p {
   font-size: 16px;
 }
+
+.table__container {
+  max-height: 350px;
+  width: 100%;
+  overflow: auto;
+}

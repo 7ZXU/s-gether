@@ -7,13 +7,14 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
-const { application } = require('express');
-
+const multer = require('multer');
+const upload = multer({ dest: './server/upload' }); // 파일 업로드 할 폴더
 
 const YOUR_SECRET_KEY = 'abcd';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use('/image', express.static('./server/upload')); // 클라이언트 입장에서 /image 라는 경로로 접근하도록 설정
 
 app.use(cors());
 app.use(function (req, res, next) {
@@ -47,7 +48,7 @@ app.post('/api/feed', (req, res) => {
   let nickname;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
   //console.log("디코드", jwt.decode(token, YOUR_SECRET_KEY));
-  
+
   const sql = `SELECT nickname FROM management.user_info WHERE user_id = '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
     if (err) {
@@ -60,7 +61,6 @@ app.post('/api/feed', (req, res) => {
       nickname: nickname,
       id: id.userId,
     });
-
   });
 });
 
@@ -69,24 +69,21 @@ app.post('/api/todolist', (req, res) => {
   const id = jwt.decode(token, YOUR_SECRET_KEY);
   let list;
 
-  const sql = `SELECT * FROM management.plan WHERE user_id = "${id.userId}"`; 
+  const sql = `SELECT * FROM management.plan WHERE user_id = "${id.userId}"`;
 
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
-  } else {
-    // console.log( 'todolist', row);
-    list = row;
-    console.log('list', list);
-  }
-  res.status(201).json({
-    result: list,
+    } else {
+      // console.log( 'todolist', row);
+      list = row;
+      console.log('list', list);
+    }
+    res.status(201).json({
+      result: list,
+    });
   });
-
-
-  })
-
-})
+});
 
 app.post('/api/todo', (req, res) => {
   const todo = req.body.todo;
@@ -95,25 +92,23 @@ app.post('/api/todo', (req, res) => {
   console.log(todo, token);
 
   db.query(
-
     `INSERT INTO management.plan (plan_date, plan_todo, plan_check, user_id) VALUES (NOW(), "${todo}", "false", "${id.userId}") `
-
-  )
-})
+  );
+});
 
 app.post('/api/delete', (req, res) => {
   const user = req.body.user;
   const idx = req.body.idx;
 
-  const sql = `DELETE FROM management.plan WHERE idx="${idx}" AND user_id="${user}" `
+  const sql = `DELETE FROM management.plan WHERE idx="${idx}" AND user_id="${user}" `;
 
   db.query(sql, (err, row, fields) => {
-    if(err){
+    if (err) {
       console.log(err);
     } else {
-      console.log("delete", idx);
+      console.log('delete', idx);
     }
-  })
+  });
 });
 
 app.post('/api/check', (req, res) => {
@@ -122,23 +117,21 @@ app.post('/api/check', (req, res) => {
   const idx = req.body.idx;
 
   console.log(idx, checked, user);
-  
-  const sql = `UPDATE management.plan SET plan_check="${checked}" WHERE idx="${idx}" AND user_id="${user}"`
+
+  const sql = `UPDATE management.plan SET plan_check="${checked}" WHERE idx="${idx}" AND user_id="${user}"`;
 
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
     } else {
-      console.log("무한대");
+      console.log('무한대');
     }
   });
 
   // db.query(
 
-
   // )
-
-})
+});
 
 app.post('/api/login', (req, res) => {
   let isUser = false;
@@ -185,6 +178,7 @@ app.post('/api/login', (req, res) => {
 app.post('/api/mypage/info', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
+
   const sql = `SELECT name, nickname, birth, email, phone_number FROM management.user_info WHERE user_id= '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
     if (err) {
@@ -198,60 +192,105 @@ app.post('/api/mypage/info', (req, res) => {
       const email = row[0].email;
       const phone_number = row[0].phone_number;
 
+      console.log(phone_number);
+
       res.status(201).json({
         result: 'ok',
         name: name,
         nickname: nickname,
         birth: birth,
         email: email,
-        phone_number: phone_number,
+        phone: phone_number,
       });
     }
   });
 });
 
-/* mypage UserBlock에서 닉네임 불러오기 */
+/* Info 저장하기 */
+app.post('/api/mypage/saveInfo', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const name = req.body.name ? "'" + req.body.name + "'" : null;
+  const birth = req.body.birth ? "'" + req.body.birth + "'" : null;
+  const phone = req.body.phone ? "'" + req.body.phone + "'" : null;
+  const email = req.body.email ? "'" + req.body.email + "'" : null;
+
+  const sql = `UPDATE management.user_info SET name = ${name}, birth = ${birth}, email = ${email}, phone_number = ${phone} WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      res.status(201).json({
+        result: 'ok',
+      });
+    }
+  });
+});
+
+/* mypage UserBlock에서 닉네임, 이미지 불러오기 */
 app.post('/api/mypage/nickname', (req, res) => {
   const token = req.body.token;
   let nickname;
 
   const id = jwt.decode(token, YOUR_SECRET_KEY);
-  const sql = `SELECT nickname FROM management.user_info WHERE user_id = '${id.userId}'`;
+  const sql = `SELECT nickname, user_image FROM management.user_info WHERE user_id = '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
     } else {
-      nickname = row[0].nickname;
       console.log(nickname);
       res.status(201).json({
         result: 'ok',
-        nickname: nickname,
+        nickname: row[0].nickname,
+        image: row[0].user_image,
         id: id.userId,
       });
     }
   });
 });
 
-/* mypage의 Charge 불러오기 */
-app.post('/api/mypage/charge', (req, res) => {
+/* 닉네임 변경 or 등록 */
+app.post('/api/mypage/saveNickname', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
+  console.log(req.body.nickname);
 
-  let history = [];
-  let history_data = {};
+  const nickname = req.body.nickname ? "'" + req.body.nickname + "'" : null;
 
-  const sql = `SELECT transaction_date, money, current_balance FROM management.transaction_history WHERE user_id= '${id.userId}' AND transaction_type = 0 ORDER BY transaction_date`;
+  const sql = `UPDATE management.user_info SET nickname = ${nickname} WHERE user_id= '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
       res.status(400).json({ error: 'sql error' });
     } else {
-      console.log(row);
-      history = row;
       res.status(201).json({
         result: 'ok',
-        history: row,
       });
+    }
+  });
+});
+
+/* userBlock 이미지 등록 */
+app.post('/api/mypage/savePhoto', upload.single('image'), (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  // const image = req.body.image ? "'" + req.body.image + "'" : null;
+  const image = "'" + '/image/' + req.file.filename + "'";
+  console.log(image);
+
+  const sql = `UPDATE management.user_info SET user_image = ${image} WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      res.status(201).json({
+        result: 'ok',
+      });
+      console.log(row);
     }
   });
 });
@@ -274,63 +313,61 @@ app.post('/api/challenge_ing', (req, res) => {
   db.query(sql, (err, rows, fields) => {
     if (err) {
       //console.log(err);
-      
+
       res.status(201).json({
         result: 'not ok',
-      })
-
+      });
     } else {
-      
-      for ( let i = 0; i < rows.length; i++) 
-            {
-              /*if(오늘 날짜와 비교){
+      for (let i = 0; i < rows.length; i++) {
+        /*if(오늘 날짜와 비교){
                 isstate = true; 회색?
               }*/
-              date = rows[i].challenge_date;
-              isstate = true;
-              if(rows[i].is_cert === 0){
-                iscert = false;
-              }
-              else{
-                iscert = true;
-              }
-              if(rows[i].mate_check === 0){ // mate 체크 안함
-                ischecked = false;
-                isdone = false;
-              }
-              else if(rows[i].mate_check === 1){ //mate 성공
-                ischecked = true;
-                isdone = true;
-              }
-              else{                           //mate 실패
-                ischecked = true;
-                isdone = false;
-              }
+        date = rows[i].challenge_date;
+        isstate = true;
+        if (rows[i].is_cert === 0) {
+          iscert = false;
+        } else {
+          iscert = true;
+        }
+        if (rows[i].mate_check === 0) {
+          // mate 체크 안함
+          ischecked = false;
+          isdone = false;
+        } else if (rows[i].mate_check === 1) {
+          //mate 성공
+          ischecked = true;
+          isdone = true;
+        } else {
+          //mate 실패
+          ischecked = true;
+          isdone = false;
+        }
 
-              infos.push({ //{ id: 1, done: true, state: true, checked: true, cert: true }
-                id: i,
-                done: isdone,
-                state: isstate,
-                checked: ischecked,
-                cert: iscert,
-                date: date
-              });
-            };
-            if(rows.length < 30){
-              for(let i = rows.length + 1; i < 30; i++){
-                infos.push({
-                  id: i,
-                  done: false,
-                  state: false,
-                  checked: false,
-                  cert: false,
-                  date: '2000-01-01'
-                });
-              }
-            };
+        infos.push({
+          //{ id: 1, done: true, state: true, checked: true, cert: true }
+          id: i,
+          done: isdone,
+          state: isstate,
+          checked: ischecked,
+          cert: iscert,
+          date: date,
+        });
+      }
+      if (rows.length < 30) {
+        for (let i = rows.length + 1; i < 30; i++) {
+          infos.push({
+            id: i,
+            done: false,
+            state: false,
+            checked: false,
+            cert: false,
+            date: '2000-01-01',
+          });
+        }
+      }
       res.status(201).json({
         result: 'ok',
-        rows: infos
+        rows: infos,
       });
     }
   });
@@ -346,7 +383,7 @@ app.post('/api/challenge_info', (req, res) => {
   let cstart;
   let cend;
 
-  const sql = `SELECT * FROM management.challenge_info WHERE challenge_id = '${challenge_id}'`;//date_format(date_start, '%Y-%m-%d'), date_format(date_finish, '%Y-%m-%d'), challenge_image, challenge_name, challenge_id
+  const sql = `SELECT * FROM management.challenge_info WHERE challenge_id = '${challenge_id}'`; //date_format(date_start, '%Y-%m-%d'), date_format(date_finish, '%Y-%m-%d'), challenge_image, challenge_name, challenge_id
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
@@ -364,11 +401,10 @@ app.post('/api/challenge_info', (req, res) => {
       image: challenge_image,
       start: cstart,
       end: cend,
-      name: cname
+      name: cname,
     });
   });
 });
-
 
 /* challenge todo*/
 app.post('/api/challenge_todo', (req, res) => {
@@ -381,31 +417,31 @@ app.post('/api/challenge_todo', (req, res) => {
   let check;
   let infos = [];
 
-  const sql = `SELECT * FROM management.challenge_todo WHERE challenge_id = '${challenge_id}' AND user_id = '${user_id}'`;//date_format(date_start, '%Y-%m-%d'), date_format(date_finish, '%Y-%m-%d'), challenge_image, challenge_name, challenge_id
+  const sql = `SELECT * FROM management.challenge_todo WHERE challenge_id = '${challenge_id}' AND user_id = '${user_id}'`; //date_format(date_start, '%Y-%m-%d'), date_format(date_finish, '%Y-%m-%d'), challenge_image, challenge_name, challenge_id
   db.query(sql, (err, rows, fields) => {
     if (err) {
       console.log(err);
     } else {
-      for ( let i = 0; i < rows.length; i++) 
-            {
+      for (let i = 0; i < rows.length; i++) {
+        date = rows[i].challenge_date;
+        todo = rows[i].challenge_todo;
+        if (rows[i].todo_check === 1) {
+          check = true;
+        } else {
+          check = false;
+        }
 
-              date = rows[i].challenge_date;
-              todo = rows[i].challenge_todo;
-              if(rows[i].todo_check === 1){ check = true;}
-              else{check = false;}
-              
-
-              infos.push({
-                id: i+1,
-                text: todo,
-                checked: check,
-                date: date
-              });
-            };
+        infos.push({
+          id: i + 1,
+          text: todo,
+          checked: check,
+          date: date,
+        });
+      }
     }
     res.status(201).json({
       result: 'ok',
-      rows: infos
+      rows: infos,
     });
   });
 });
@@ -418,20 +454,144 @@ app.post('/api/certupload', (req, res) => {
   const user_id = req.body.user_name;
   const challenge_date = req.body.challenge_id;
 
-//const sql = `UPDATE management.challenge_ing SET is_cert = 0 `; 모든 is_cert 1로
-const sql = `UPDATE management.challenge_ing SET challenge_image = '${formdata}' WHERE challenge_id = '${challenge_id}' AND user_id = '${user_id}' AND challenge_date = '${challenge_date}'`;
-db.query(sql, (err, rows, fields) => {
-  if (err) {
-    console.log("DB저장 실패");
-    console.log(err);
-  } else {
-    console.log("DB저장 성공");
-          };
+  //const sql = `UPDATE management.challenge_ing SET is_cert = 0 `; 모든 is_cert 1로
+  const sql = `UPDATE management.challenge_ing SET challenge_image = '${formdata}' WHERE challenge_id = '${challenge_id}' AND user_id = '${user_id}' AND challenge_date = '${challenge_date}'`;
+  db.query(sql, (err, rows, fields) => {
+    if (err) {
+      console.log('DB저장 실패');
+      console.log(err);
+    } else {
+      console.log('DB저장 성공');
+    }
+  });
 });
 
+/* mypage의 Charge 불러오기 */
+// todo: 스터디 참여(type = 2)할 경우 잔액에서 - 해줘야 함.
+app.post('/api/mypage/charge', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
 
+  const sql = `SELECT transaction_date, money, current_balance FROM management.transaction_history WHERE user_id= '${id.userId}' AND transaction_type = 0 ORDER BY transaction_date`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log(row);
+      // history = row;
+      res.status(201).json({
+        result: 'ok',
+        history: row,
+      });
+    }
+  });
 });
 
+/* 충전하기 */
+app.post('/api/mypage/chargeMoney', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  const chargeMoney = Number(req.body.chargeMoney);
+  const currentBalance = Number(req.body.currentBalance) + chargeMoney;
+  const sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id.userId}", DATE_FORMAT(now(),'%Y-%m-%d'), ${chargeMoney}, ${currentBalance}, 0)`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log(row);
+      res.status(201).json({
+        result: 'ok',
+      });
+    }
+  });
+});
+
+/* penalty와 reward 불러오기 */
+// penalty
+app.post('/api/mypage/penalty', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const sql = `SELECT transaction_date, money FROM management.transaction_history WHERE user_id='${id.userId}' AND transaction_type = 3 ORDER BY transaction_date`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log('penalty: ' + row);
+      // const penalty = row; // penalty 내역
+      res.status(201).json({
+        result: 'ok',
+        penalty: row,
+      });
+    }
+  });
+});
+
+// reward
+app.post('/api/mypage/rewards', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const sql = `SELECT transaction_date, money FROM management.transaction_history WHERE user_id='${id.userId}' AND transaction_type = 1 ORDER BY transaction_date`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log('reward: ' + row);
+      res.status(201).json({
+        result: 'ok',
+        rewards: row,
+      });
+    }
+  });
+});
+
+/* Setting 정보 불러오기 */
+app.post('/api/mypage/setting', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  const sql = `SELECT permission_friend, permission_id, permission_challenge FROM management.user_info WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log(row[0]);
+      res.status(201).json({
+        result: 'ok',
+        permission_friend: row[0].permission_friend,
+        permission_id: row[0].permission_id,
+        permission_challenge: row[0].permission_challenge,
+      });
+    }
+  });
+});
+
+/* Setting 정보 저장 */
+app.post('/api/mypage/saveSetting', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const permission_friend = req.body.permission_friend === true ? 1 : 0;
+  const permission_id = req.body.permission_id === true ? 1 : 0;
+  const permission_challenge = req.body.permission_challenge === true ? 1 : 0;
+
+  const sql = `UPDATE management.user_info SET permission_friend = ${permission_friend}, permission_id = ${permission_id}, permission_challenge = ${permission_challenge} WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      res.status(201).json({
+        result: 'ok',
+      });
+    }
+  });
+});
 
 app.listen(port, () => {
   console.log(`Connect at http://localhost:${port}`);
