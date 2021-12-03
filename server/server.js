@@ -332,6 +332,28 @@ app.post('/api/mypage/setting', (req, res) => {
   });
 });
 
+/* Setting 정보 저장 */
+app.post('/api/mypage/saveSetting', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const permission_friend = req.body.permission_friend === true ? 1 : 0;
+  const permission_id = req.body.permission_id === true ? 1 : 0;
+  const permission_challenge = req.body.permission_challenge === true ? 1 : 0;
+
+  const sql = `UPDATE management.user_info SET permission_friend = ${permission_friend}, permission_id = ${permission_id}, permission_challenge = ${permission_challenge} WHERE user_id= '${id.userId}'`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      res.status(201).json({
+        result: 'ok',
+      });
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Connect at http://localhost:${port}`);
 });

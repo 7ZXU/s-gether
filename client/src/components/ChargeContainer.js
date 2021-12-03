@@ -3,6 +3,7 @@ import '../css/ChargeContainer.css';
 import { getCookie } from '../cookie.js';
 import Modal from './Modal';
 import axios from 'axios';
+import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
@@ -111,33 +112,37 @@ function ChargeContainer() {
 
       <section className="history__container">
         <h1>Charge History</h1>
-        <Table className="charge_history_table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">날짜</TableCell>
-              <TableCell align="center">금액</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {history ? (
-              history.map((cur, index) => {
-                return (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      '&:last-child td, &:last-child th': { border: 0 },
-                    }}
-                  >
-                    <TableCell align="center">{cur.transaction_date}</TableCell>
-                    <TableCell align="center">{cur.money}</TableCell>
-                  </TableRow>
-                );
-              })
-            ) : (
-              <p>내역 불러오는 중...</p>
-            )}
-          </TableBody>
-        </Table>
+        <div className="table__container">
+          <Table className="charge_history_table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">날짜</TableCell>
+                <TableCell align="center">금액</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {history ? (
+                history.map((cur, index) => {
+                  return (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        '&:last-child td, &:last-child th': { border: 0 },
+                      }}
+                    >
+                      <TableCell align="center">
+                        {cur.transaction_date}
+                      </TableCell>
+                      <TableCell align="center">{cur.money}</TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <p>내역 불러오는 중...</p>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </section>
     </div>
   );
