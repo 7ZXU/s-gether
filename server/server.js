@@ -249,6 +249,26 @@ app.post('/api/mypage/charge', (req, res) => {
   });
 });
 
+/* 충전하기 */
+app.post('/api/mypage/chargeMoney', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  const chargeMoney = Number(req.body.chargeMoney);
+  const currentBalance = Number(req.body.currentBalance) + chargeMoney;
+  const sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id.userId}", DATE_FORMAT(now(),'%Y-%m-%d'), ${chargeMoney}, ${currentBalance}, 0)`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log(row);
+      res.status(201).json({
+        result: 'ok',
+      });
+    }
+  });
+});
+
 /* penalty와 reward 불러오기 */
 // penalty
 app.post('/api/mypage/penalty', (req, res) => {

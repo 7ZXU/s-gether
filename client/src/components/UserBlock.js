@@ -144,9 +144,11 @@ function UserBlock() {
           open={modalOpen}
           close={closeModal}
           header="닉네임 변경"
+          placeholder="닉네임을 입력하세요"
           username={username}
           setValue={setUsername}
           saveValue={saveNickname}
+          check="저장"
         ></Modal>
       </div>
     </div>

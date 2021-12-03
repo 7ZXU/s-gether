@@ -3,7 +3,16 @@ import '../css/Modal.css';
 import InputText from './InputText';
 
 function Modal(props) {
-  const { open, close, header, username, setValue, saveValue } = props;
+  const {
+    open,
+    close,
+    header,
+    username,
+    setValue,
+    saveValue,
+    check,
+    placeholder,
+  } = props;
 
   const [input, setInput] = useState('');
 
@@ -15,7 +24,11 @@ function Modal(props) {
 
   const onClickSave = () => {
     console.log(input);
-    setValue(input);
+
+    if (setValue) {
+      setValue(input);
+    }
+
     saveValue(input);
     close();
   };
@@ -34,14 +47,14 @@ function Modal(props) {
           <main>
             <InputText
               defaultValue={username}
-              placeholder="닉네임을 입력하세요"
+              placeholder={placeholder}
               onChange={onChangeNickname}
             ></InputText>
           </main>
           <footer>
             <button className="close" onClick={onClickSave}>
               {' '}
-              저장{' '}
+              {check}{' '}
             </button>
           </footer>
         </section>

@@ -1,32 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import '../css/ChargeContainer.css';
 import { getCookie } from '../cookie.js';
+import Modal from './Modal';
 import axios from 'axios';
 
 function ChargeContainer() {
   const [money, setMoney] = useState(0);
   const token = getCookie('myToken');
-
   const [history, setHistory] = useState('');
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [uploadImage, setUploadImage] = useState(false);
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  // 잔액 불러오기
+  async function loadCharge() {
+    await axios
+      .post('http://localhost:5000/api/mypage/charge', {
+        token: token,
+      })
+      .then((res) => {
+        console.log(res.data.result);
+        console.log(res.data.history);
+        if (res.data.history.length !== 0) {
+          setHistory(res.data.history);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // 충전하기
+  async function charge(input) {
+    await axios
+      .post('http://localhost:5000/api/mypage/chargeMoney', {
+        token: token,
+        chargeMoney: input,
+        currentBalance: money,
+      })
+      .then((res) => {
+        console.log(res.data.result);
+        loadCharge();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   useEffect(() => {
     console.log('charge: ' + token);
-    async function loadCharge() {
-      await axios
-        .post('http://localhost:5000/api/mypage/charge', {
-          token: token,
-        })
-        .then((res) => {
-          console.log(res.data.result);
-          console.log(res.data.history);
-          if (res.data.history.length !== 0) {
-            setHistory(res.data.history);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
     loadCharge();
   }, []);
 
@@ -51,9 +81,17 @@ function ChargeContainer() {
             <span>{money}</span>
           </div>
           <div className="right-item">
-            <button type="button" class="btn-charge">
+            <button type="button" className="btn-charge" onClick={openModal}>
               충전하기
             </button>
+            <Modal
+              open={modalOpen}
+              close={closeModal}
+              header="충전하기"
+              placeholder="충전할 금액 입력"
+              saveValue={charge}
+              check="충전"
+            ></Modal>
           </div>
         </div>
         <span className="explanation">
