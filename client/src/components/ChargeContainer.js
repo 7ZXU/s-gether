@@ -3,11 +3,14 @@ import '../css/ChargeContainer.css';
 import { getCookie } from '../cookie.js';
 import Modal from './Modal';
 import axios from 'axios';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
 
 function ChargeContainer() {
   const [money, setMoney] = useState(0);
@@ -22,6 +25,18 @@ function ChargeContainer() {
 
   const closeModal = () => {
     setModalOpen(false);
+  };
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(4);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
   };
 
   // 잔액 불러오기
@@ -112,35 +127,57 @@ function ChargeContainer() {
       <section className="history__container">
         <h1>Charge History</h1>
         <div className="table__container">
-          <Table className="charge_history_table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">날짜</TableCell>
-                <TableCell align="center">금액</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {history ? (
-                history.map((cur, index) => {
-                  return (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        '&:last-child td, &:last-child th': { border: 0 },
-                      }}
-                    >
-                      <TableCell align="center">
-                        {cur.transaction_date}
-                      </TableCell>
-                      <TableCell align="center">{cur.money}</TableCell>
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <p>내역 불러오는 중...</p>
-              )}
-            </TableBody>
-          </Table>
+          <Paper sx={{ overflow: 'hidden' }}>
+            <TableContainer sx={{ maxHeight: 350 }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" sx={{ 'font-weight': 'bold' }}>
+                      날짜
+                    </TableCell>
+                    <TableCell align="center" sx={{ 'font-weight': 'bold' }}>
+                      금액
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {history ? (
+                    history
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((cur, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            tabIndex={-1}
+                            role="checkbox"
+                            key={index}
+                          >
+                            <TableCell align="center" key="index">
+                              {cur.transaction_date}
+                            </TableCell>
+                            <TableCell align="center">{cur.money}</TableCell>
+                          </TableRow>
+                        );
+                      })
+                  ) : (
+                    <p>내역 불러오는 중...</p>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5]}
+              component="div"
+              count={history.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
         </div>
       </section>
     </div>
