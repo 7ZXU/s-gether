@@ -4,7 +4,6 @@ import { setCookie, getCookie } from '../cookie';
 import styled from 'styled-components';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
-import { getTouchRippleUtilityClass } from '@mui/material';
 
 const Button = styled.button`
   cursor: pointer;
