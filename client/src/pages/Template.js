@@ -12,7 +12,6 @@ import axios from 'axios';
 import { get } from 'http';
 //import ImagePicker from 'antd-mobile/lib/image-picker';
 //import imageCompression from "browser-image-compression";
-//challenge받는대로 수정들 해야함 (todo추가에 cid같은거)
 //const Template = ({ children, Myname, days, Yourname, days2 }) => {
 const Template = () => {
   let time = new Date();
@@ -63,6 +62,14 @@ const Template = () => {
     setTodos(temptodos);
   };
 
+  const matedaytodos = () => {
+    setmatetempTodos([]);
+    matealltodos.map((all) => (
+      (all.date === getday.date ? matetemptodos.push(all) : '') //2021-11-29T15:00:00.000Z => e.target.date
+    ))
+    setmateTodos(matetemptodos);
+  };
+
   const [alltodos, setallTodos] = useState([{
     id: 1,
     text: '할일 1',
@@ -92,6 +99,54 @@ const Template = () => {
       date: '2020-12-12'
     }
   ]);
+
+  const [mateuser, setmateUser] = useState('');
+
+  const [matechallenges, setmatechallenges] = useState([
+    { id: 1, done: true, state: false, checked: true, cert: true, date: '2021-11-30' },
+  ]);
+
+
+  const [matetodos, setmateTodos] = useState([
+    {
+      id: 1,
+      text: '할일 1',
+      checked: true,
+      date: '2020-11-30'
+    }
+  ]);
+
+  const [matetemptodos, setmatetempTodos] = useState([]);
+
+  const [mateitemData, setmateitemdata] = useState([{
+    id: 1,
+    img: '',
+    ischecked: 0,
+    date: '2020-12-12'
+  }]);
+  const [mateallitemData, setmateallitemdata] = useState([
+    {
+      id: 1,
+      img: '',
+      ischecked: 0,
+      date: '2020-12-12'
+    },
+    {
+      id: 2,
+      img: '',
+      ischecked: 0,
+      date: '2020-12-12'
+    }
+  ]);
+
+  const [matealltodos, setmateallTodos] = useState([{
+    id: 1,
+    text: '할일 1',
+    checked: true,
+    date: '2021-11-30'
+  }]);
+
+  const [mate, setmate] = useState('');
 
   useEffect(() => {
 
@@ -145,7 +200,7 @@ const Template = () => {
           token: token,
         })
         .then((res) => {
-          const nickname = res.data.id;
+          const nickname = res.data.nickname;
           setUser(nickname);
         })
         .catch((err) => {
@@ -193,12 +248,45 @@ const Template = () => {
           console.log(err);
         });
     }
+
+    async function loadData6() {
+      await axios
+        .post('http://localhost:5000/api/challenge_mate', {
+          token: token,
+          challenge_id: 10, //실험용
+        })
+        .then((res) => {
+          if(res.data.result === 'not ok'){
+            console.log("no mate");
+          }
+          else{
+            console.log(res.data);
+            setmatechallenges(
+              res.data.mcinfo,
+              );
+            const matenickname = res.data.matenick;
+            setmateUser(matenickname);
+            setmateallTodos(
+              res.data.mctodo
+              );
+            setmateallitemdata(
+              res.data.mcimg
+            );
+            
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
     loadData5();
 
     loadData();
     loadData2();
     loadData3();
     loadData4();
+    loadData6();
   },[]);  
 
   const daycheck = () => {
@@ -207,12 +295,18 @@ const Template = () => {
       (all.date === getday.date ? itemData.push(all) :"")
     ))
     };
+    const matedaycheck = () => {
+      setmateitemdata([]);
+      mateallitemData.map((all) => (
+        (all.date === getday.date ? mateitemData.push(all) :"")
+      ))
+      };
     //--------------------------------------------------------------------
 
   const Myname = user;
   const days = challenges;
-  const Yourname = '곽진무'; //mate들어올 곳
-  const days2 = challenges;
+  const Yourname = mateuser; //mate들어올 곳
+  const days2 = matechallenges;
 
 
 
@@ -286,6 +380,11 @@ const Template = () => {
                 key={day.id}
                 cert={day.cert}
                 onClick={() => settodocert({ id: day.id, isempty: day.cert })}
+                date= {day.date}
+                day = {day}
+                onMouseDown={() => setgetday({ date: day.date})}
+                onMouseUp= {matedaytodos}
+                onMouseOver={matedaycheck}
               >
                 <div className={'content ${checked ? "checked" : ""}'}>
                   {day.state && day.done && day.checked && (
@@ -316,7 +415,7 @@ const Template = () => {
 
       {!(getday.date === "") &&<div className="Template3">
         <div className="title">Certification</div>
-        <Cert Cday={todos && todos.length} cert={todocert.isempty} sday={getday.date} t2 = {allitemData}/>
+        <Cert Cday={todos && todos.length} cert={1} sday={getday.date} t2 = {allitemData}/>
       </div>}
     </div>
   );

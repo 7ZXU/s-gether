@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import FeedPage from './pages/FeedPage';
 import ImagePage from './pages/ImagePage';
 import MyChallenge from './pages/Template';
+import FriendPage from './pages/FriendPage';
 
 import axios from 'axios';
 
@@ -24,6 +25,7 @@ function App() {
         <Route exact path="/challenges" component={ChanllengePage} />
         <Route exact path="/myChallenge" component={MyChallenge} />
         <Route exact path="/feed/image" component={ImagePage} />
+        <Route exact path="/friendpage" component={FriendPage} />
       </Switch>
     </div>
   );

@@ -45,21 +45,21 @@
   cursor: pointer;
 }
 
-.Check {
+#challenge__cert__back > .Check {
   position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 980;
-  top: 0;
+  top: -700px;
+  left: -900px;
+  z-index: 0;
   overflow: hidden;
-  width: 100vw;
-  height: 100vh;
+  width: 110vw;
+  height: 110vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #6c567b;
   opacity: 0.8;
 }
+
 .image {
   width: 550px;
   height: 550px;
@@ -78,43 +78,46 @@
   margin-left: 130px;
 }
 
-.form {
+#challenge__cert__form {
+
   margin-left: 10%;
-  padding-left: 200px;
   position: absolute;
-  top: 3%;
-  left: 20%;
+  top: -500px;
+  left: -500px;
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   z-index: 990;
-  width: 800px;
+  width: 1000px;
   height: 800px;
   border-radius: 5px;
   box-shadow: 1px 2px 5px 1px black;
+
   background: white;
 }
 
-.form > .yes {
+#challenge__cert__form > .yes {
   background: none;
   outline: none;
   border: none;
   color: green;
   margin-top: 0px;
   margin-right: 450px;
+  z-index: 999;
   display: flex;
   cursor: pointer;
   transition: 0.1s background ease-in;
 }
 
-.form > .no {
+#challenge__cert__form > .no {
   background: none;
   outline: none;
   border: none;
-
+  z-index: 999;
   display: flex;
   cursor: pointer;
-  margin-top: -120px;
+  margin-top: -100px;
   margin-left: 450px;
   transition: 0.1s background ease-in;
 }
