@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
-const ChallengeBack = (onInsertToggle) => {
+const ChallengeBack = ({onInsertToggle, da}) => {
   const [fileUrl, setFileUrl] = useState(null);
 
 const [files, setfiles] = useState('');
@@ -48,7 +48,7 @@ const onHandleUpload = async () => {
               'img':imgSrc,
               'challenge_id':challenge_id,
               'user_id':user_id,
-              'challenge_date' : year+"-"+month+"-"+day+"T15:00:00.000Z",
+              'challenge_date' : da,
           }
       });
   } catch (e) {

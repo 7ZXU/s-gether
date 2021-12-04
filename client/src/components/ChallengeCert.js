@@ -165,7 +165,7 @@ const Cert = ({ Cday, cert, sday,t2 }) => {
           </div>
         </ImageList>
       )}
-      {insertToggle && <ChallengeBack onInsertToggle={onInsertToggle} />}
+      {insertToggle && <ChallengeBack onInsertToggle={onInsertToggle} da={sday}/>}
       {insertToggle2 && (
         <div>
           <div className="Check" onClick={onInsertToggle2}></div>

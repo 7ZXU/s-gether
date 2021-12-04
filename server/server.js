@@ -319,59 +319,7 @@ app.post('/api/challenge_ing', (req, res) => {
         result: 'not ok',
       });
     } else {
-<<<<<<< HEAD
-      
-      for ( let i = 0; i < rows.length; i++) 
-            {
-              if(today >= rows[i].challenge_date){
-                isstate = true;
-              }
-              else{
-                isstate = false;
-              }
-              date = rows[i].challenge_date;
-              //isstate = true;
-              if(rows[i].is_cert === 0){
-                iscert = false;
-              }
-              else{
-                iscert = true;
-              }
-              if(rows[i].mate_check === 0){ // mate 체크 안함
-                ischecked = false;
-                isdone = false;
-              }
-              else if(rows[i].mate_check === 1){ //mate 성공
-                ischecked = true;
-                isdone = true;
-              }
-              else{                           //mate 실패
-                ischecked = true;
-                isdone = false;
-              }
 
-              infos.push({ //{ id: 1, done: true, state: true, checked: true, cert: true }
-                id: i,
-                done: isdone,
-                state: isstate,
-                checked: ischecked,
-                cert: iscert,
-                date: date
-              });
-            };
-            if(rows.length < 30){
-              for(let i = rows.length + 1; i < 30; i++){
-                infos.push({
-                  id: i,
-                  done: false,
-                  state: false,
-                  checked: false,
-                  cert: false,
-                  date: '2000-01-01'
-                });
-              }
-            };
-=======
       for (let i = 0; i < rows.length; i++) {
         /*if(오늘 날짜와 비교){
                 isstate = true; 회색?
@@ -419,7 +367,6 @@ app.post('/api/challenge_ing', (req, res) => {
           });
         }
       }
->>>>>>> 786a7ee06e45d1148f090e866d8b0b1882f41b18
       res.status(201).json({
         result: 'ok',
         rows: infos,
@@ -477,8 +424,6 @@ app.post('/api/challenge_todo', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-<<<<<<< HEAD
-      console.log(rows.length);
       for ( let i = 0; i < rows.length; i++) 
             {
               date = rows[i].challenge_date;
@@ -494,24 +439,7 @@ app.post('/api/challenge_todo', (req, res) => {
                 date: date
               });
             };
-=======
-      for (let i = 0; i < rows.length; i++) {
-        date = rows[i].challenge_date;
-        todo = rows[i].challenge_todo;
-        if (rows[i].todo_check === 1) {
-          check = true;
-        } else {
-          check = false;
-        }
 
-        infos.push({
-          id: i + 1,
-          text: todo,
-          checked: check,
-          date: date,
-        });
-      }
->>>>>>> 786a7ee06e45d1148f090e866d8b0b1882f41b18
     }
     res.status(201).json({
       result: 'ok',
@@ -528,9 +456,9 @@ app.post('/api/certupload', (req, res) => {
   const user_id = body['user_id'];
   const challenge_date = body['challenge_date'];
 
-<<<<<<< HEAD
+
 //const sql = `UPDATE management.challenge_ing SET is_cert = 0 `; 모든 is_cert 1로
-const sql = `UPDATE management.challenge_ing SET challenge_image = '${img}' WHERE challenge_id = '${challenge_id}'`;
+const sql = `UPDATE management.challenge_ing SET challenge_image = '${img}' WHERE user_id = '${user_id}' AND challenge_id = '${challenge_id}' AND challenge_date = '${challenge_date}'`;
 //const sql = `INSERT INTO management.challenge_ing (challenge_date, user_id, challenge_image, mate_check, challenge_id,is_cert) VALUES ('${challenge_date}','${user_id}', "${img}", 0, ${challenge_id},0) `
 
   db.query(sql, (err, rows, fields) => {
@@ -556,20 +484,9 @@ app.post('/api/ctodoupload', (req, res) => {//필요: idx, date, user_id, challt
 
     `INSERT INTO management.challenge_todo (challenge_date, user_id, challenge_todo, todo_check, challenge_id) VALUES ('${challenge_date}','${user_id.userId}', "${todo}", 0, ${challenge_id}) `
 
-  )
+  )});
 
-=======
-  //const sql = `UPDATE management.challenge_ing SET is_cert = 0 `; 모든 is_cert 1로
-  const sql = `UPDATE management.challenge_ing SET challenge_image = '${formdata}' WHERE challenge_id = '${challenge_id}' AND user_id = '${user_id}' AND challenge_date = '${challenge_date}'`;
-  db.query(sql, (err, rows, fields) => {
-    if (err) {
-      console.log('DB저장 실패');
-      console.log(err);
-    } else {
-      console.log('DB저장 성공');
-    }
-  });
-});
+
 
 /* mypage의 Charge 불러오기 */
 // todo: 스터디 참여(type = 2)할 경우 잔액에서 - 해줘야 함.
@@ -633,15 +550,10 @@ app.post('/api/mypage/penalty', (req, res) => {
       });
     }
   });
->>>>>>> 786a7ee06e45d1148f090e866d8b0b1882f41b18
 });
 
-// reward
-app.post('/api/mypage/rewards', (req, res) => {
-  const token = req.body.token;
-  const id = jwt.decode(token, YOUR_SECRET_KEY);
 
-<<<<<<< HEAD
+
 /* cert 이미지 불러오기 */
 app.post('/api/challenge_ing_img', (req, res) => {
   const token = req.body.token;
@@ -683,7 +595,16 @@ app.post('/api/challenge_ing_img', (req, res) => {
       res.status(201).json({
         result: 'ok',
         rows: infos
-=======
+      });
+    }
+  });
+});
+
+
+// reward
+app.post('/api/mypage/rewards', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
   const sql = `SELECT transaction_date, money FROM management.transaction_history WHERE user_id='${id.userId}' AND transaction_type = 1 ORDER BY transaction_date`;
   db.query(sql, (err, row, fields) => {
     if (err) {
@@ -714,12 +635,11 @@ app.post('/api/mypage/setting', (req, res) => {
         result: 'ok',
         permission_friend: row[0].permission_friend,
         permission_id: row[0].permission_id,
-        permission_challenge: row[0].permission_challenge,
->>>>>>> 786a7ee06e45d1148f090e866d8b0b1882f41b18
-      });
-    }
+        permission_challenge: row[0].permission_challenge,      });
+      }
+    });
   });
-});
+
 
 /* Setting 정보 저장 */
 app.post('/api/mypage/saveSetting', (req, res) => {
@@ -738,6 +658,168 @@ app.post('/api/mypage/saveSetting', (req, res) => {
     } else {
       res.status(201).json({
         result: 'ok',
+      });
+    }
+  });
+});
+
+
+
+
+/* mate 불러오기 */
+app.post('/api/challenge_mate', (req, res) => {
+  const token = req.body.token;
+  const cid = req.body.challenge_id;
+
+  let mateid = 'psy';
+
+  let infos = [];
+  let isdone;
+  let isstate;
+  let ischecked;
+  let iscert;
+  let date;
+  
+
+  let todo;
+  let check;
+  let infos2 = [];
+
+  let infos3 = [];
+  let img;
+
+  let nickname;
+
+
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const sql = `SELECT * FROM management.challenge WHERE user_id = '${id.userId}' AND challenge_id = ${cid}`;
+  let sql2 = `SELECT * FROM management.challenge user_id = '${id.userId}' AND challenge_id = '${cid}'`;
+  let sql3 = `SELECT * FROM management.challenge user_id = '${id.userId}' AND challenge_id = '${cid}'`;
+  let sql4 = `SELECT * FROM management.challenge user_id = '${id.userId}' AND challenge_id = '${cid}'`;
+  let sql5 = `SELECT * FROM management.challenge user_id = '${id.userId}' AND challenge_id = '${cid}'`;
+
+  db.query(sql, (err, rows, fields) => {
+    if (err) {
+      console.log(err);
+    } else {
+      //mateid = rows[i].challenge_mate;
+      sql2 = `SELECT * FROM management.challenge_ing WHERE user_id = '${mateid}' AND challenge_id = ${cid}`;
+      db.query(sql2, (err, rows, fields) => {
+        if (err) {
+          console.log(err);
+        } else {
+    
+          for (let i = 0; i < rows.length; i++) {
+            /*if(오늘 날짜와 비교){
+                    isstate = true; 회색?
+                  }*/
+            date = rows[i].challenge_date;
+            isstate = true;
+            if (rows[i].is_cert === 0) {
+              iscert = false;
+            } else {
+              iscert = true;
+            }
+            if (rows[i].mate_check === 0) {
+              // mate 체크 안함
+              ischecked = false;
+              isdone = false;
+            } else if (rows[i].mate_check === 1) {
+              //mate 성공
+              ischecked = true;
+              isdone = true;
+            } else {
+              //mate 실패
+              ischecked = true;
+              isdone = false;
+            }
+    
+            infos.push({
+              //{ id: 1, done: true, state: true, checked: true, cert: true }
+              id: i,
+              done: isdone,
+              state: isstate,
+              checked: ischecked,
+              cert: iscert,
+              date: date,
+            });
+          }
+          if (rows.length < 30) {
+            for (let i = rows.length + 1; i < 30; i++) {
+              infos.push({
+                id: i,
+                done: false,
+                state: false,
+                checked: false,
+                cert: false,
+                date: '2000-01-01',
+              });
+            }
+          }
+          sql3 = `SELECT * FROM management.challenge_todo WHERE challenge_id = ${cid} AND user_id = '${mateid}'`;
+          db.query(sql3, (err, rows, fields) => {
+            if (err) {
+              console.log(err);
+            } else {
+              for ( let i = 0; i < rows.length; i++) 
+                    {
+                      date = rows[i].challenge_date;
+                      todo = rows[i].challenge_todo;
+                      if(rows[i].todo_check === 1){ check = true;}
+                      else{check = false;}
+                      
+        
+                      infos2.push({
+                        id: i+1,
+                        text: todo,
+                        checked: check,
+                        date: date,
+                        matenick: mateid
+                      });
+                    };
+                    sql4 = `SELECT * FROM management.challenge_ing WHERE user_id = '${mateid}' AND challenge_id = ${cid}`;
+                    db.query(sql4, (err, rows, fields) => {
+                      if (err) {
+                        console.log(err);
+                  
+                      } else {
+                        
+                        for ( let i = 0; i < rows.length; i++) 
+                              {
+                  
+                                date = rows[i].challenge_date;
+                                img = rows[i].challenge_image;
+                                ischecked = rows[i].mate_check;
+                  
+                                infos3.push({
+                                  id: i,
+                                  img: img,
+                                  date: date,
+                                  ischecked: ischecked
+                                });
+                              };
+                              sql5 = `SELECT nickname FROM management.user_info WHERE user_id = '${mateid}'`;
+                              db.query(sql5, (err, row, fields) => {
+                                if (err) {
+                                  console.log(err);
+                                } else {
+                                  nickname = row[0].nickname;
+                                }
+                                res.status(201).json({
+                                  result: 'ok',
+                                mcinfo: infos,
+                                mctodo: infos2,
+                                mcimg: infos3,
+                                matenick: nickname
+                                });
+                              });
+                      }
+                      
+                    });
+            }
+          });
+        }
       });
     }
   });
