@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+.userInfo__box {
+  margin: 10px;
+}
+
 .row {
   /* --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0; */

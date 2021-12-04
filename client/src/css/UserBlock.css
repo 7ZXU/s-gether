@@ -8,6 +8,7 @@
   background-color: #ffffff;
   box-shadow: 5px 5px;
   margin-bottom: 90px;
+  position: relative;
 }
 
 .user-photo {
@@ -21,9 +22,14 @@
   border-radius: 50%;
 }
 
+.save-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 .user-name {
   display: flex;
-  margin-top: 20px;
   justify-content: center;
   padding: 10px 0;
 }
