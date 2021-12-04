@@ -1,6 +1,6 @@
 import React from 'react';
 import '../css/ChallengeCert.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MdAddCircle } from 'react-icons/md';
 import ChallengeBack from './ChallengeBack';
 import Certcheck from './Certcheck';
@@ -9,6 +9,8 @@ import { ImageListItem } from '@mui/material';
 import { getCookie } from '../cookie';
 import axios from 'axios';
 import styled from 'styled-components';
+
+
 
 import img1 from '../assets/1.jpg';
 import img2 from '../assets/2.jpg';
@@ -33,58 +35,77 @@ const Form = styled.form`
   background: white;
 `;
 
-const Cert = ({ Cday, cert }) => {
-  /*const token = getCookie('myToken');
+const Cert = ({ Cday, cert, sday,t2 }) => {
+  const token = getCookie('myToken');
 
+
+
+  const [insertToggle, setInsertToggle] = useState(false);
+  const [insertToggle2, setInsertToggle2] = useState(false);
+
+  const [itemData, setitemdata] = useState([]);
+  const [allitemData, setallitemdata] = useState([
+    {
+      id: 1,
+      img: img1,
+      ischecked: 0,
+      date: '2020-12-12'
+    },
+    {
+      id: 2,
+      img: img2,
+      ischecked: 0,
+      date: '2020-12-12'
+    }
+  ]);
+
+
+  const [challenges, setchallenges] = useState([
+    { id: 1, img: '', date: '2021-11-30', ischecked: 0},
+  ]);
+  
   useEffect(() => {
-    console.log(token);
     async function loadData() {
       await axios
-        .post('http://localhost:5000/api/challenge_ing', {
+        .post('http://localhost:5000/api/challenge_ing_img', {
           token: token,
+          challenge_id: 10, //실험용
         })
         .then((res) => {
-          const nickname = res.data.id;
-          console.log(res.data);
-          console.log(nickname);
-          setUser(nickname);
+          if(res.data.result === 'not ok'){
+            console.log("no progress");
+          }
+          else{
+            console.log(res.data.rows);
+            setallitemdata(
+              res.data.rows
+            );
+            //console.log(allitemData);
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     }
     loadData();
+
+  },[]);
+
+  /*useEffect(() => {
+    daycheck();
   });*/
 
+  /*allitemData.map((all) => (
+                  (all.date.substring(0,10) === sday.substring(0,10) ? itemData.push(all) : console.log(all.date.substring(0,10) +", "+sday)) //2021-11-29T15:00:00.000Z => e.target.date
+                ))
+                 */
 
-  const [insertToggle, setInsertToggle] = useState(false);
-  const [insertToggle2, setInsertToggle2] = useState(false);
-  const [itemData, setitemdata] = useState([
-    {
-      id: 1,
-      img: img1,
-      ischecked: false,
-      isgood: false,
-    },
-    {
-      id: 2,
-      img: img2,
-      ischecked: false,
-      isgood: false,
-    },
-    {
-      id: 3,
-      img: img3,
-      ischecked: false,
-      isgood: false,
-    },
-    {
-      id: 4,
-      img: img4,
-      ischecked: false,
-      isgood: false,
-    },
-  ]);
+  const daycheck = () => {
+    setitemdata([]);
+    allitemData.map((all) => (
+      (all.date === sday ? itemData.push(all) :"")
+    ))
+    };
 
 
   const onInsertToggle = () => {
@@ -108,7 +129,6 @@ const Cert = ({ Cday, cert }) => {
       )
     );
   };
-
   return (
     <div className="ChallengeCerts">
       {!cert && (
@@ -116,9 +136,9 @@ const Cert = ({ Cday, cert }) => {
           <MdAddCircle />
         </div>
       )}
-      {cert && (
+      {cert&& (
         <ImageList sx={{ width: 700, height: 200 }} cols={3} rowHeight={164}>
-          {itemData.map((item) => (
+          {itemData && t2.map((item) => ( item.date === sday ?
             <ImageListItem key={item.img}>
               <img
                 className="certimage"
@@ -130,16 +150,16 @@ const Cert = ({ Cday, cert }) => {
                 alt="certimage"
               />
               <div className="indicater">
-                {!item.ischecked && <MdAddCircle size="45" color="yellow" />}
-                {item.ischecked && item.isgood && (
+                {item.ischecked === 0 && <MdAddCircle size="45" color="yellow" />}
+                {item.ischecked === 1 && (
                   <MdAddCircle size="45" color="green" />
                 )}
-                {item.ischecked && !item.isgood && (
+                {item.ischecked === 2 && (
                   <MdAddCircle size="45" color="red" />
                 )}
               </div>
             </ImageListItem>
-          ))}
+          : ""))}
           <div className="add-button2" onClick={onInsertToggle}>
             <MdAddCircle />
           </div>

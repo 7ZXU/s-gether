@@ -208,6 +208,7 @@ app.post('/api/mypage/charge', (req, res) => {
 app.post('/api/challenge_ing', (req, res) => {
   const token = req.body.token;
   const cid = req.body.challenge_id;
+  const today = req.body.today;
 
   let infos = [];
   let isdone;
@@ -231,11 +232,14 @@ app.post('/api/challenge_ing', (req, res) => {
       
       for ( let i = 0; i < rows.length; i++) 
             {
-              /*if(오늘 날짜와 비교){
-                isstate = true; 회색?
-              }*/
+              if(today >= rows[i].challenge_date){
+                isstate = true;
+              }
+              else{
+                isstate = false;
+              }
               date = rows[i].challenge_date;
-              isstate = true;
+              //isstate = true;
               if(rows[i].is_cert === 0){
                 iscert = false;
               }
@@ -284,7 +288,7 @@ app.post('/api/challenge_ing', (req, res) => {
   });
 });
 
-/* (임시) challenge 이미지 날짜 불러오기*/
+/* (임시) challenge 이미지, 날짜 불러오기*/
 app.post('/api/challenge_info', (req, res) => {
   const token = req.body.token;
   const challenge_id = req.body.challenge_id;
@@ -334,9 +338,9 @@ app.post('/api/challenge_todo', (req, res) => {
     if (err) {
       console.log(err);
     } else {
+      console.log(rows.length);
       for ( let i = 0; i < rows.length; i++) 
             {
-
               date = rows[i].challenge_date;
               todo = rows[i].challenge_todo;
               if(rows[i].todo_check === 1){ check = true;}
@@ -358,26 +362,90 @@ app.post('/api/challenge_todo', (req, res) => {
   });
 });
 
-/* cert업로드 */
+/* cert업로드 조정필요함*/
 app.post('/api/certupload', (req, res) => {
-  const challenge_id = req.body.challenge_id;
-  const formdata = req.body.formdata;
-  const config = req.body.config;
-  const user_id = req.body.user_name;
-  const challenge_date = req.body.challenge_id;
+  const body = req.body.params;
+  const challenge_id = body['challenge_id'];
+  const img = body['img'];
+  const user_id = body['user_id'];
+  const challenge_date = body['challenge_date'];
 
 //const sql = `UPDATE management.challenge_ing SET is_cert = 0 `; 모든 is_cert 1로
-const sql = `UPDATE management.challenge_ing SET challenge_image = '${formdata}' WHERE challenge_id = '${challenge_id}' AND user_id = '${user_id}' AND challenge_date = '${challenge_date}'`;
-db.query(sql, (err, rows, fields) => {
-  if (err) {
-    console.log("DB저장 실패");
-    console.log(err);
-  } else {
-    console.log("DB저장 성공");
-          };
+const sql = `UPDATE management.challenge_ing SET challenge_image = '${img}' WHERE challenge_id = '${challenge_id}'`;
+//const sql = `INSERT INTO management.challenge_ing (challenge_date, user_id, challenge_image, mate_check, challenge_id,is_cert) VALUES ('${challenge_date}','${user_id}', "${img}", 0, ${challenge_id},0) `
+
+  db.query(sql, (err, rows, fields) => {
+    if (err) {
+      console.log("DB저장 실패");
+      console.log(err);
+    } else {
+      console.log("DB저장 성공");
+            };
+  });
+});
+
+/* challenge todo업로드 */
+app.post('/api/ctodoupload', (req, res) => {//필요: idx, date, user_id, challtodo, todocheck, challenge_id-----------------------------------------------
+  const body = req.body.params;
+  const todo = body['todo'];
+  const challenge_id = body['challenge_id'];
+  const challenge_date = body['challenge_date'];
+  const token = body['token'];
+  const user_id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  db.query(
+
+    `INSERT INTO management.challenge_todo (challenge_date, user_id, challenge_todo, todo_check, challenge_id) VALUES ('${challenge_date}','${user_id.userId}', "${todo}", 0, ${challenge_id}) `
+
+  )
+
 });
 
 
+/* cert 이미지 불러오기 */
+app.post('/api/challenge_ing_img', (req, res) => {
+  const token = req.body.token;
+  const cid = req.body.challenge_id;
+
+  let infos = [];
+  let img;
+  let date;
+  let ischecked;
+
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const sql = `SELECT * FROM management.challenge_ing WHERE user_id = '${id.userId}' AND challenge_id = '${cid}'`;
+
+  db.query(sql, (err, rows, fields) => {
+    if (err) {
+      //console.log(err);
+      
+      res.status(201).json({
+        result: 'not ok',
+      })
+
+    } else {
+      
+      for ( let i = 0; i < rows.length; i++) 
+            {
+
+              date = rows[i].challenge_date;
+              img = rows[i].challenge_image;
+              ischecked = rows[i].mate_check;
+
+              infos.push({
+                id: i,
+                img: img,
+                date: date,
+                ischecked: ischecked
+              });
+            };
+      res.status(201).json({
+        result: 'ok',
+        rows: infos
+      });
+    }
+  });
 });
 
 

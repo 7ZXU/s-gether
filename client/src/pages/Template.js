@@ -3,17 +3,18 @@ import '../css/Template.css';
 import Challperson from '../components/Challperson';
 import Cert from '../components/ChallengeCert';
 import Todolist from '../components/TodoList';
-import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
+import Ctodo from '../components/Challengeaddtodo';
+import { MdCheckBox, MdCheckBoxOutlineBlank, MdAddCircle } from 'react-icons/md';
 import mainImg from '../assets/1.jpg';
 import Header from '../components/Header';
 import { getCookie } from '../cookie';
 import axios from 'axios';
+import { get } from 'http';
 //import ImagePicker from 'antd-mobile/lib/image-picker';
 //import imageCompression from "browser-image-compression";
-
+//challenge받는대로 수정들 해야함 (todo추가에 cid같은거)
 //const Template = ({ children, Myname, days, Yourname, days2 }) => {
 const Template = () => {
-
   let time = new Date();
   let year = time.getFullYear;
   let day = time.getDay;
@@ -22,6 +23,11 @@ const Template = () => {
   const [insertToggle, setInsertToggle] = useState(false);
   const onInsertToggle = () => {
     setInsertToggle((prev) => !prev);
+  };
+
+  const [insertToggle2, setInsertToggle2] = useState(false);
+  const onInsertToggle2 = () => {
+    setInsertToggle2((prev) => !prev);
   };
 
   const token = getCookie('myToken');
@@ -54,9 +60,6 @@ const Template = () => {
     alltodos.map((all) => (
       (all.date === getday.date ? temptodos.push(all) : '') //2021-11-29T15:00:00.000Z => e.target.date
     ))
-    console.log(getday);
-    console.log(alltodos);
-    console.log(temptodos);
     setTodos(temptodos);
   };
 
@@ -69,6 +72,26 @@ const Template = () => {
 
 
 
+  const [itemData, setitemdata] = useState([{
+    id: 1,
+    img: '',
+    ischecked: 0,
+    date: '2020-12-12'
+  }]);
+  const [allitemData, setallitemdata] = useState([
+    {
+      id: 1,
+      img: '',
+      ischecked: 0,
+      date: '2020-12-12'
+    },
+    {
+      id: 2,
+      img: '',
+      ischecked: 0,
+      date: '2020-12-12'
+    }
+  ]);
 
   useEffect(() => {
 
@@ -77,6 +100,7 @@ const Template = () => {
         .post('http://localhost:5000/api/challenge_ing', {
           token: token,
           challenge_id: 10, //실험용
+          today: year+"-"+month+"-"+day+"T15:00:00.000Z"
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
@@ -140,17 +164,50 @@ const Template = () => {
           setallTodos(
             res.data.rows
             );
+            console.log(res.data.rows);
         })
         .catch((err) => {
           console.log(err);
         });
     }
 
+    async function loadData5() {
+      await axios
+        .post('http://localhost:5000/api/challenge_ing_img', {
+          token: token,
+          challenge_id: 10, //실험용
+        })
+        .then((res) => {
+          if(res.data.result === 'not ok'){
+            console.log("no progress");
+          }
+          else{
+            console.log(res.data.rows);
+            setallitemdata(
+              res.data.rows
+            );
+            console.log(allitemData);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    loadData5();
+
     loadData();
     loadData2();
     loadData3();
     loadData4();
   },[]);  
+
+  const daycheck = () => {
+    setitemdata([]);
+    allitemData.map((all) => (
+      (all.date === getday.date ? itemData.push(all) :"")
+    ))
+    };
+    //--------------------------------------------------------------------
 
   const Myname = user;
   const days = challenges;
@@ -172,7 +229,7 @@ const Template = () => {
         <Header />
       </div>
       <div className="ChallengeName">
-        <img className="Challimg" src={mainImg} alt="챌린지 이미지" />
+        <img className="Challimg" src={cimg} alt="챌린지 이미지" />
         {Cinfo.name}
         <div>{Cinfo.date}</div>
       </div>
@@ -194,6 +251,7 @@ const Template = () => {
                 onClick={() => settodocert({ id: day.id, isempty: day.cert })}
                 onMouseDown={() => setgetday({ date: day.date})}
                 onMouseUp= {daytodos}
+                onMouseOver={daycheck}
               >
                 <div className={'content ${checked ? "checked" : ""}'}>
                   {day.state && day.done && day.checked && (
@@ -252,11 +310,13 @@ const Template = () => {
       {!(getday.date === "") &&<div className="Template2">
         <div className="title">{getday.date.substring(0,10)} Todo list({todos && todos.length})</div>
         <Todolist todos={todos} />
+        <button className="no" onClick={onInsertToggle2}><MdAddCircle size="100" color="black" /></button>
+        <Ctodo open={insertToggle2} user={user} cid={10} cday={getday.date} onInsertToggle2 = {onInsertToggle2}/>
       </div>}
 
       {!(getday.date === "") &&<div className="Template3">
         <div className="title">Certification</div>
-        <Cert Cday={todos && todos.length} cert={todocert.isempty} />
+        <Cert Cday={todos && todos.length} cert={todocert.isempty} sday={getday.date} t2 = {allitemData}/>
       </div>}
     </div>
   );

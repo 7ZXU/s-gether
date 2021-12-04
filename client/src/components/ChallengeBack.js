@@ -4,35 +4,60 @@ import '../css/ChallengeBack.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+
 const ChallengeBack = (onInsertToggle) => {
   const [fileUrl, setFileUrl] = useState(null);
 
-  function processImage(event) {
-    console.log("-------------process---------------");
-    const imageFile = event.target.files[0];
-    const imageUrl = URL.createObjectURL(imageFile);
-    setFileUrl(imageUrl);
-    console.log("-------------onload---------------");
-    const file = event.target.files;
-    setfiles(file);
-
-  }
 const [files, setfiles] = useState('');
-const handleclick = (e) =>{
-  console.log("-------------upload---------------");
-  const formdata = new FormData();
-  const user_name = 'snow'; //임시
-  const challenge_id = 10;
-  const challenge_date = '2021-12-01';
-  formdata.append('uploadImage', files[0]);
 
-  const config = {
-    Headers: {
-      'content-type': 'multipart/form-data',
-    },
-  };
-  axios.post('http://localhost:5000/api/certupload',challenge_id,formdata,config,user_name, challenge_date)
-};
+const [imgSrc, setImgSrc] = useState('');
+
+let time = new Date();
+  let year = time.getFullYear;
+  let day = time.getDay;
+  let month = time.getMonth;
+
+
+
+
+const onChangeHandle = (evt)=>{
+
+  const imageFile = evt.target.files[0];
+  const imageUrl = URL.createObjectURL(imageFile);
+  setFileUrl(imageUrl);
+  if(evt.target.files.length){
+      const imgTarget = (evt.target.files)[0];
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(imgTarget);
+      fileReader.onload = function(e) {
+        setImgSrc(e.target.result);
+      }
+  }else{
+      setImgSrc('');
+  }
+}
+
+const onHandleUpload = async () => {
+
+  const user_id = 'snow'; //임시
+  const challenge_id = 10;
+
+  try {
+      axios.post(`http://localhost:5000/api/certupload`, {
+          params: {
+              'img':imgSrc,
+              'challenge_id':challenge_id,
+              'user_id':user_id,
+              'challenge_date' : year+"-"+month+"-"+day+"T15:00:00.000Z",
+          }
+      });
+  } catch (e) {
+      console.error('[FAIL] POST ANSWER', e);
+      return e;
+  }
+}
+
+
 
   
 
@@ -47,10 +72,10 @@ const handleclick = (e) =>{
           accept="image/*"
           name="imgFile"
           id="imgFile"
-          onChange={processImage}//&& onLoadFile () =>  
+          onChange={onChangeHandle}//&& onLoadFile () =>  
           //onChange={onLoadFile}
         ></input>
-        <button className="subm" type="submit" onMouseOver={handleclick}>
+        <button className="subm" type="submit" onMouseDown={onHandleUpload}>
           <MdAddCircle size="80" color="black" />
           submit
         </button>
