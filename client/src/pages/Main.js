@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import box from '../assets/box.png';
 import logo from '../assets/logo.png';
 import '../css/Main.css';
-import Login from './Login';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import { getCookie } from '../cookie';
 
 function Main() {
+  const token = getCookie('myToken');
+
+  useEffect(() => {
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (token) {
+      console.log('토큰 있음');
+      window.location.replace('/feed');
+    } else {
+      console.log('쿠키 없음');
+    }
+  }, []);
+
   return (
     <div className="main__container">
       <img className="box-img" src={box} alt="로고 박스" />

@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Calendar from "../components/Calendar";
-import CheckboxList from "../components/CheckboxList";
-import Thumbnail from "../components/Thumbnail";
-import ChallengeCard from "../components/ChallengeCard";
-import axios from "axios";
-import { Button, Modal, Fade, Box, Backdrop, List } from "@mui/material";
-import { getCookie } from "../cookie";
-import TextField from "@mui/material/TextField";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import StaticDatePicker from "@mui/lab/StaticDatePicker";
-import { format } from "date-fns";
-import Avatar from "@mui/material/Avatar";
-import FriendPage from "./FriendPage";
-import Header from "../components/Header";
-
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Calendar from '../components/Calendar';
+import CheckboxList from '../components/CheckboxList';
+import Thumbnail from '../components/Thumbnail';
+import ChallengeCard from '../components/ChallengeCard';
+import axios from 'axios';
+import { Button, Modal, Fade, Box, Backdrop, List } from '@mui/material';
+import { getCookie, removeCookie } from '../cookie';
+import TextField from '@mui/material/TextField';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import StaticDatePicker from '@mui/lab/StaticDatePicker';
+import { format } from 'date-fns';
+import Avatar from '@mui/material/Avatar';
+import FriendPage from './FriendPage';
+import Header from '../components/Header';
 
 const FeedWrap = styled.div`
   display: flex;
@@ -71,14 +71,16 @@ const Plus = styled.button`
 `;
 
 const Login = styled(AccountCircleIcon)``;
-
+const Logout = styled(LogoutIcon)`
+  padding-left: 10px;
+`;
 
 function FeedPage({ history }) {
-  const [user, setUser] = useState("");
-  const token = getCookie("myToken");
+  const [user, setUser] = useState('');
+  const token = getCookie('myToken');
   const [lists, setLists] = useState([]);
   const [photos, setPhotos] = useState([]);
-  const [todo, setTodo] = useState("");
+  const [todo, setTodo] = useState('');
   const [album, setAlbum] = useState([]);
   const [friends, setFriends] = useState([]);
 
@@ -92,8 +94,7 @@ function FeedPage({ history }) {
 
   const [uploadImage, setUploadImage] = useState(false);
   const [userImage, setUserImage] = useState(null);
-  
-  
+
   const onLoadImage = (e) => {
     if (e.target.files.length) {
       const imgTarget = e.target.files[0];
@@ -114,18 +115,16 @@ function FeedPage({ history }) {
       console.log('이미지추가 x');
     }
   };
-  
 
   // 캘린더에 선택한 날짜에 따라 todo 불러옴
   async function loadList(date) {
-
     await axios
-      .post("http://localhost:5000/api/todolist", {
+      .post('http://localhost:5000/api/todolist', {
         token: token,
         day: date,
       })
       .then((res) => {
-        console.log("FeedPage", res.data.result);
+        console.log('FeedPage', res.data.result);
         setLists(res.data.result);
       })
       .catch((err) => {
@@ -133,45 +132,50 @@ function FeedPage({ history }) {
       });
   }
 
+  async function loadData() {
+    await axios
+      .post('http://localhost:5000/api/feed', {
+        token: token,
+      })
+      .then((res) => {
+        if (res.data.nickname == null) {
+          setUser(res.data.id);
+        } else {
+          setUser(res.data.nickname);
+        }
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  async function loadFriends() {
+    await axios
+      .post('http://localhost:5000/api/friends', {
+        token: token,
+      })
+      .then((res) => {
+        setFriends(res.data.result);
+        console.log('friends', friends);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   useEffect(() => {
-    console.log(token);
-    async function loadData() {
-      await axios
-        .post("http://localhost:5000/api/feed", {
-          token: token,
-        })
-        .then((res) => {
-          if (res.data.nickname == null) {
-            setUser(res.data.id);
-          } else {
-            setUser(res.data.nickname);
-          }
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (token) {
+      console.log('토큰 있음');
+      console.log(token);
+      loadData();
+      loadList(day);
+      loadFriends();
+    } else {
+      window.location.replace('/');
+      console.log('쿠키 없음');
     }
-
-    loadData();
-
-    loadList(day);
-
-    async function loadFriends() {
-      await axios
-        .post("http://localhost:5000/api/friends", {
-          token: token,
-        })
-        .then((res) => {
-          setFriends(res.data.result);
-          console.log("friends", friends);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-
-    loadFriends();
   }, []);
 
   const SLIDE_COUNT = 10;
@@ -186,29 +190,36 @@ function FeedPage({ history }) {
   };
 
   const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
     boxShadow: 24,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     p: 4,
+  };
+
+  const onClickLogout = () => {
+    console.log('로그아웃 클릭');
+
+    // 쿠키 삭제
+    removeCookie('myToken');
+    window.location.replace('/'); // 메인 페이지로 이동
   };
 
   const onClick = () => {
     console.log(token);
-
     async function saveData() {
       await axios
-        .post("http://localhost:5000/api/todo", {
+        .post('http://localhost:5000/api/todo', {
           todo: todo,
           id: user,
           token: token,
-          day: format(value, "yyyy-MM-dd"),
+          day: format(value, 'yyyy-MM-dd'),
         })
         .then(loadList(value));
     }
@@ -233,21 +244,25 @@ function FeedPage({ history }) {
     saveData();
   };
 
-
-
   // 친구들 앞 글자만 분리
   function stringAvatar(name) {
     return {
-      children: `${name.split(" ")[0][0]}`,
+      children: `${name.split(' ')[0][0]}`,
     };
   }
 
   return (
     <FeedWrap>
-      <Header />
+      <div style={{ display: 'flex', 'justify-content': 'space-between' }}>
+        <Header />
+        <Logout
+          sx={{ fontSize: 50, cursor: 'pointer' }}
+          onClick={onClickLogout}
+        ></Logout>
+      </div>
 
       <Navbar>
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
           {friends.map((friend, index) => (
             <Avatar
               {...stringAvatar(friend)}
@@ -283,9 +298,9 @@ function FeedPage({ history }) {
                 // todolist post
                 async function loadList() {
                   await axios
-                    .post("http://localhost:5000/api/todolist", {
+                    .post('http://localhost:5000/api/todolist', {
                       token: token,
-                      day: format(newValue, "yyyy-MM-dd"),
+                      day: format(newValue, 'yyyy-MM-dd'),
                     })
                     .then((res) => {
                       setLists(res.data.result);
@@ -327,7 +342,13 @@ function FeedPage({ history }) {
         <CheckboxListWrap>
           <h1>Todo</h1>
           {lists.map((list, index) => (
-            <CheckboxList list={list} key={index} show={"1"} loadList={loadList} value={value}/> //idx 멎나??
+            <CheckboxList
+              list={list}
+              key={index}
+              show={'1'}
+              loadList={loadList}
+              value={value}
+            /> //idx 멎나??
           ))}
 
           <Modal
@@ -351,14 +372,14 @@ function FeedPage({ history }) {
                     setTodo(e.target.value);
                   }}
                   placeholder="할 일을 입력하세요"
-                  style={{ marginBottom: "20px" }}
+                  style={{ marginBottom: '20px' }}
                 />
 
-                <Box style={{ flexDirection: "row" }}>
-                  <button style={{ width: "50%" }} onClick={handleClose}>
+                <Box style={{ flexDirection: 'row' }}>
+                  <button style={{ width: '50%' }} onClick={handleClose}>
                     취소
                   </button>
-                  <button style={{ width: "50%" }} onClick={onClick}>
+                  <button style={{ width: '50%' }} onClick={onClick}>
                     완료
                   </button>
                 </Box>
@@ -366,16 +387,15 @@ function FeedPage({ history }) {
             </Fade>
           </Modal>
           <Button onClick={handleOpen}>ADD TODO</Button>
-          
-            <input
-              type="file" 
-              id="input-file"
-              accept="image/jpg, image/png, image/jpeg, image/gif, image/png"
-              name="plan_img" 
-              multiple="multiple"
-              onChange={onLoadImage}
-            />
 
+          <input
+            type="file"
+            id="input-file"
+            accept="image/jpg, image/png, image/jpeg, image/gif, image/png"
+            name="plan_img"
+            multiple="multiple"
+            onChange={onLoadImage}
+          />
         </CheckboxListWrap>
         <ChallengeWrap>
           <h1>Challenge</h1>
