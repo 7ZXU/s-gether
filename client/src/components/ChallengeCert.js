@@ -168,8 +168,8 @@ const Cert = ({ Cday, cert, sday,t2 }) => {
       {insertToggle && <ChallengeBack onInsertToggle={onInsertToggle} da={sday}/>}
       {insertToggle2 && (
         <div>
-          <div className="Check" onClick={onInsertToggle2}></div>
-          <form>
+          <form id="challenge__cert__back"><div className="Check" onClick={onInsertToggle2}></div></form>
+          <form id="challenge__cert__form">
             <img className="image" src={cimg} alt="img" />
             <div className="font">확인 </div>
             <button

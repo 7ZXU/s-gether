@@ -610,10 +610,11 @@ app.post('/api/challenge_todo', (req, res) => {
 });
 
 /* cert업로드 조정필요함*/
-app.post('/api/certupload', (req, res) => {
-  const body = req.body.params;
+app.post('/api/certupload',upload.single('img'), (req, res) => {
+
+  const body = req.body;
   const challenge_id = body['challenge_id'];
-  const img = body['img'];
+  const img = '/image/' + req.file.filename;
   const user_id = body['user_id'];
   const challenge_date = body['challenge_date'];
 

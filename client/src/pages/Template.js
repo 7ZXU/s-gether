@@ -12,7 +12,6 @@ import axios from 'axios';
 import { get } from 'http';
 //import ImagePicker from 'antd-mobile/lib/image-picker';
 //import imageCompression from "browser-image-compression";
-//challenge받는대로 수정들 해야함 (todo추가에 cid같은거)
 //const Template = ({ children, Myname, days, Yourname, days2 }) => {
 const Template = () => {
   let time = new Date();
@@ -416,7 +415,7 @@ const Template = () => {
 
       {!(getday.date === "") &&<div className="Template3">
         <div className="title">Certification</div>
-        <Cert Cday={todos && todos.length} cert={todocert.isempty} sday={getday.date} t2 = {allitemData}/>
+        <Cert Cday={todos && todos.length} cert={1} sday={getday.date} t2 = {allitemData}/>
       </div>}
     </div>
   );
