@@ -1,51 +1,170 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import '../css/SettingContainer.css';
+import { getCookie } from '../cookie.js';
+import axios from 'axios';
+
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
 
 function SettingContainer() {
-  const [checked, setChecked] = useState([0]);
+  const token = getCookie('myToken');
+  const [checked, setChecked] = useState({
+    permission_friend: false,
+    permission_id: false,
+    permission_challenge: false,
+  });
+
+  async function loadSetting() {
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (!token) {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    } else {
+      await axios
+        .post('http://localhost:5000/api/mypage/setting', {
+          token: token,
+        })
+        .then((res) => {
+          console.log(res.data.result);
+          setChecked({
+            permission_friend: res.data.permission_friend === 1 ? true : false,
+            permission_id: res.data.permission_id === 1 ? true : false,
+            permission_challenge:
+              res.data.permission_challenge === 1 ? true : false,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
+  useEffect(() => {
+    loadSetting();
+  }, []);
+
+  useEffect(() => {
+    console.log('설정 변경');
+  }, [checked]);
+
+  // 체크 박스 클릭 변경
+  const check = (e) => {
+    console.log('누른 항목: ');
+    console.log(e.target.tabIndex);
+    switch (e.target.tabIndex) {
+      case 1:
+        console.log('1');
+        setChecked({
+          permission_friend: !checked.permission_friend,
+        });
+        break;
+      case 2:
+        console.log('2');
+        setChecked({
+          ...checked,
+          permission_id: !checked.permission_id,
+        });
+        break;
+      case 3:
+        console.log('3');
+        setChecked({
+          ...checked,
+          permission_challenge: !checked.permission_challenge,
+        });
+        break;
+      default:
+        console.log('err');
+    }
+  };
+
+  // 설정 저장
+  async function saveSetting() {
+    console.log('설정 저장');
+    console.log(checked);
+    await axios
+      .post('http://localhost:5000/api/mypage/saveSetting', {
+        token: token,
+        permission_friend: checked.permission_friend,
+        permission_id: checked.permission_id,
+        permission_challenge: checked.permission_challenge,
+      })
+      .then((res) => {
+        console.log(res.data.result);
+        loadSetting();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   return (
     <div className="setting__container">
       <h1>setting</h1>
-      <form id="setting__form" action="#" method="post">
-        <div class="form-group row">
-          <label for="friend" class="col-sm-3 col-form-label">
-            친구 요청 받기
-          </label>
-          <div class="col-sm-9">
-            <ListItemIcon>
-              <Checkbox edge="start" tabIndex={-1} disableRipple />
-            </ListItemIcon>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="id_search" class="col-sm-3 col-form-label">
-            아이디 검색 허용
-          </label>
-          <div class="col-sm-9">
-            <ListItemIcon>
-              <Checkbox edge="start" tabIndex={-1} disableRipple />
-            </ListItemIcon>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="challenge" class="col-sm-3 col-form-label">
-            나의 챌린지 공개
-          </label>
-          <div class="col-sm-9">
-            <ListItemIcon>
-              <Checkbox edge="start" tabIndex={-1} disableRipple />
-            </ListItemIcon>
-          </div>
-        </div>
-        <div class="form-group">
-          <button type="submit" class="btn-submit">
-            설정 저장
-          </button>
-        </div>
-      </form>
+      <Table className="penalty_history_table">
+        <TableHead>
+          <TableRow>
+            <TableCell align="center">항목</TableCell>
+            <TableCell align="center">선택</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow
+            sx={{
+              '&:last-child td, &:last-child th': { border: 0 },
+            }}
+          >
+            <TableCell align="center">친구 요청 받기</TableCell>
+            <TableCell align="center">
+              <Checkbox
+                tabIndex={1}
+                disableRipple
+                checked={checked.permission_friend}
+                onChange={check}
+              />
+            </TableCell>
+          </TableRow>
+          <TableRow
+            sx={{
+              '&:last-child td, &:last-child th': { border: 0 },
+            }}
+          >
+            <TableCell align="center">아이디 검색 허용</TableCell>
+            <TableCell align="center">
+              <Checkbox
+                tabIndex={2}
+                disableRipple
+                checked={checked.permission_id}
+                onChange={check}
+              />
+            </TableCell>
+          </TableRow>
+          <TableRow
+            sx={{
+              '&:last-child td, &:last-child th': { border: 0 },
+            }}
+          >
+            <TableCell align="center">챌린지 목록 공개</TableCell>
+            <TableCell align="center">
+              <Checkbox
+                tabIndex={3}
+                disableRipple
+                checked={checked.permission_challenge}
+                onChange={check}
+              />
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+      <div class="form-group clearfix">
+        <button type="submit" class="btn-submit" onClick={saveSetting}>
+          설정 저장
+        </button>
+      </div>
     </div>
   );
 }

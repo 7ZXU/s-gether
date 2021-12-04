@@ -1,80 +1,223 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/Template.css';
 import Challperson from '../components/Challperson';
 import Cert from '../components/ChallengeCert';
 import Todolist from '../components/TodoList';
-import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
+import Ctodo from '../components/Challengeaddtodo';
+import { MdCheckBox, MdCheckBoxOutlineBlank, MdAddCircle } from 'react-icons/md';
 import mainImg from '../assets/1.jpg';
 import Header from '../components/Header';
-
+import { getCookie } from '../cookie';
+import axios from 'axios';
+import { get } from 'http';
+//import ImagePicker from 'antd-mobile/lib/image-picker';
+//import imageCompression from "browser-image-compression";
+//challenge받는대로 수정들 해야함 (todo추가에 cid같은거)
 //const Template = ({ children, Myname, days, Yourname, days2 }) => {
 const Template = () => {
+  let time = new Date();
+  let year = time.getFullYear;
+  let day = time.getDay;
+  let month = time.getMonth;
+
   const [insertToggle, setInsertToggle] = useState(false);
   const onInsertToggle = () => {
     setInsertToggle((prev) => !prev);
   };
 
-  const [challenges] = useState([
-    { id: 1, done: true, state: true, checked: true, cert: true },
-    { id: 2, done: true, state: true, checked: true, cert: true },
-    { id: 3, done: false, state: true, checked: true, cert: true },
-    { id: 4, done: true, state: true, checked: true, cert: true },
-    { id: 5, done: true, state: true, checked: true, cert: true },
-    { id: 6, done: false, state: true, checked: true, cert: true },
-    { id: 7, done: true, state: true, checked: true, cert: true },
-    { id: 8, done: true, state: true, checked: true, cert: true },
-    { id: 9, done: false, state: true, checked: false, cert: true },
-    { id: 10, done: true, state: true, checked: true, cert: true },
-    { id: 11, done: true, state: true, checked: true, cert: true },
-    { id: 12, done: false, state: true, checked: true, cert: true },
-    { id: 13, done: true, state: true, checked: true, cert: true },
-    { id: 14, done: true, state: true, checked: true, cert: true },
-    { id: 15, done: false, state: true, checked: true, cert: false },
-    { id: 16, done: true, state: true, checked: false, cert: false },
-    { id: 17, done: true, state: false, checked: false, cert: false },
-    { id: 18, done: false, state: false, checked: false, cert: false },
-    { id: 19, done: true, state: false, checked: true, cert: false },
-    { id: 20, done: true, state: false, checked: false, cert: false },
-    { id: 21, done: false, state: false, checked: false, cert: false },
-    { id: 22, done: true, state: false, checked: true, cert: false },
-    { id: 23, done: true, state: false, checked: false, cert: false },
-    { id: 24, done: false, state: false, checked: false, cert: false },
-    { id: 25, done: true, state: false, checked: true, cert: false },
-    { id: 26, done: true, state: false, checked: false, cert: false },
-    { id: 27, done: false, state: false, checked: false, cert: false },
-    { id: 28, done: true, state: false, checked: true, cert: false },
-    { id: 29, done: true, state: false, checked: false, cert: false },
-    { id: 30, done: false, state: false, checked: false, cert: false },
+  const [insertToggle2, setInsertToggle2] = useState(false);
+  const onInsertToggle2 = () => {
+    setInsertToggle2((prev) => !prev);
+  };
+
+  const token = getCookie('myToken');
+
+  const [cimg, setcimg] = useState('');
+  const [user, setUser] = useState('');
+
+  const [challenges, setchallenges] = useState([
+    { id: 1, done: true, state: false, checked: true, cert: true, date: '2021-11-30' },
   ]);
 
-  const Myname = '곽무진';
-  const days = challenges;
-  const Yourname = '곽진무';
-  const days2 = challenges;
+  const [Cinfo, setCinfo] = useState({
+    name: 'challenge',
+    date: '2021-11-1 ~ 2021-11-30',
+  });
 
   const [todos, setTodos] = useState([
     {
       id: 1,
       text: '할일 1',
       checked: true,
+      date: '2020-11-30'
+    }
+  ]);
+
+  const [temptodos, settempTodos] = useState([]);
+
+  const daytodos = () => {
+    settempTodos([]);
+    alltodos.map((all) => (
+      (all.date === getday.date ? temptodos.push(all) : '') //2021-11-29T15:00:00.000Z => e.target.date
+    ))
+    setTodos(temptodos);
+  };
+
+  const [alltodos, setallTodos] = useState([{
+    id: 1,
+    text: '할일 1',
+    checked: true,
+    date: '2021-11-30'
+  }]);
+
+
+
+  const [itemData, setitemdata] = useState([{
+    id: 1,
+    img: '',
+    ischecked: 0,
+    date: '2020-12-12'
+  }]);
+  const [allitemData, setallitemdata] = useState([
+    {
+      id: 1,
+      img: '',
+      ischecked: 0,
+      date: '2020-12-12'
     },
     {
       id: 2,
-      text: '할일 2',
-      checked: false,
-    },
-    {
-      id: 3,
-      text: '할일 3',
-      checked: true,
-    },
+      img: '',
+      ischecked: 0,
+      date: '2020-12-12'
+    }
   ]);
-  const [Cinfo, setCinfo] = useState({
-    name: 'challenge',
-    date: '2021-11-1 ~ 2021-11-30',
-  });
+
+  useEffect(() => {
+
+    async function loadData() {
+      await axios
+        .post('http://localhost:5000/api/challenge_ing', {
+          token: token,
+          challenge_id: 10, //실험용
+          today: year+"-"+month+"-"+day+"T15:00:00.000Z"
+        })
+        .then((res) => {
+          if(res.data.result === 'not ok'){
+            console.log("no progress");
+          }
+          else{
+            setchallenges(
+                res.data.rows,
+                );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData2() {
+      await axios
+        .post('http://localhost:5000/api/challenge_info', {
+          token: token,
+          challenge_id: 10 //실험용
+        })
+        .then((res) => {
+          //console.log("-------------challenge_image---------------");
+          //console.log(res.data);
+          setcimg(res.data.image);
+          //console.log("-------------challenge_image---------------");
+          setCinfo({
+            name: res.data.name,
+            date: res.data.start.substring(0,10) + ' ~ ' + res.data.end.substring(0,10)
+          });
+
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData3() {
+      await axios
+        .post('http://localhost:5000/api/feed', {
+          token: token,
+        })
+        .then((res) => {
+          const nickname = res.data.id;
+          setUser(nickname);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData4() {
+      await axios
+        .post('http://localhost:5000/api/challenge_todo', {
+          token: token,
+          challenge_id: 10, //실험용
+          user_id: 'snow' //실험용
+        })
+        .then((res) => {
+          setallTodos(
+            res.data.rows
+            );
+            console.log(res.data.rows);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData5() {
+      await axios
+        .post('http://localhost:5000/api/challenge_ing_img', {
+          token: token,
+          challenge_id: 10, //실험용
+        })
+        .then((res) => {
+          if(res.data.result === 'not ok'){
+            console.log("no progress");
+          }
+          else{
+            console.log(res.data.rows);
+            setallitemdata(
+              res.data.rows
+            );
+            console.log(allitemData);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    loadData5();
+
+    loadData();
+    loadData2();
+    loadData3();
+    loadData4();
+  },[]);  
+
+  const daycheck = () => {
+    setitemdata([]);
+    allitemData.map((all) => (
+      (all.date === getday.date ? itemData.push(all) :"")
+    ))
+    };
+    //--------------------------------------------------------------------
+
+  const Myname = user;
+  const days = challenges;
+  const Yourname = '곽진무'; //mate들어올 곳
+  const days2 = challenges;
+
+
 
   const [todocert, settodocert] = useState({ id: '', isempty: '' });
+  const [getday, setgetday] = useState({ date: ""});
 
   return (
     <div className="Template">
@@ -86,7 +229,7 @@ const Template = () => {
         <Header />
       </div>
       <div className="ChallengeName">
-        <img className="Challimg" src={mainImg} alt="챌린지 이미지" />
+        <img className="Challimg" src={cimg} alt="챌린지 이미지" />
         {Cinfo.name}
         <div>{Cinfo.date}</div>
       </div>
@@ -103,7 +246,12 @@ const Template = () => {
                 className="ChallengeDays"
                 key={day.id}
                 cert={day.cert}
+                date= {day.date}
+                day = {day}
                 onClick={() => settodocert({ id: day.id, isempty: day.cert })}
+                onMouseDown={() => setgetday({ date: day.date})}
+                onMouseUp= {daytodos}
+                onMouseOver={daycheck}
               >
                 <div className={'content ${checked ? "checked" : ""}'}>
                   {day.state && day.done && day.checked && (
@@ -159,15 +307,17 @@ const Template = () => {
         </div>
       </div>
 
-      <div className="Template2">
-        <div className="title">Todo list({todos.length})</div>
+      {!(getday.date === "") &&<div className="Template2">
+        <div className="title">{getday.date.substring(0,10)} Todo list({todos && todos.length})</div>
         <Todolist todos={todos} />
-      </div>
+        <button className="no" onClick={onInsertToggle2}><MdAddCircle size="100" color="black" /></button>
+        <Ctodo open={insertToggle2} user={user} cid={10} cday={getday.date} onInsertToggle2 = {onInsertToggle2}/>
+      </div>}
 
-      <div className="Template3">
+      {!(getday.date === "") &&<div className="Template3">
         <div className="title">Certification</div>
-        <Cert Cday={todos.length} cert={todocert.isempty} />
-      </div>
+        <Cert Cday={todos && todos.length} cert={todocert.isempty} sday={getday.date} t2 = {allitemData}/>
+      </div>}
     </div>
   );
 };

@@ -83,12 +83,14 @@
     color: #6c567b;
 }
 
-.Template2 + .Template3{
+/*.Template2 + .Template3{
     margin-top: -280px;
     margin-left: 850px;
-}
+}*/
 .Template3{
-
+    position: absolute;
+    left: 850px;
+    top: 700px;
     max-height: 100vh;
     max-width: 100vh;
     

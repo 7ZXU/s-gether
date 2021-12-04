@@ -78,7 +78,7 @@
   margin-left: 130px;
 }
 
-#challenge__cert__form {
+.form {
   margin-left: 10%;
   padding-left: 200px;
   position: absolute;
@@ -95,7 +95,7 @@
   background: white;
 }
 
-#challenge__cert__form > .yes {
+.form > .yes {
   background: none;
   outline: none;
   border: none;
@@ -107,7 +107,7 @@
   transition: 0.1s background ease-in;
 }
 
-#challenge__cert__form > .no {
+.form > .no {
   background: none;
   outline: none;
   border: none;

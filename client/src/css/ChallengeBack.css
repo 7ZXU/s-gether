@@ -1,12 +1,11 @@
 .Background {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -700px;
+  left: -850px;
   z-index: 980;
-  top: 0;
   overflow: hidden;
-  width: 100vw;
-  height: 100vh;
+  width: 110vw;
+  height: 110vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,8 +16,8 @@
 #challenge__back__form {
   margin-left: 10%;
   position: absolute;
-  top: 20%;
-  left: 20%;
+  top: -500px;
+  left: -500px;
   display: flex;
   flex-direction: column;
   justify-content: center;

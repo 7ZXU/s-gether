@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 
-function Pchart() {
+function Pchart({start, end, done}) {
   const chartColors = ['#0000FF', '#FF0000', '#999933', '#666699'];
 
   const pieOptions = {
@@ -33,7 +33,7 @@ function Pchart() {
     labels: ['성공', '실패'],
     datasets: [
       {
-        data: [80, 20],
+        data: [done, 30-done], //날짜계산 추가
         backgroundColor: chartColors,
         hoverBackgroundColor: chartColors,
       },

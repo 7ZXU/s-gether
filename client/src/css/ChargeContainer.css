@@ -63,3 +63,13 @@
   background-color: #000000;
   color: #ffffff;
 }
+
+.history__container p {
+  font-size: 16px;
+}
+
+.table__container {
+  max-height: 350px;
+  width: 100%;
+  overflow: auto;
+}

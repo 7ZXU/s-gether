@@ -1,59 +1,62 @@
-import * as React from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import CommentIcon from '@mui/icons-material/Comment';
+import {useState} from 'react';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import {Checkbox, Button} from '@mui/material';
+import axios from 'axios';
+import styled from 'styled-components';
 
-export default function CheckboxList() {
-  const [checked, setChecked] = React.useState([0]);
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+export default function CheckboxList({list, key}) {
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
+  const [user, setUser] = useState(list.user_id)
+  const [checked, setChecked] = useState(list.plan_check)
+  const [idx, setIdx] = useState(list.idx)
+
+  console.log(key);
+  
+
+  const onClick=() => {
+    async function DeleteTodo(){
+      await axios.post("http://localhost:5000/api/delete", {
+        user: user,
+        idx: key,
+      })
     }
 
-    setChecked(newChecked);
-  };
+    DeleteTodo();
+  }
+
+  const handleChange = (e) =>{
+    // 누르면 db에 plan_check 값 바꿔야되는 거잖아
+    // api 연결해야 할 듯
+    async function saveCheck() {
+      
+      console.log("before", checked, typeof(checked));
+      // console.log("checkboxlist",user, checked, idx);
+      if (checked === 0) {
+        setChecked(1);
+      } else {
+        setChecked(0);
+      }
+
+      console.log("after", checked);
+
+      await axios.post("http://localhost:5000/api/check", {
+          user: user,
+          checked: checked,
+          idx: idx,
+
+      });
+    }
+
+    saveCheck();
+
+  }
 
   return (
-    <List sx={{ width: '100%', maxWidth: 360, borderStyle:'solid', borderRadius:5, boxShadow:'5px' , height: 1 }}>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
-
-        return (
-          <ListItem
-            key={value}
-            secondaryAction={
-              <IconButton edge="end" aria-label="comments">
-                <CommentIcon />
-              </IconButton>
-            }
-            disablePadding
-          >
-            <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={`Todo ${value + 1}`} />
-            </ListItemButton>
-          </ListItem>
-        );
-      })}
-    </List>
+    <FormGroup style={{display:"flex", flexDirection:"row", justifyContent:"space-between" }}>
+      <FormControlLabel control={<Checkbox checked={checked} onChange={handleChange}/>} label={list.plan_todo} />
+      <Button style={{border:"none"}} onClick={onClick}>🗑</Button>
+    </FormGroup>
   );
 }

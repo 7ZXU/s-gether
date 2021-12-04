@@ -1,107 +1,140 @@
-import React, { useState } from 'react';
-import CustomButton from './CustomButton';
+import React, { useState, useEffect } from 'react';
+import InputWithLabel from './InputWithLabel';
 import '../css/InfoContainer.css';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import { getCookie } from '../cookie.js';
+import axios from 'axios';
 
 function InfoContainer() {
-  // TODO: 상태관리? redux로 백엔드 연동했을 때 값 유지
-  const [name, setName] = useState('');
-  const [birth, setBirth] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
+  const token = getCookie('myToken');
+
+  const [info, setInfo] = useState({
+    name: '',
+    birth: '',
+    phone: '',
+    email: '',
+  });
+
+  async function loadInfo() {
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (!token) {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    } else {
+      await axios
+        .post('http://localhost:5000/api/mypage/info', {
+          token: token,
+        })
+        .then((res) => {
+          console.log('Info data: ' + res.data);
+          setInfo({
+            name: res.data.name,
+            birth: res.data.birth,
+            phone: res.data.phone,
+            email: res.data.email,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
+  useEffect(() => {
+    loadInfo();
+  }, []);
+
+  async function saveInfo() {
+    console.log('email: ' + info.email);
+    await axios
+      .post('http://localhost:5000/api/mypage/saveInfo', {
+        token: token,
+        name: info.name,
+        birth: info.birth,
+        phone: info.phone,
+        email: info.email,
+      })
+      .then((res) => {
+        console.log(res.data.result);
+        if (res.status === 201) {
+          console.log('저장 완료');
+        } else {
+          console.log('저장 실패');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   const onChangeName = (e) => {
-    setName(e.target.value);
+    setInfo({
+      ...info,
+      name: e.target.value,
+    });
+    // setName(e.target.value);
   };
   const onChangeBirth = (e) => {
-    setBirth(e.target.value);
+    setInfo({
+      ...info,
+      birth: e.target.value,
+    });
+    //setBirth(e.target.value);
   };
   const onChangePhone = (e) => {
-    setPhone(e.target.value);
+    setInfo({
+      ...info,
+      phone: e.target.value,
+    });
+    //setPhone(e.target.value);
   };
   const onChangeEmail = (e) => {
-    setEmail(e.target.value);
+    setInfo({
+      ...info,
+      email: e.target.value,
+    });
+    //setEmail(e.target.value);
   };
 
   return (
     <div className="info__container">
       <h1>Info</h1>
-      <form id="info__form" action="#" method="post">
-        <div class="form-group row">
-          <label for="username" class="col-sm-3 col-form-label">
-            이름:
-          </label>
-          <div class="col-sm-9">
-            <input
-              onChange={onChangeName}
-              type="text"
-              autoComplete="off"
-              id="username"
-              name="username"
-              value={name}
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="birth" class="col-sm-3 col-form-label">
-            생년월일:
-          </label>
-          <div class="col-sm-9">
-            <input
-              onChange={onChangeBirth}
-              type="text"
-              autoComplete="off"
-              id="birth"
-              name="birth"
-              value={birth}
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="phone" class="col-sm-3 col-form-label">
-            전화번호:
-          </label>
-          <div class="col-sm-9">
-            <input
-              onChange={onChangePhone}
-              type="text"
-              autoComplete="off"
-              id="phone"
-              name="phone"
-              value={phone}
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="email" class="col-sm-3 col-form-label">
-            E-mail:
-          </label>
-          <div class="col-sm-9">
-            <input
-              onChange={onChangeEmail}
-              type="text"
-              autoComplete="off"
-              id="email"
-              name="email"
-              value={email}
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="form-group">
-          <button type="submit" class="btn-submit">
-            수정완료
-          </button>
-        </div>
-      </form>
-      {/* <form id="info-form" method="post" action="#">
-        <ul>
-          <li></li>
-        </ul>
-      </form> */}
+      <div className="userInfo__box">
+        <InputWithLabel
+          label="이름"
+          onChange={onChangeName}
+          name="username"
+          autoComplete="off"
+          value={info.name ? info.name : ''}
+          placeholder="이름을 입력하세요"
+        />
+        <InputWithLabel
+          label="생년월일"
+          onChange={onChangeBirth}
+          name="userbirth"
+          autoComplete="off"
+          value={info.birth ? info.birth : ''}
+          placeholder="2021-01-01 형태로 입력"
+        />
+        <InputWithLabel
+          label="전화번호"
+          onChange={onChangePhone}
+          name="userphone"
+          autoComplete="off"
+          value={info.phone ? info.phone : ''}
+          placeholder="전화번호를 입력하세요"
+        />
+        <InputWithLabel
+          label="이메일"
+          onChange={onChangeEmail}
+          name="useremail"
+          autoComplete="off"
+          value={info.email ? info.email : ''}
+          placeholder="이메일을 입력하세요"
+        />
+        <button type="submit" className="btn-submit" onClick={saveInfo}>
+          저장하기
+        </button>
+      </div>
     </div>
   );
 }
