@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Calendar from "../components/Calendar";
-import Friends from "../components/Friends";
-import CheckboxList from "../components/CheckboxList";
-import Thumbnail from "../components/Thumbnail";
-import ChallengeCard from "../components/ChallengeCard";
-import axios from "axios";
-import { Button, Modal, Fade, Box, Backdrop, List } from "@mui/material";
-import { getCookie } from "../cookie";
-
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Calendar from '../components/Calendar';
+import Friends from '../components/Friends';
+import CheckboxList from '../components/CheckboxList';
+import Thumbnail from '../components/Thumbnail';
+import ChallengeCard from '../components/ChallengeCard';
+import axios from 'axios';
+import { Button, Modal, Fade, Box, Backdrop, List } from '@mui/material';
+import { getCookie, removeCookie } from '../cookie';
 
 const FeedWrap = styled.div`
   display: flex;
@@ -64,37 +64,36 @@ const Plus = styled.button`
 `;
 
 const Login = styled(AccountCircleIcon)``;
+const Logout = styled(LogoutIcon)`
+  padding-left: 10px;
+`;
 
 function FeedPage() {
-  const [user, setUser] = useState("");
-  const token = getCookie("myToken");
+  const [user, setUser] = useState('');
+  const token = getCookie('myToken');
   const [lists, setLists] = useState([]);
 
-  useEffect(() => {
-    console.log(token);
-    async function loadData() {
-      await axios
-        .post("http://localhost:5000/api/feed", {
-          token: token,
-        })
-        .then((res) => {
-          if (res.data.nickname == null) {
-            setUser(res.data.id);
-          } else {
-            setUser(res.data.nickname);
-          }
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+  async function loadData() {
+    await axios
+      .post('http://localhost:5000/api/feed', {
+        token: token,
+      })
+      .then((res) => {
+        if (res.data.nickname == null) {
+          setUser(res.data.id);
+        } else {
+          setUser(res.data.nickname);
+        }
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
-    loadData();
-
-    async function loadList() {
-      await axios
-      .post("http://localhost:5000/api/todolist" , {
+  async function loadList() {
+    await axios
+      .post('http://localhost:5000/api/todolist', {
         token: token,
       })
       .then((res) => {
@@ -103,9 +102,19 @@ function FeedPage() {
       .catch((err) => {
         console.log(err);
       });
-    }
+  }
 
-    loadList();
+  useEffect(() => {
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (token) {
+      console.log('토큰 있음');
+      console.log(token);
+      loadData();
+      loadList();
+    } else {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    }
   }, []);
 
   const SLIDE_COUNT = 10;
@@ -120,24 +129,32 @@ function FeedPage() {
   };
 
   const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
     boxShadow: 24,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     p: 4,
+  };
+
+  const onClickLogout = () => {
+    console.log('로그아웃 클릭');
+
+    // 쿠키 삭제
+    removeCookie('myToken');
+    window.location.replace('/'); // 메인 페이지로 이동
   };
 
   const onClick = () => {
     console.log(token);
 
     async function saveData() {
-      await axios.post("http://localhost:5000/api/todo", {
+      await axios.post('http://localhost:5000/api/todo', {
         todo: todo,
         id: user,
         token: token,
@@ -148,16 +165,21 @@ function FeedPage() {
     saveData();
   };
 
-  const [todo, setTodo] = useState("");
+  const [todo, setTodo] = useState('');
 
   return (
     <FeedWrap>
       <Header>
         <Friends />
-
-        <Link to="/mypage">
-          <Login sx={{ fontSize: 50 }}>login</Login>
-        </Link>
+        <div>
+          <Link to="/mypage">
+            <Login sx={{ fontSize: 50, color: '#000000' }}>login</Login>
+          </Link>
+          <Logout
+            sx={{ fontSize: 50, cursor: 'pointer' }}
+            onClick={onClickLogout}
+          ></Logout>
+        </div>
       </Header>
       <Body>
         <CalendarWrap>
@@ -194,14 +216,14 @@ function FeedPage() {
                     setTodo(e.target.value);
                   }}
                   placeholder="할 일을 입력하세요"
-                  style={{ marginBottom: "20px" }}
+                  style={{ marginBottom: '20px' }}
                 />
 
-                <Box style={{ flexDirection: "row" }}>
-                  <button style={{ width: "50%" }} onClick={handleClose}>
+                <Box style={{ flexDirection: 'row' }}>
+                  <button style={{ width: '50%' }} onClick={handleClose}>
                     취소
                   </button>
-                  <button style={{ width: "50%" }} onClick={onClick}>
+                  <button style={{ width: '50%' }} onClick={onClick}>
                     완료
                   </button>
                 </Box>

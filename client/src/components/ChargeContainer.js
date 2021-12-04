@@ -3,7 +3,6 @@ import '../css/ChargeContainer.css';
 import { getCookie } from '../cookie.js';
 import Modal from './Modal';
 import axios from 'axios';
-import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
