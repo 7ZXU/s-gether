@@ -9,9 +9,13 @@ import Stack from '@mui/material/Stack';
 
 
 function ChallengePopup(props)  {
-    const url = "http://localhost:5000";
+    
     const {onClose} = props;
     const [imgSrc, setImgSrc] = useState(defaultimage);
+    const [uploadFile, setUploadFile] = useState({
+        file: null,
+        fileName: null,
+      });
     const [ChallengeName, setChallengeName] = useState("");
     const [ChallengeEndDate, setChallengeDate] = useState("");
     const [ParticipantsNum, setParticipantsNum] = useState("");
@@ -24,14 +28,22 @@ function ChallengePopup(props)  {
     const onChangeHandle = (evt)=>{
         if(evt.target.files.length){
             const imgTarget = (evt.target.files)[0];
+            
             const fileReader = new FileReader();
             fileReader.readAsDataURL(imgTarget);
             fileReader.onload = function(e) {
               setImgSrc(e.target.result);
             }
+            setUploadFile({
+                file: evt.target.files[0],
+                fileName: evt.target.value,
+            });
+            console.log("??");
+            console.log(evt.target.files[0]);
         }else{
             setImgSrc(defaultimage);
         }
+        
     }
     const onHandleUpload = async () => {
         var type = "";
@@ -55,18 +67,24 @@ function ChallengePopup(props)  {
             return;
         }
         try {
-            axios.post(`${url}/api/upLoadChallenge`, {
-                params: {
-                    'img':imgSrc,
-                    'StartDate':ChallengeStartDate,
-                    'EndDate':ChallengeEndDate,
-                    'Name' : ChallengeName,
-                    'EntryFee':EntryFee,
-                    'PeopleNum':ParticipantsNum,
-                    'type' : type,
- 
-                }
-            });
+            const formData = new FormData();
+            formData.append('image', uploadFile.file);
+            formData.append('StartDate',ChallengeStartDate);
+            formData.append('EndDate',ChallengeEndDate);
+            formData.append('Name' , ChallengeName);
+            formData.append('EntryFee' ,EntryFee);
+            formData.append('PeopleNum', ParticipantsNum);
+            formData.append('type', type);
+            const url = "http://localhost:5000/api/upLoadChallenge";
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                },
+            };
+
+            axios.post(url, formData, config)
+            
+
             setChallengeName("");
             setChallengeDate("");
             setParticipantsNum("");
