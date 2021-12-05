@@ -360,7 +360,7 @@ app.post('/api/upLoadChallenge', upload.single('image'), (req, res) => {
     participation_fee, max_participants, challenge_image, current_participants) VALUES 
   ("${name}","${EndDate}", "${StartDate}","${type}","${Fee}","${Num}", "${image}", "${1}" )`);
   db.query(
-    `INSERT INTO management.challenge (user_id, challenge_id) SELECT "${id}", challenge_id FROM management.challenge_info WHERE challenge_name = "${name}" `
+    `INSERT INTO management.challenge (user_id, reward_check, success, fail, challenge_id) SELECT "${id}", 0, 0, 0, challenge_id FROM management.challenge_info WHERE challenge_name = "${name}"`
   );
 
   const banking_query = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id}' ORDER BY idx DESC`;
@@ -394,7 +394,7 @@ app.post('/api/enrollChallenge', (req, res) => {
   const fee = req.body.Fee;
   const id = jwt.decode(token, YOUR_SECRET_KEY)['userId'];
   db.query(
-    `INSERT INTO management.challenge (user_id, challenge_id) VALUES ("${id}","${data['id']}")`
+    `INSERT INTO management.challenge (user_id, challenge_id, reward_check, success, fail) VALUES ("${id}","${data['id']}", 0, 0, 0)`
   );
   db.query(
     `UPDATE management.challenge_info SET current_participants = current_participants + 1 WHERE challenge_id = ${data['id']}`
@@ -425,7 +425,7 @@ app.post('/api/enrollChallenge', (req, res) => {
 app.get('/api/getMyChallengeList', (req, res) => {
   const token = req.query['token'];
   const userId = jwt.decode(token, YOUR_SECRET_KEY)['userId'];
-  const sql_query = `SELECT * FROM management.challenge_info WHERE challenge_id IN (SELECT challenge_id FROM management.challenge WHERE user_id = "${userId}" ) `;
+  const sql_query = `SELECT * FROM management.challenge_info WHERE challenge_id IN (SELECT challenge_id FROM management.challenge WHERE user_id = "${userId}" AND reward_check = 0) `;
   db.query(sql_query, (err, rows, fields) => {
     if (err) {
       console.log(err);
