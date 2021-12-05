@@ -68,16 +68,12 @@ yarn dev
     현재 사람들을 모집하는 챌린지 목록을 보여준다.
     해당 오른쪽에는 해당 챌린지 카드를 보여준다.
     챌린지 카드를 클릭하면 해당 챌린지에 참여할지에 관한 팝업이 뜬다.
-    ```
-    ##### 팝업 사진 추가!!!!!!
-    ```
+    <img src = "./Picture/enrollChallenge.png">
 
 4. Add Challenge
 
     사용자가 하고자 하는 챌린지를 등록할 수 있다.
-    ```
-    ##### 팝업 사진 추가!!!!!
-    ```
+    <img src = "./Picture/UploadChallenge.png">
 
 ---
 ### [My Challenge Page]
