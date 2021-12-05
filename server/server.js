@@ -936,47 +936,7 @@ app.post('/api/mypage/penalty', (req, res) => {
   });
 });
 
-/* cert 이미지 불러오기 */
-app.post('/api/challenge_ing_img', (req, res) => {
-  const token = req.body.token;
-  const cid = req.body.challenge_id;
 
-  let infos = [];
-  let img;
-  let date;
-  let ischecked;
-
-  const id = jwt.decode(token, YOUR_SECRET_KEY);
-
-  const sql = `SELECT * FROM management.challenge_ing WHERE user_id = '${id.userId}' AND challenge_id = '${cid}'`;
-
-  db.query(sql, (err, rows, fields) => {
-    if (err) {
-      //console.log(err);
-
-      res.status(201).json({
-        result: 'not ok',
-      });
-    } else {
-      for (let i = 0; i < rows.length; i++) {
-        date = rows[i].challenge_date;
-        img = rows[i].challenge_image;
-        ischecked = rows[i].mate_check;
-
-        infos.push({
-          id: i,
-          img: img,
-          date: date,
-          ischecked: ischecked,
-        });
-      }
-      res.status(201).json({
-        result: 'ok',
-        rows: infos,
-      });
-    }
-  });
-});
 
 // reward
 app.post('/api/mypage/rewards', (req, res) => {
@@ -1076,7 +1036,7 @@ app.post('/api/challenge_mate', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      mateid = rows[0].challenge_mate;
+      mateid = rows[0].mate;
       sql2 = `SELECT * FROM management.challenge_ing WHERE user_id = '${mateid}' AND challenge_id = ${cid}`;
       db.query(sql2, (err, rows, fields) => {
         if (err) {
