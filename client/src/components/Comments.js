@@ -11,20 +11,19 @@ const Container = styled.div`
 `;
 
 
-
 const Comment = styled.text`
     padding-top: 10px;
   padding-left: 50px;
   padding-bottom: 20px;
 `;
 
-function Comments({id, src, comment}) {
+function Comments({id, comment}) {
 
 
   return (
 
     <div>
-    <AvatarHeader id={id} src={src}></AvatarHeader>
+    <AvatarHeader id={id}></AvatarHeader>
       <Container>
         <Comment>{comment}</Comment>
       </Container>

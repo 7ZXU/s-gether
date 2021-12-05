@@ -13,11 +13,12 @@ import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import StaticDatePicker from "@mui/lab/StaticDatePicker";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import Avatar from "@mui/material/Avatar";
 import FriendPage from "./FriendPage";
 import Header from "../components/Header";
-
+import defaultimage from "../assets/upLoadImage.png";
+import MyCard from "../components/MyCard";
 
 const FeedWrap = styled.div`
   display: flex;
@@ -34,6 +35,7 @@ const Navbar = styled.div`
 const Body = styled.div`
   display: flex;
   justify-content: space-between;
+  width: 100%;
 `;
 
 const CalendarWrap = styled.div`
@@ -54,7 +56,7 @@ const CheckboxListWrap = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 20px;
-  width: 20%;
+  width: 60%;
 `;
 
 const ChallengeWrap = styled.div`
@@ -63,62 +65,26 @@ const ChallengeWrap = styled.div`
   margin-left: 20px;
   width: 20%;
 `;
-const Plus = styled.button`
-  background: transparent;
-  border: none;
-  font-size: 100px;
-  text-align: center;
-`;
-
-const Login = styled(AccountCircleIcon)``;
-
 
 function FeedPage({ history }) {
+  // useState 변수
   const [user, setUser] = useState("");
   const token = getCookie("myToken");
   const [lists, setLists] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [todo, setTodo] = useState("");
-  const [album, setAlbum] = useState([]);
   const [friends, setFriends] = useState([]);
+  // const [challenges, setChallenges] = useState([]);
 
-  const [value, setValue] = useState(new Date());
-  const [day, setDay] = useState(new Date());
+  const [value, setValue] = useState(new Date()); // 캘린더 클릭 날짜 설정
+  const [day, setDay] = useState(new Date()); // 오늘 날짜 설정
 
-  const [uploadFile, setUploadFile] = useState({
-    file: null,
-    fileName: null,
-  });
+  const [imgSrc, setImgSrc] = useState(""); // thumbnail에 띄울 이미지 배열 받아옴
 
-  const [uploadImage, setUploadImage] = useState(false);
-  const [userImage, setUserImage] = useState(null);
-  
-  
-  const onLoadImage = (e) => {
-    if (e.target.files.length) {
-      const imgTarget = e.target.files[0];
-      setUploadFile({
-        file: e.target.files[0],
-        fileName: e.target.value,
-      });
-      console.log(e.target.files[0]);
-      console.log('fileName: ' + e.target.value);
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(imgTarget);
-      fileReader.onload = function (e) {
-        setUserImage(e.target.result);
-        setUploadImage(true);
-      };
-      console.log('이미지 업로드');
-    } else {
-      console.log('이미지추가 x');
-    }
-  };
-  
+  // async 함수
 
   // 캘린더에 선택한 날짜에 따라 todo 불러옴
   async function loadList(date) {
-
     await axios
       .post("http://localhost:5000/api/todolist", {
         token: token,
@@ -132,6 +98,31 @@ function FeedPage({ history }) {
         console.log(err);
       });
   }
+  async function loadPhoto() {
+    await axios
+      .post("http://localhost:5000/api/photolist", {
+        token: token,
+        date: format(value, "yyyy-MM-dd"),
+      })
+      .then((res) => {
+        setPhotos(res.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // async function loadChallenge() {
+  //   await axios
+  //     .post("http://localhost:5000/api/loadChallenge", {
+  //       token: token,
+  //     })
+  //     .then((res) => {
+  //       console.log("feedpage", res.data.result);
+  //       setChallenges(res.data.result);
+  //       // console.log("feedpage/challenge", challenges);
+  //     });
+  // }
 
   useEffect(() => {
     console.log(token);
@@ -172,6 +163,9 @@ function FeedPage({ history }) {
     }
 
     loadFriends();
+
+    loadPhoto();
+    // loadChallenge();
   }, []);
 
   const SLIDE_COUNT = 10;
@@ -183,6 +177,14 @@ function FeedPage({ history }) {
   };
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const MyCardList = () => {
+    return (
+      <Box sx={{ border: 2, borderRadius: 1 }}>
+        <MyCard></MyCard>
+      </Box>
+    );
   };
 
   const style = {
@@ -213,27 +215,41 @@ function FeedPage({ history }) {
         .then(loadList(value));
     }
 
-    // // 캘린더에 선택한 날짜에 따라 todo 불러옴
-    // async function loadList() {
-    //   await axios
-    //     .post("http://localhost:5000/api/todolist", {
-    //       token: token,
-    //       day: day,
-    //     })
-    //     .then((res) => {
-    //       console.log("FeedPage", res.data.result);
-    //       setLists(res.data.result);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // }
-
     setOpen(false);
     saveData();
   };
 
+  // 저장한 이미지 배열로 보내기
+  // 9개 제한?
 
+  // useEffect
+  // 날짜 클릭하면 이미지 배열 불러와서 업데이트
+
+  const onLoadImage = (e) => {
+    if (e.target.files.length) {
+      const imgTarget = e.target.files[0]; // 여기서 올린 사진 첫번째꺼만 받아옴
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(imgTarget);
+      fileReader.onload = function (e) {
+        setImgSrc(e.target.result);
+      };
+    } else {
+    }
+  };
+
+  const onUploadImage = async () => {
+    console.log("Feedpage/onLoadImage", photos);
+
+    axios
+      .post("http://localhost:5000/api/uploadimage", {
+        params: {
+          img: imgSrc,
+          date: value,
+          token: token,
+        },
+      })
+      .then(loadPhoto());
+  };
 
   // 친구들 앞 글자만 분리
   function stringAvatar(name) {
@@ -279,7 +295,6 @@ function FeedPage({ history }) {
               value={value}
               onChange={(newValue) => {
                 setValue(newValue);
-
                 // todolist post
                 async function loadList() {
                   await axios
@@ -297,96 +312,172 @@ function FeedPage({ history }) {
 
                 loadList();
 
-                // async function loadPhoto() {
-                //   await axios
-                //     .post("http://localhost:5000/api/photolist", {
-                //       token: token,
-                //       date: format(newValue, "yyyy-MM-dd"),
-                //     })
-                //     .then((res) => {
-                //       setPhotos(res.data.result);
-                //       console.log(photos);
-                //     })
-                //     .catch((err) => {
-                //       console.log(err);
-                //     });
-                // }
-                // loadPhoto();
-
-                // 해당 날짜를 feed 페이지에 보내야 함
+                async function loadPhoto() {
+                  await axios
+                    .post("http://localhost:5000/api/photolist", {
+                      token: token,
+                      date: format(newValue, "yyyy-MM-dd"),
+                    })
+                    .then((res) => {
+                      setPhotos(res.data.result);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }
+                loadPhoto();
               }}
               // Wed Dec 22 2021 21:10:22 GMT+0900 (한국 표준시)
 
               renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>
-          <Link to="/feed/image">
-            <Thumbnail slides={photos} num={3} />
-          </Link>
-        </CalendarWrap>
-        <CheckboxListWrap>
-          <h1>Todo</h1>
-          {lists.map((list, index) => (
-            <CheckboxList list={list} key={index} show={"1"} loadList={loadList} value={value}/> //idx 멎나??
-          ))}
 
-          <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            open={open}
-            onClose={handleClose}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: 500,
+          <Thumbnail slides={photos} num={3} />
+          <button
+            onClick={() => {
+              history.push(
+                `/feed/image?date=${format(
+                  value,
+                  "yyyy-MM-dd"
+                )}&token=${token}&slides=${photos}`
+              );
+            }}
+            style={{
+              backgroundColor: "transparent",
+              textAlign: "end",
+              fontWeight: "bold",
+              border: "none",
+              fontSize: "18px",
             }}
           >
-            <Fade in={open}>
-              <Box sx={style}>
-                <h1>Todo 추가 </h1>
+            ⍈ comments
+          </button>
+        </CalendarWrap>
 
-                <input
-                  type="text"
-                  onBlur={(e) => {
-                    setTodo(e.target.value);
-                  }}
-                  placeholder="할 일을 입력하세요"
-                  style={{ marginBottom: "20px" }}
-                />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            width: "40%",
+            marginLeft: "30px",
+          }}
+        >
+          <CheckboxListWrap>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h1>Todo</h1>
+              <Button onClick={handleOpen} style={{ fontSize: "30px" }}>
+                ➕
+              </Button>
+            </div>
 
-                <Box style={{ flexDirection: "row" }}>
-                  <button style={{ width: "50%" }} onClick={handleClose}>
-                    취소
-                  </button>
-                  <button style={{ width: "50%" }} onClick={onClick}>
-                    완료
-                  </button>
+            {lists.map((list, index) => (
+              <CheckboxList
+                list={list}
+                key={index}
+                show={"1"}
+                loadList={loadList}
+                value={value}
+              /> //idx 멎나??
+            ))}
+          </CheckboxListWrap>
+
+          <div>
+            <Modal
+              aria-labelledby="transition-modal-title"
+              aria-describedby="transition-modal-description"
+              open={open}
+              onClose={handleClose}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={open}>
+                <Box sx={style}>
+                  <h1>Todo 추가 </h1>
+
+                  <input
+                    type="text"
+                    onBlur={(e) => {
+                      setTodo(e.target.value);
+                    }}
+                    placeholder="할 일을 입력하세요"
+                    style={{
+                      marginBottom: "20px",
+                      fontSize: "20px",
+                      borderTop: "none",
+                      borderLeft: "none",
+                      borderRight: "none",
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    <button
+                      style={{
+                        width: "45%",
+                        fontSize: "25px",
+                        fontWeight: "bold",
+                        backgroundColor: "transparent",
+                        border: "none",
+                      }}
+                      onClick={handleClose}
+                    >
+                      ✕
+                    </button>
+                    <button
+                      style={{
+                        width: "45%",
+                        fontSize: "25px",
+                        fontWeight: "bold",
+                        backgroundColor: "transparent",
+                        border: "none",
+                      }}
+                      onClick={onClick}
+                    >
+                      ❍
+                    </button>
+                  </div>
                 </Box>
-              </Box>
-            </Fade>
-          </Modal>
-          <Button onClick={handleOpen}>ADD TODO</Button>
-          
-            <input
-              type="file" 
-              id="input-file"
-              accept="image/jpg, image/png, image/jpeg, image/gif, image/png"
-              name="plan_img" 
-              multiple="multiple"
-              onChange={onLoadImage}
-            />
+              </Fade>
+            </Modal>
 
-        </CheckboxListWrap>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+              }}
+            >
+              <input
+                type="file"
+                id="input-file"
+                accept="image/jpg, image/png, image/jpeg, image/gif, image/png"
+                name="plan_img"
+                onChange={onLoadImage}
+                style={{ fontSize: "20px" }}
+              />
+              <Button
+                onClick={onUploadImage}
+                style={{ fontSize: "20px", color: "black" }}
+              >
+                ⇧
+              </Button>
+            </div>
+          </div>
+        </div>
+
         <ChallengeWrap>
           <h1>Challenge</h1>
-          <Link to="/myChallenge">
-            <ChallengeCard />
-          </Link>
-          <ChallengeCard />
-          <ChallengeCard />
-          <Link to="/challenges">
-            <Plus>+</Plus>
-          </Link>
+          <MyCardList />
         </ChallengeWrap>
       </Body>
     </FeedWrap>

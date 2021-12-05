@@ -21,6 +21,7 @@ function ChallengePopup(props)  {
     const [categoryworkOut, setcategoryworkOut] = useState(false);
     const [categoryRoutine, setcategoryRoutine] = useState(false);
     const [categoryProject, setcategoryProject] = useState(false);
+    
     const onChangeHandle = (evt)=>{
         if(evt.target.files.length){
             const imgTarget = (evt.target.files)[0];
@@ -33,6 +34,7 @@ function ChallengePopup(props)  {
             setImgSrc(defaultimage);
         }
     }
+    
     const onHandleUpload = async () => {
         var type = "";
         console.log(categoryProject);

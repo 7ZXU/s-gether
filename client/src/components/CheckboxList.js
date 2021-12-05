@@ -87,6 +87,7 @@ export default function CheckboxList({ list, show, loadList, value }) {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
+        width: "100%"
       }}
     >
       {/* <input type="checkbox" checked={checked} onChange={handleChange} />

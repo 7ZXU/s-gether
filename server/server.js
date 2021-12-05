@@ -14,8 +14,9 @@ const upload = multer({ dest: './server/upload' }); // 파일 업로드 할 폴�
 const YOUR_SECRET_KEY = "abcd";
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: 5000000}));
 app.use('/image', express.static('./server/upload')); // 클라이언트 입장에서 /image 라는 경로로 접근하도록 설정
+
 
 
 app.use(cors());
@@ -127,36 +128,38 @@ app.post("/api/feed", (req, res) => {
   });
 });
 
-app.post("/api/friendpage", (req, res) => {
-  const friend = req.body.friend;
-  const token = req.body.token;
-  const id = jwt.decode(token, YOUR_SECRET_KEY);
-  console.log("api/friendpage", friend);
+// app.post("/api/friendpage", (req, res) => {
+//   const friend = req.body.friend;
+//   const token = req.body.token;
+//   const id = jwt.decode(token, YOUR_SECRET_KEY);
+//   console.log("api/friendpage", friend);
 
-  let list;
+//   let list;
 
-  const sql = `SELECT * FROM management.plan WHERE user_id = "${friend}"`;
+//   const sql = `SELECT * FROM management.plan WHERE user_id = "${friend}"`;
 
-  db.query(sql, (err, row, fields) => {
-    if (err) {
-      console.log(err);
-    } else {
-      list = row;
-      console.log(list);
-    }
-    res.status(201).json({
-      result: list,
-    });
+//   db.query(sql, (err, row, fields) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       list = row;
+//       console.log(list);
+//     }
+//     res.status(201).json({
+//       result: list,
+//     });
 
 
-  });
-});
+//   });
+// });
 
 app.post("/api/friends", (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
-  const sql = `SELECT nickname from management.user_info WHERE user_id IN (SELECT target_mem_id FROM management.follow WHERE mem_id = "${id.userId}")`;
+  const sql = `SELECT nickname from management.user_info WHERE user_id IN (SELECT target_mem_id FROM management.follow WHERE mem_id = "${id.userId}" AND agree = 1) OR user_id IN (SELECT mem_id FROM management.follow WHERE target_mem_id = "${id.userId}" AND agree = 1);`
+
+  // const sql = `SELECT nickname from management.user_info WHERE user_id IN (SELECT target_mem_id FROM management.follow WHERE mem_id = "${id.userId}")`;
 
   let friends = [];
 
@@ -203,15 +206,22 @@ app.post("/api/savecomment", (req, res) => {
   
   const token = req.body.token;
   const friend = req.body.friend;
-  const day = req.body.day;
+  const day = req.body.day.split("T")[0];
   const comment = req.body.comment;
 
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
-  console.log("api/savecomment", id.userId, friend, day, comment)
-  db.query(
-    `INSERT INTO management.comment (commented_nickname, comment, comment_user_id, comment_date) VALUES ("${friend}", "${comment}", "${id.userId}", "${day}") `
-  );
+  
+  
+  const sql = `INSERT INTO management.comment (commented_nickname, comment, comment_user_id, comment_date) VALUES ("${friend}", "${comment}", "${id.userId}", "${day}") `
+
+  db.query(sql, (err, row, fields) => {
+    if(err){
+      console.log(err)
+    } else{
+      console.log("api/savecomment", id.userId, friend, day, comment)
+    }
+  })
 
 
 })
@@ -250,15 +260,17 @@ app.post("/api/photolist", (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
   const date = req.body.date;
-  let photo;
+  let photo=[];
 
-  const sql = `SELECT plan_image FROM management.photo WHERE user_id="${id.userId} AND DATE(plan_date) = "${date}"`;
+  const sql = `SELECT plan_image FROM management.photo WHERE photo_user_id="${id.userId}" AND DATE(photo_date) = "${date}"`;
 
-  db.query(sql, (err, row, fields) => {
+  db.query(sql, (err, rows, fields) => {
     if (err) {
       console.log(err);
     } else {
-      photo = row;
+      rows.forEach((row)=>{
+        photo.push(row.plan_image)
+      })
     }
     res.status(201).json({
       result: photo,
@@ -316,6 +328,29 @@ app.post("/api/check", (req, res) => {
 
   // )
 });
+
+
+
+app.post('/api/uploadimage', (req, res)=>{
+  const body = req.body.params;
+
+  const img = body['img'];
+  const date = body['date'];
+  const token = body['token'];
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  console.log('api/upload', date, id.userId);
+
+  const sql = `INSERT INTO management.photo (photo_user_id, photo_date, plan_image) VALUES ("${id.userId}", "${date}", "${img}")`
+
+  db.query(sql, (err, row, fields) =>{
+    if (err){
+      console.log(err);
+    } else{
+      // console.log(row);
+    }
+  })
+})
 
 app.post('/api/upLoadChallenge', (req, res) =>{
 
@@ -1135,6 +1170,67 @@ app.post('/api/challenge_mate', (req, res) => {
     }
   });
 });
+
+app.post('/api/loadcomment', (req, res)=>{
+  const token = req.body.token;
+  const date = req.body.date;
+  const friend_name = req.body.friend_name;
+  let lists;
+
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  let sql;
+
+  if (friend_name !== null) {
+    sql = `SELECT comment_user_id, comment FROM management.comment WHERE commented_nickname = "${friend_name}"`
+  } else {
+    console.log("else");
+    sql = `SELECT comment_user_id, comment FROM management.comment WHERE commented_nickname IN (SELECT nickname FROM management.user_info WHERE user_id = "${id.userId}")`
+  }
+  
+
+  db.query(sql, (err, row, fields) => {
+
+    if(err){
+      console.log(err)
+    } else{
+
+      lists = row;
+    } res.status(201).json({
+      result: lists
+    })
+    
+  })
+
+
+})
+
+
+app.post('/api/loadChallenge', (req, res)=>{
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  let challenges = [];
+
+  const sql = `SELECT challenge_name, challenge_image, challenge_id FROM management.challenge_info WHERE challenge_id in (SELECT challenge_id FROM management.challenge WHERE user_id = "${id.userId}")`;
+
+  db.query(sql, (err, rows, fields)=>{
+    if(err){
+      console.log(err)
+    } else {
+      // console.log("api/loadC", rows);
+      rows.forEach((row) =>{
+        challenges.push({
+          "challenge_id" : row['challenge_id'],
+          "challenge_name" : row['challenge_name'], 
+          "challenge_image" : row['challenge_image']
+        })
+      })
+    }
+    console.log("api/loadC", challenges);
+    res.status(201).json({
+      result: challenges
+    })
+  })
+})
 
 app.listen(port, () => {
   console.log(`Connect at http://localhost:${port}`);
