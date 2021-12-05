@@ -35,7 +35,7 @@ const Form = styled.form`
   background: white;
 `;
 
-const Cert = ({ Cday, cert, sday,t2,update}) => {
+const Cert = ({ Cday, cert, sday,t2,update,challengeId}) => {
   const token = getCookie('myToken');
 
 
@@ -69,7 +69,7 @@ const Cert = ({ Cday, cert, sday,t2,update}) => {
       await axios
         .post('http://localhost:5000/api/challenge_ing_img', {
           token: token,
-          challenge_id: 10, //실험용
+          challenge_id: challengeId, //실험용
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
@@ -137,7 +137,7 @@ const certupdate = () => {
 
   try {
     axios.post('http://localhost:5000/api/cert', {
-          challenge_id: 10, //실험용
+          challenge_id: challengeId, //실험용----------------------------------------------------------------------------------------------------------------
           cert: cc,
           user_id: 'psy',//mate
           challenge_date: sday
@@ -156,7 +156,7 @@ const certupdate = () => {
   
     try {
       axios.post('http://localhost:5000/api/cert', {
-            challenge_id: 10, //실험용
+            challenge_id: challengeId, //실험용
             cert: cc,
             user_id: 'psy',//mate
             challenge_date: sday
@@ -205,7 +205,7 @@ const certupdate = () => {
           </div>
         </ImageList>
       )}
-      {insertToggle && <ChallengeBack onInsertToggle={onInsertToggle} da={sday}/>}
+      {insertToggle && <ChallengeBack onInsertToggle={onInsertToggle} da={sday} challengeId={challengeId}/>}
       {insertToggle2 && (
         <div>
           <form id="challenge__cert__back"><div className="Check" onClick={onInsertToggle2}></div></form>

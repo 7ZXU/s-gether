@@ -25,7 +25,7 @@ const Form = styled.form`
   background: white;
 `;
 
-const Challperson = (onInsertToggle, name) => {
+const Challperson = ({onInsertToggle, name, challengeId}) => {
   const [todos] = useState([
     {
       id: 1,
@@ -76,7 +76,7 @@ const Challperson = (onInsertToggle, name) => {
       await axios
         .post('http://localhost:5000/api/challenge_ing', {
           token: token,
-          challenge_id: 10, //실험용
+          challenge_id: challengeId, //실험용
           today: time
         })
         .then((res) => {
@@ -103,7 +103,7 @@ const Challperson = (onInsertToggle, name) => {
       await axios
         .post('http://localhost:5000/api/challenge_info', {
           token: token,
-          challenge_id: 10 //실험용
+          challenge_id: challengeId //실험용
         })
         .then((res) => {
           //console.log("-------------challenge_image---------------");

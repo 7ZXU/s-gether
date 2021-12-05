@@ -46,7 +46,6 @@ function MyPage() {
             </CustomButton>
             <CustomButton onClick={onClickSetting}>Setting</CustomButton>
           </div>
-          {/* <SelectMenu></SelectMenu> */}
         </div>
         <div className="menu-detail">
           {(function () {

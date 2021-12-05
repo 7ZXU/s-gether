@@ -69,6 +69,7 @@
 }
 
 .table__container {
+  padding-top: 20px;
   max-height: 350px;
   width: 100%;
   overflow: auto;
