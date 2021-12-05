@@ -99,10 +99,18 @@ yarn dev
    
 
    선택한 날짜의 todolist를 보여준다.
+   <img src = ".\Picture\challengetodo.png" >
+   선택한 날짜의 todo를 추가할 수 있다.
 5. Certification
 
    
    선택한 날짜의 인증사진을 보여준다.
+   <img src = ".\Picture\cert.png" >
+   사진을 누르면 challenge를 잘 수행했는지 선택할 수 있다.
+
+   
+   <img src = ".\Picture\certupload.png" >
+   선택한 날짜의 인증사진을 업로드할 수 있다.
 
 
 
