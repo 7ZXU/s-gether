@@ -757,13 +757,14 @@ app.post('/api/challenge_todo', (req, res) => {
   const token = req.body.token;
   const challenge_id = req.body.challenge_id;
   const user_id = req.body.user_id;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
 
   let date;
   let todo;
   let check;
   let infos = [];
 
-  const sql = `SELECT * FROM management.challenge_todo WHERE challenge_id = '${challenge_id}' AND user_id = '${user_id}'`; //date_format(date_start, '%Y-%m-%d'), date_format(date_finish, '%Y-%m-%d'), challenge_image, challenge_name, challenge_id
+  const sql = `SELECT * FROM management.challenge_todo WHERE challenge_id = '${challenge_id}' AND user_id = '${id.userId}'`; //date_format(date_start, '%Y-%m-%d'), date_format(date_finish, '%Y-%m-%d'), challenge_image, challenge_name, challenge_id
   db.query(sql, (err, rows, fields) => {
     if (err) {
       console.log(err);
@@ -1075,7 +1076,7 @@ app.post('/api/challenge_mate', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      //mateid = rows[i].challenge_mate;
+      mateid = rows[0].challenge_mate;
       sql2 = `SELECT * FROM management.challenge_ing WHERE user_id = '${mateid}' AND challenge_id = ${cid}`;
       db.query(sql2, (err, rows, fields) => {
         if (err) {
@@ -1177,6 +1178,7 @@ app.post('/api/challenge_mate', (req, res) => {
                       mctodo: infos2,
                       mcimg: infos3,
                       matenick: nickname,
+                      maid: mateid
                     });
                   });
                 }

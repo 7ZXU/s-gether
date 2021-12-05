@@ -116,7 +116,7 @@ const Template = ({ match }) => {
       date: '2020-12-12',
     },
   ]);
-
+  const [mateid, setmateid] = useState('');
   const [mateuser, setmateUser] = useState('');
 
   const [matechallenges, setmatechallenges] = useState([
@@ -299,6 +299,8 @@ const Template = ({ match }) => {
               );
             const matenickname = res.data.matenick;
             setmateUser(matenickname);
+            const matei = res.data.maid;
+            setmateid(matei);
             setmateallTodos(
               res.data.mctodo
               );
@@ -570,7 +572,7 @@ const Template = ({ match }) => {
 
       {!(getday.date === "") &&<div className="Template3">
         <div className="title">Certification</div>
-        <Cert Cday={todos && todos.length} cert={1} sday={getday.date} t2 = {itemData} update={onupdate} challengeId={challengeId}/>
+        <Cert Cday={todos && todos.length} cert={1} sday={getday.date} t2 = {itemData} update={onupdate} challengeId={challengeId} mid={mateid}/>
       </div>}
     </div>
   );

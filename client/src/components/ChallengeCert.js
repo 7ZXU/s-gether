@@ -35,7 +35,7 @@ const Form = styled.form`
   background: white;
 `;
 
-const Cert = ({ Cday, cert, sday,t2,update,challengeId}) => {
+const Cert = ({ Cday, cert, sday,t2,update,challengeId, mid}) => {
   const token = getCookie('myToken');
 
 
@@ -137,9 +137,9 @@ const certupdate = () => {
 
   try {
     axios.post('http://localhost:5000/api/cert', {
-          challenge_id: challengeId, //실험용----------------------------------------------------------------------------------------------------------------
+          challenge_id: challengeId,
           cert: cc,
-          user_id: 'psy',//mate
+          user_id: mid,//mate
           challenge_date: sday
         })
         .catch((err) => {
@@ -158,7 +158,7 @@ const certupdate = () => {
       axios.post('http://localhost:5000/api/cert', {
             challenge_id: challengeId, //실험용
             cert: cc,
-            user_id: 'psy',//mate
+            user_id: mid,//mate
             challenge_date: sday
           })
           .catch((err) => {
