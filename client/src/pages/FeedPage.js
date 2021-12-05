@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MyCard from '../components/MyCard';
 import Calendar from "../components/Calendar";
 import CheckboxList from "../components/CheckboxList";
 import Thumbnail from "../components/Thumbnail";
@@ -183,6 +184,14 @@ function FeedPage({ history }) {
   };
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const MyCardList = () => {
+    return(
+      <Box sx={{ border: 2, borderRadius: 1 }}>
+        <MyCard></MyCard>
+      </Box>
+    )
   };
 
   const style = {
@@ -378,15 +387,7 @@ function FeedPage({ history }) {
 
         </CheckboxListWrap>
         <ChallengeWrap>
-          <h1>Challenge</h1>
-          <Link to="/myChallenge">
-            <ChallengeCard />
-          </Link>
-          <ChallengeCard />
-          <ChallengeCard />
-          <Link to="/challenges">
-            <Plus>+</Plus>
-          </Link>
+          <MyCardList/>
         </ChallengeWrap>
       </Body>
     </FeedWrap>

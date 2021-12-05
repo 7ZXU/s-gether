@@ -4,12 +4,13 @@ import defaultimage from '../assets/upLoadImage.png';
 import CustomButton from '../components/CustomButton';
 import '../css/ChallengePopup.css';
 import axios from 'axios';
+import {setCookie, getCookie} from '../cookie';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
 
 function ChallengePopup(props)  {
-    
+    const token = getCookie('myToken');
     const {onClose} = props;
     const [imgSrc, setImgSrc] = useState(defaultimage);
     const [uploadFile, setUploadFile] = useState({
@@ -68,6 +69,7 @@ function ChallengePopup(props)  {
         }
         try {
             const formData = new FormData();
+            formData.append('token', token);
             formData.append('image', uploadFile.file);
             formData.append('StartDate',ChallengeStartDate);
             formData.append('EndDate',ChallengeEndDate);
