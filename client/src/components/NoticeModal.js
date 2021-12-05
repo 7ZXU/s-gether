@@ -19,7 +19,7 @@ function Modal(props) {
             </button>
           </header>
           <main>
-            <p style={{ 'font-size': 16 }}>{setText}</p>
+            <p style={{ fontSize: 16 }}>{setText}</p>
           </main>
           <footer>
             <button className="close" onClick={onClickClose}>

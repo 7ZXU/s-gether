@@ -431,7 +431,6 @@ app.get('/api/getMyChallengeList', (req, res) => {
       console.log(err);
     } else {
       challenge = [];
-
       for (let i = 0; i < rows.length; i++) {
         challenge.push({
           img: rows[i]['challenge_image'],
@@ -449,6 +448,7 @@ app.get('/api/getMyChallengeList', (req, res) => {
     res.status(201).json({
       data: challenge,
       result: 'ok',
+      userId: userId,
     });
   });
 });
@@ -1208,6 +1208,82 @@ app.post('/api/challenge_mate', (req, res) => {
             }
           });
         }
+      });
+    }
+  });
+});
+
+/* ChallengeFinishModal */
+/* 1등 id 받아오기 */
+app.get('/api/getChallengeWinner', (req, res) => {
+  const challenge_id = req.query.challengeId;
+  console.log(challenge_id);
+
+  const sql = `SELECT user_id FROM management.challenge WHERE challenge_id = ${challenge_id} AND success=(SELECT max(success) FROM management.challenge WHERE challenge_id = ${challenge_id})`;
+
+  db.query(sql, (err, rows, fields) => {
+    if (err) {
+      console.log(err);
+    } else {
+      winners = [];
+      for (let i = 0; i < rows.length; i++) {
+        winners.push(rows[i].user_id);
+      }
+    }
+    res.status(201).json({
+      result: 'ok',
+      winners: winners,
+    });
+  });
+});
+
+/* 전체 패널티 값 계산하기 */
+app.get('/api/getChallengeTotalPenalty', (req, res) => {
+  const challenge_id = req.query.challengeId;
+  const penaltyFee = Number(req.query.penaltyFee);
+
+  console.log(penaltyFee);
+  console.log(typeof penaltyFee);
+  // 패널티 횟수 불러옴
+  const sql = `SELECT sum(fail) as total FROM management.challenge WHERE challenge_id = ${challenge_id}`;
+  db.query(sql, (err, rows, fields) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(rows[0].total);
+      total = rows[0].total * penaltyFee;
+    }
+    res.status(201).json({
+      result: 'ok',
+      totalFee: total,
+    });
+  });
+});
+
+/* 전체 값 계산(success, fail 값 전달) */
+app.post('/api/getChallengeResult', (req, res) => {
+  const token = req.body.token;
+  const challenge_id = req.body.challengeId;
+  const userId = jwt.decode(token, YOUR_SECRET_KEY).userId;
+  const NumOfWinner = Number(req.body.NumOfWinner);
+  const totalPenalty = Number(req.body.totalPenalty);
+
+  console.log(NumOfWinner, totalPenalty);
+
+  const sql = `SELECT success, fail FROM management.challenge WHERE challenge_id = ${challenge_id} AND user_id = '${userId}'`;
+  db.query(sql, (err, rows, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        result: err,
+      });
+    } else {
+      console.log(Math.ceil(totalPenalty / NumOfWinner));
+      res.status(201).json({
+        result: 'ok',
+        success: rows[0].success,
+        fail: rows[0].fail,
+        rewards: Math.ceil(totalPenalty / NumOfWinner),
       });
     }
   });

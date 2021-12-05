@@ -11,6 +11,7 @@ import '../css/card.css';
 import { formControlUnstyledClasses } from '@mui/core';
 import SpecificItem from './specificItem';
 import NoticeModal from './NoticeModal';
+import ChallengeFinishModal from './ChallengeFinishModal';
 
 const breakPoints = [
   { width: 1, itemsToShow: 1 },
@@ -21,8 +22,10 @@ const breakPoints = [
 function MyCard() {
   const [dataList, setdata] = useState([]);
   const token = getCookie('myToken');
+  const [userId, setUserID] = useState('');
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [challengeModalOpen, setChallengeModalOpen] = useState(false);
 
   const openModal = () => {
     setModalOpen(true);
@@ -30,6 +33,14 @@ function MyCard() {
 
   const closeModal = () => {
     setModalOpen(false);
+  };
+
+  const openChallengeModal = () => {
+    setChallengeModalOpen(true);
+  };
+
+  const closeChallengeModal = () => {
+    setChallengeModalOpen(false);
   };
 
   async function callChallengeList() {
@@ -42,6 +53,7 @@ function MyCard() {
       })
       .then((response) => {
         setdata(response['data']['data']);
+        setUserID(response['data']['userId']);
       })
       .catch((error) => {
         console.log(error);
@@ -63,8 +75,9 @@ function MyCard() {
             ? dataList.map((data, key) => {
                 const url = `/myChallenge/:${data.id}`;
                 const startDate = new Date(data.startDate);
-                console.log(now < startDate ? '시작 전입니다.' : '시작가능');
+                const endDate = new Date(data.endDate);
                 if (now < startDate) {
+                  // 현재 날짜가 시작 날짜보다 이른 경우
                   return (
                     <SpecificItem key={key}>
                       <img
@@ -92,7 +105,8 @@ function MyCard() {
                       </Typography>
                     </SpecificItem>
                   );
-                } else {
+                } else if (now >= startDate && now <= endDate) {
+                  // 스터디 기간 중일 경우
                   return (
                     <SpecificItem key={key}>
                       <Link to={url}>
@@ -105,6 +119,44 @@ function MyCard() {
                           align="center"
                         />
                       </Link>
+                      <Typography variant="h6" component="div" align="center">
+                        {data['name']}
+                      </Typography>
+                      <Typography variant="h6" component="div" align="center">
+                        Date : {data['startDate'].split('T')[0]} ~{' '}
+                        {data['endDate'].split('T')[0]}
+                      </Typography>
+                    </SpecificItem>
+                  );
+                } else if (now > endDate) {
+                  const dateIntervalMs =
+                    endDate.getTime() - startDate.getTime();
+                  const DateIntervalDay =
+                    dateIntervalMs / (1000 * 60 * 60 * 24) + 1;
+                  const penaltyFee = Math.ceil(data.fee / DateIntervalDay);
+                  console.log(penaltyFee);
+                  // 스터디 기간을 지났을 경우
+                  // reward 안받은 애들만 불러온다.
+                  return (
+                    <SpecificItem key={key}>
+                      <img
+                        className="studyBackground-img"
+                        src={data['img']}
+                        alt="card 사진"
+                        heigth="200"
+                        width="200"
+                        align="center"
+                        style={{ cursor: 'pointer' }}
+                        onClick={openChallengeModal}
+                      />
+                      <ChallengeFinishModal
+                        open={challengeModalOpen}
+                        close={closeChallengeModal}
+                        challengeId={data.id}
+                        challengeName={data.name}
+                        penaltyFee={penaltyFee}
+                        userId={userId}
+                      ></ChallengeFinishModal>
                       <Typography variant="h6" component="div" align="center">
                         {data['name']}
                       </Typography>
