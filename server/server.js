@@ -461,6 +461,7 @@ app.post('/api/mypage/savePhoto', upload.single('image'), (req, res) => {
 app.post('/api/challenge_ing', (req, res) => {
   const token = req.body.token;
   const cid = req.body.challenge_id;
+  const today = req.body.today
 
   let infos = [];
   let isdone;
@@ -516,18 +517,15 @@ app.post('/api/challenge_ing', (req, res) => {
           date: date,
         });
       }
-      if (rows.length < 30) {
-        for (let i = rows.length + 1; i < 30; i++) {
-          infos.push({
-            id: i,
-            done: false,
-            state: false,
-            checked: false,
-            cert: false,
-            date: '2000-01-01',
-          });
-        }
-      }
+      infos.push({
+        id: rows.length + 1,
+        done: false,
+        state: false,
+        checked: false,
+        cert: false,
+        date: today,
+      });
+
       res.status(201).json({
         result: 'ok',
         rows: infos,
@@ -874,6 +872,7 @@ app.post('/api/mypage/saveSetting', (req, res) => {
 app.post('/api/challenge_mate', (req, res) => {
   const token = req.body.token;
   const cid = req.body.challenge_id;
+  const today = req.body.today;
 
   let mateid = 'psy';
 
@@ -949,18 +948,15 @@ app.post('/api/challenge_mate', (req, res) => {
               date: date,
             });
           }
-          if (rows.length < 30) {
-            for (let i = rows.length + 1; i < 30; i++) {
-              infos.push({
-                id: i,
-                done: false,
-                state: false,
-                checked: false,
-                cert: false,
-                date: '2000-01-01',
-              });
-            }
-          }
+          
+        infos.push({
+          id: rows.length + 1,
+          done: false,
+          state: false,
+          checked: false,
+          cert: false,
+          date: today,
+        });
           sql3 = `SELECT * FROM management.challenge_todo WHERE challenge_id = ${cid} AND user_id = '${mateid}'`;
           db.query(sql3, (err, rows, fields) => {
             if (err) {
@@ -1029,6 +1025,63 @@ app.post('/api/challenge_mate', (req, res) => {
   });
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/api/cert', (req, res) => {
+
+  const body = req.body;
+  const challenge_id = body['challenge_id'];
+  const cert = body['cert'];
+  const user_id = body['user_id'];
+  const challenge_date = body['challenge_date'];
+
+  console.log(challenge_id+", "+cert+", "+user_id+", "+challenge_date);
+
+const sql = `UPDATE management.challenge_ing SET mate_check = ${cert} WHERE user_id = '${user_id}' AND challenge_id = ${challenge_id} AND challenge_date = '${challenge_date}'`;
+  db.query(sql, (err, rows, fields) => {
+    if (err) {
+      console.log('DB저장 실패');
+      console.log(err);
+    } else {
+      console.log('DB저장 성공');
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Connect at http://localhost:${port}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+

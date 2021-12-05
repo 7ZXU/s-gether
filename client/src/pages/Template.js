@@ -148,14 +148,20 @@ const Template = () => {
 
   const [mate, setmate] = useState('');
 
-  useEffect(() => {
 
+  const [update, setupdate] = useState(false);
+  const onupdate = () => {
+    setupdate((prev) => !prev);
+  };
+
+
+  const onupdate2 = () => {
     async function loadData() {
       await axios
         .post('http://localhost:5000/api/challenge_ing', {
           token: token,
           challenge_id: 10, //실험용
-          today: year+"-"+month+"-"+day+"T15:00:00.000Z"
+          today: time
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
@@ -241,7 +247,6 @@ const Template = () => {
             setallitemdata(
               res.data.rows
             );
-            console.log(allitemData);
           }
         })
         .catch((err) => {
@@ -254,6 +259,149 @@ const Template = () => {
         .post('http://localhost:5000/api/challenge_mate', {
           token: token,
           challenge_id: 10, //실험용
+          today: time
+        })
+        .then((res) => {
+          if(res.data.result === 'not ok'){
+            console.log("no mate");
+          }
+          else{
+            console.log(res.data);
+            setmatechallenges(
+              res.data.mcinfo,
+              );
+            const matenickname = res.data.matenick;
+            setmateUser(matenickname);
+            setmateallTodos(
+              res.data.mctodo
+              );
+            setmateallitemdata(
+              res.data.mcimg
+            );
+            
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    loadData();
+    loadData4();
+    loadData5();
+    loadData6();
+    setupdate((prev) => !prev);
+  };
+
+  if(update === true){
+    onupdate2();
+  }
+
+  useEffect(() => {
+
+    async function loadData() {
+      await axios
+        .post('http://localhost:5000/api/challenge_ing', {
+          token: token,
+          challenge_id: 10, //실험용
+          today: time
+        })
+        .then((res) => {
+          if(res.data.result === 'not ok'){
+            console.log("no progress");
+          }
+          else{
+            setchallenges(
+                res.data.rows,
+                );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData2() {
+      await axios
+        .post('http://localhost:5000/api/challenge_info', {
+          token: token,
+          challenge_id: 10 //실험용
+        })
+        .then((res) => {
+          //console.log("-------------challenge_image---------------");
+          //console.log(res.data);
+          setcimg(res.data.image);
+          //console.log("-------------challenge_image---------------");
+          setCinfo({
+            name: res.data.name,
+            date: res.data.start.substring(0,10) + ' ~ ' + res.data.end.substring(0,10)
+          });
+
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData3() {
+      await axios
+        .post('http://localhost:5000/api/feed', {
+          token: token,
+        })
+        .then((res) => {
+          const nickname = res.data.nickname;
+          setUser(nickname);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData4() {
+      await axios
+        .post('http://localhost:5000/api/challenge_todo', {
+          token: token,
+          challenge_id: 10, //실험용
+          user_id: 'snow' //실험용
+        })
+        .then((res) => {
+          setallTodos(
+            res.data.rows
+            );
+            console.log(res.data.rows);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData5() {
+      await axios
+        .post('http://localhost:5000/api/challenge_ing_img', {
+          token: token,
+          challenge_id: 10, //실험용
+        })
+        .then((res) => {
+          if(res.data.result === 'not ok'){
+            console.log("no progress");
+          }
+          else{
+            console.log(res.data.rows);
+            setallitemdata(
+              res.data.rows
+            );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    async function loadData6() {
+      await axios
+        .post('http://localhost:5000/api/challenge_mate', {
+          token: token,
+          challenge_id: 10, //실험용
+          today: time
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
@@ -287,19 +435,14 @@ const Template = () => {
     loadData3();
     loadData4();
     loadData6();
-  },[]);  
+  },[]);
+  
 
   const daycheck = () => {
-    setitemdata([]);
-    allitemData.map((all) => (
-      (all.date === getday.date ? itemData.push(all) :"")
-    ))
+    setitemdata(allitemData);
     };
     const matedaycheck = () => {
-      setmateitemdata([]);
-      mateallitemData.map((all) => (
-        (all.date === getday.date ? mateitemData.push(all) :"")
-      ))
+      setitemdata(mateallitemData);
       };
     //--------------------------------------------------------------------
 
@@ -415,7 +558,7 @@ const Template = () => {
 
       {!(getday.date === "") &&<div className="Template3">
         <div className="title">Certification</div>
-        <Cert Cday={todos && todos.length} cert={1} sday={getday.date} t2 = {allitemData}/>
+        <Cert Cday={todos && todos.length} cert={1} sday={getday.date} t2 = {itemData} update={onupdate}/>
       </div>}
     </div>
   );

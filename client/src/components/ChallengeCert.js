@@ -35,7 +35,7 @@ const Form = styled.form`
   background: white;
 `;
 
-const Cert = ({ Cday, cert, sday,t2 }) => {
+const Cert = ({ Cday, cert, sday,t2,update}) => {
   const token = getCookie('myToken');
 
 
@@ -88,7 +88,7 @@ const Cert = ({ Cday, cert, sday,t2 }) => {
         });
     }
     loadData();
-
+    console.log(t2);
   },[]);
 
   /*useEffect(() => {
@@ -106,6 +106,7 @@ const Cert = ({ Cday, cert, sday,t2 }) => {
       (all.date === sday ? itemData.push(all) :"")
     ))
     };
+
 
 
   const onInsertToggle = () => {
@@ -129,6 +130,45 @@ const Cert = ({ Cday, cert, sday,t2 }) => {
       )
     );
   };
+
+  
+const certupdate = () => {
+  let cc = 1;
+
+  try {
+    axios.post('http://localhost:5000/api/cert', {
+          challenge_id: 10, //실험용
+          cert: cc,
+          user_id: 'psy',//mate
+          challenge_date: sday
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+  } catch (e) {
+      console.error('[FAIL] POST ANSWER', e);
+      return e;
+  }
+  };
+
+  const certupdate2 = () => {
+    let cc = 2;
+  
+    try {
+      axios.post('http://localhost:5000/api/cert', {
+            challenge_id: 10, //실험용
+            cert: cc,
+            user_id: 'psy',//mate
+            challenge_date: sday
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+    } catch (e) {
+        console.error('[FAIL] POST ANSWER', e);
+        return e;
+    }
+    };
   return (
     <div className="ChallengeCerts">
       {!cert && (
@@ -175,30 +215,16 @@ const Cert = ({ Cday, cert, sday,t2 }) => {
             <button
               className="yes"
               onClick={onInsertToggle2}
-              onMouseOver={() =>
-                setitemdata(
-                  itemData.map((item) =>
-                    item.id === imgid
-                      ? { ...item, ischecked: true, isgood: true }
-                      : item
-                  )
-                )
-              }
+              onMouseDown={certupdate}
+              onMouseUp={update}
             >
               <MdAddCircle size="100" color="green" />
             </button>
             <button
               className="no"
               onClick={onInsertToggle2}
-              onMouseOver={() =>
-                setitemdata(
-                  itemData.map((item) =>
-                    item.id === imgid
-                      ? { ...item, ischecked: true, isgood: false }
-                      : item
-                  )
-                )
-              }
+              onMouseDown={certupdate2}
+              onMouseUp={update}
             >
               <MdAddCircle size="100" color="red" />
             </button>

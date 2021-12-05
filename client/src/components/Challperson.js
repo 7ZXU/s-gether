@@ -10,15 +10,15 @@ import axios from 'axios';
 const Form = styled.form`
   margin-left: 10%;
   position: absolute;
-  top: 20%;
-  left: 20%;
+  top: 10%;
+  left: 10%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 990;
-  width: 1200px;
-  height: 1000px;
+  width: 1000px;
+  height: 800px;
   border-radius: 5px;
   box-shadow: 1px 2px 5px 1px black;
 
@@ -29,23 +29,23 @@ const Challperson = (onInsertToggle, name) => {
   const [todos] = useState([
     {
       id: 1,
-      date: '2021-10-01',
+      date: '2021-12-08',
       challname: 'Challenge: ',
-      text: '한일 1',
+      text: 'react Study',
       checked: true,
     },
     {
       id: 2,
-      date: '2021-10-02',
+      date: '2021-12-07',
       challname: 'Challenge: ',
-      text: '한일 2',
+      text: 'react Study',
       checked: false,
     },
     {
       id: 3,
-      date: '2021-10-02',
+      date: '2021-12-06',
       challname: 'Challenge: ',
-      text: '한일 3',
+      text: 'react Study',
       checked: true,
     },
   ]);
@@ -66,13 +66,18 @@ const Challperson = (onInsertToggle, name) => {
 
   const token = getCookie('myToken');
 
-
+  let time = new Date();
+  let year = time.getFullYear;
+  let day = time.getDay;
+  let month = time.getMonth;
+  
   useEffect(() => {
     async function loadData() {
       await axios
         .post('http://localhost:5000/api/challenge_ing', {
           token: token,
           challenge_id: 10, //실험용
+          today: time
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
@@ -81,7 +86,7 @@ const Challperson = (onInsertToggle, name) => {
           else{
             let tnum = 0;
             res.data.rows.map((all) =>
-            all.done === true 
+            all.done === true
               ? tnum++
               : ''
             )
@@ -140,9 +145,9 @@ const Challperson = (onInsertToggle, name) => {
 
   return (
     <div>
-      <div className="Background" onClick={() =>onInsertToggle}></div>
+      <div className="Background" id="Bac" onClick={() =>onInsertToggle}></div>
       <Form>
-        <div className="Na">곽무진</div>
+        <div className="Na"></div>
         <div className="Chart">
           <Pchart start= {Cinfo.date_start} end= {Cinfo.date_end} done= {dnum} />
           <div className="Border">
