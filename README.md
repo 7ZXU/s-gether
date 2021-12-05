@@ -81,7 +81,29 @@ yarn dev
 
 ---
 ### [My Challenge Page]
-<img src = ".\Picture\My challenge Page.png" >
+<img src = ".\Picture\My challenge.png" >
+
+1. Challenge info
+
+   현재 challenge의 사진과 정보를 보여준다.
+2. Challenge list
+
+   
+   각 날짜의 성공이나 실패여부를 보여준다. 누르면 각 날짜의 Day todo 와 Certification을 보여준다.
+3. User & mate name
+
+   
+   참가자를 보여준다. 누르면 진행상황을 Pie차트로 보여준다.
+   <img src = ".\Picture\pie.png" >
+4. Day todo
+   
+
+   선택한 날짜의 todolist를 보여준다.
+5. Certification
+
+   
+   선택한 날짜의 인증사진을 보여준다.
+
 
 
 
