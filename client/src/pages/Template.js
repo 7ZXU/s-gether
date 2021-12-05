@@ -181,6 +181,7 @@ const Template = ({ match }) => {
     setupdate((prev) => !prev);
   };
 
+  const [whoare, setwhoare] = useState(0);
 
   const onupdate2 = () => {
     async function loadData() {
@@ -456,9 +457,11 @@ const Template = ({ match }) => {
 
   const daycheck = () => {
     setitemdata(allitemData);
+    setwhoare(0)
     };
     const matedaycheck = () => {
       setitemdata(mateallitemData);
+      setwhoare(1)
       };
     //--------------------------------------------------------------------
 
@@ -566,13 +569,13 @@ const Template = ({ match }) => {
       {!(getday.date === "") &&<div className="Template2">
         <div className="title">{getday.date.substring(0,10)} Todo list({todos && todos.length})</div>
         <Todolist todos={todos} />
-        <button className="no" onClick={onInsertToggle2}><MdAddCircle size="100" color="black" /></button>
-        <Ctodo open={insertToggle2} user={user} cid={challengeId} cday={getday.date} onInsertToggle2 = {onInsertToggle2} update={onupdate}/>
+        {whoare === 0 &&<button className="no" onClick={onInsertToggle2}><MdAddCircle size="100" color="black" /></button>}
+        <Ctodo open={insertToggle2} user={user} cid={challengeId} cday={getday.date} onInsertToggle2 = {onInsertToggle2} update={onupdate} />
       </div>}
 
       {!(getday.date === "") &&<div className="Template3">
         <div className="title">Certification</div>
-        <Cert Cday={todos && todos.length} cert={1} sday={getday.date} t2 = {itemData} update={onupdate} challengeId={challengeId} mid={mateid}/>
+        <Cert Cday={todos && todos.length} cert={1} sday={getday.date} t2 = {itemData} update={onupdate} challengeId={challengeId} mid={mateid} whoare = {whoare}/>
       </div>}
     </div>
   );
