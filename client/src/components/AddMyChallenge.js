@@ -33,6 +33,9 @@ function AddMyChallenge(props)  {
         });
         onClose(false)
     }
+    console.log("-------");
+    console.log(cardData);
+    console.log("-------");
     return(
         <div className="popup">
                 <Stack direction="column" spacing={2} alignItems="center">
@@ -51,7 +54,7 @@ function AddMyChallenge(props)  {
                             Date : {cardData['startDate'].split('T')[0]} ~ {cardData['endDate'].split('T')[0]}
                         </Typography>
                         <Typography variant="h8" component="div" align="center">
-                            People : 0/{cardData['max_participants']}
+                            People : {cardData['current_participants']}/{cardData['max_participants']}
                         </Typography>
                         <Typography variant="h8" component="div" align="center">
                             Point : {cardData['fee']}

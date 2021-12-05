@@ -101,6 +101,7 @@ function ChanllengePage() {
   }
   
   const SpecificCard = () =>{
+
     return(
       <MuiCard sx={{ maxHeight : "90%", maxWidth: "50%" ,border: 2, borderRadius: 2,}}>
           <CardActionArea onClick = {() => setAddMyChallengePopup(true)} >
@@ -118,7 +119,7 @@ function ChanllengePage() {
                 Date : {data['startDate'].split('T')[0]} ~ {data['endDate'].split('T')[0]}
               </Typography>
               <Typography variant="h8" component="div" align="center">
-                People : {data['current_participants']}/{data['max_participants']}
+                People : {data['current_pariticipants']}/{data['max_participants']}
               </Typography>
               <Typography variant="h8" component="div" align="center">
                 Point : {data['fee']}

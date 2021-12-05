@@ -39,7 +39,8 @@ function StudyList(props) {
 
     let now = new Date();
     for(var i = 0; i < dataList.length; i++){
-        const data = dataList[i]
+        const data = dataList[i];
+        
         if(data['category'] === "Study"){
             const startDate = new Date(data['startDate']);
             const endDate = new Date(data['endDate']);
