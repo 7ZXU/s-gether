@@ -380,48 +380,60 @@ app.post('/api/upLoadChallenge', upload.single('image'), (req, res) =>{
     participation_fee, max_participants, challenge_image, current_participants) VALUES 
   ("${name}","${EndDate}", "${StartDate}","${type}","${Fee}","${Num}", "${image}", "${1}" )`);
   db.query(`INSERT INTO management.challenge (user_id, challenge_id) SELECT "${id}", challenge_id FROM management.challenge_info WHERE challenge_name = "${name}" `);
-
+  
+  const banking_query = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id}' ORDER BY idx DESC`;
+  db.query(banking_query, (err, rows, fields) => {
+    if (err){
+      console.log(err);
+    }else{
+      const token = req.body.token;
+      const fee = req.body.EntryFee;
+      
+      const id = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
+   
+      const current_money = rows[0]['current_balance'];
+      console.log(rows);
+      console.log(current_money);
+      var info_sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id}", NOW(), "${-fee}", "${current_money -fee}", 2)`;
+      console.log(current_money);
+      console.log(fee);
+      if(current_money > fee){
+        db.query(info_sql);
+      }
+     
+    }
+  });
 })
 
-function getCurrentMoney(callback) {
-
-  getMoney('result', function (err, result) {
-
-      if(err || !result.length) return callback('error or no results');
-      // since result is array of objects [{word: 'someword'},{word: 'someword2'}] let's remap it
-      result = result.map(obj => obj.word);
-      // result should now look like ['someword','someword2']
-      // return it
-      callback(null, result);
-
-  });
-}
-
-function getMoney(id, callback) {
-  con.query(`SELECT current_balance FROM management.transaction_history WHERE user_id='${id}' ORDER BY transaction_date DESC`, function(err, rows) {
-      if(err) return callback(err);
-      callback(null, rows);
-  });
-};
 
 app.post('/api/enrollChallenge', (req, res) =>{
-  /*
   const token = req.body.token;
   const data = req.body.data;
   const fee = req.body.Fee;
   const id = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
   db.query(`INSERT INTO management.challenge (user_id, challenge_id) VALUES ("${id}","${data['id']}")`);
   db.query(`UPDATE management.challenge_info SET current_participants = current_participants + 1 WHERE challenge_id = ${data['id']}`);
-  var info_sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${@id}", NOW(), "${-@fee}", "${current_money + @fee}", 2)`;
-  sql = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id}' ORDER BY transaction_date DESC`;
-  db.query(sql, (err, results, fields) = {
+  const banking_query = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id}' ORDER BY transaction_date DESC`;
+  db.query(banking_query, (err, rows, fields) => {
     if (err){
       console.log(err);
-    } else {
-      console.log(results);
+    }else{
+      const token = req.body.token;
+      const fee = req.body.data.fee;
+      
+      const id = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
+   
+      const current_money = rows[0]['current_balance'];
+      var info_sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id}", NOW(), "${-fee}", "${current_money -fee}", 2)`;
+      console.log(current_money);
+      console.log(fee);
+      if(current_money > fee){
+        db.query(info_sql);
+      }
+     
     }
   });
-  */
+  
 })
 
 app.get('/api/getMyChallengeList', (req, res) =>{
