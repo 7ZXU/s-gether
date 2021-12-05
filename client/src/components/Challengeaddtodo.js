@@ -48,7 +48,7 @@ import { setCookie, getCookie } from '../cookie';
                             'todo':todo,
                             'challenge_id':cid,
                             'token':token,
-                            'challenge_date': cday+'T15:00:00.000Z'
+                            'challenge_date': cday.substring(0,10)+'T15:00:00.000Z'
                         }
                     })
                     
