@@ -246,7 +246,7 @@ const Template = ({ match }) => {
         .post('http://localhost:5000/api/challenge_todo', {
           token: token,
           challenge_id: challengeId, //실험용----------------------------------------------------------------------------------------------------------------------
-          user_id: 'snow' //실험용
+          user_id: 'snow' //실험용 사용안함
         })
         .then((res) => {
           setallTodos(
@@ -567,7 +567,7 @@ const Template = ({ match }) => {
         <div className="title">{getday.date.substring(0,10)} Todo list({todos && todos.length})</div>
         <Todolist todos={todos} />
         <button className="no" onClick={onInsertToggle2}><MdAddCircle size="100" color="black" /></button>
-        <Ctodo open={insertToggle2} user={user} cid={challengeId} cday={getday.date} onInsertToggle2 = {onInsertToggle2}/>
+        <Ctodo open={insertToggle2} user={user} cid={challengeId} cday={getday.date} onInsertToggle2 = {onInsertToggle2} update={onupdate}/>
       </div>}
 
       {!(getday.date === "") &&<div className="Template3">

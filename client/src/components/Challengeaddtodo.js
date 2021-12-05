@@ -25,7 +25,7 @@ import { setCookie, getCookie } from '../cookie';
 
 
 
-    export default function Ctodo({open, user, cid, cday,onInsertToggle2}) {
+    export default function Ctodo({open, user, cid, cday,onInsertToggle2, update}) {
 
     let time = new Date();
     let year = time.getFullYear;
@@ -56,7 +56,7 @@ import { setCookie, getCookie } from '../cookie';
 
     
             saveData();
-
+            update();
             onInsertToggle2();
     
     
