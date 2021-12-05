@@ -34,13 +34,19 @@ function ProjectList(props) {
         setCard(rows[key])
       
     }
+    var now = new Date();
+
     for(var i = 0; i < dataList.length; i++){
         const data = dataList[i]
-        if(data['category'] === "Project"){
-            
-            if(typeof data['startDate'] != "undefined" && typeof data['endDate'] != "undefined" ){
-                rows.push(createData(data['img'], data['name'],  data['startDate'].split('T')[0], data['endDate'].split('T')[0], data['max_participants'], 
-                data['current_participants'], data['fee'], data['id']))
+        
+        if(data['category'] === "Project" ){
+            const startDate = new Date(data['startDate']);
+            const endDate = new Date(data['endDate']);
+            if(startDate < now && endDate > now){
+                if(typeof data['startDate'] != "undefined" && typeof data['endDate'] != "undefined" ){
+                    rows.push(createData(data['img'],data['name'],  data['startDate'].split('T')[0], data['endDate'].split('T')[0], data['max_participants'], 
+                    data['current_participants'],data['fee'], data['id']))
+                }
             }
         }
     }
