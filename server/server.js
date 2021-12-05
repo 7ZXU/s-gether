@@ -1,6 +1,6 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const db = require("./config/db");
+const db = require('./config/db');
 const port = 5000;
 
 const cors = require('cors');
@@ -11,29 +11,28 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const upload = multer({ dest: './server/upload' }); // 파일 업로드 할 폴더
 
-const YOUR_SECRET_KEY = "abcd";
+const YOUR_SECRET_KEY = 'abcd';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/image', express.static('./server/upload')); // 클라이언트 입장에서 /image 라는 경로로 접근하도록 설정
 
-
 app.use(cors());
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    'Access-Control-Allow-Methods',
+    'GET, POST, OPTIONS, PUT, PATCH, DELETE'
   );
   res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
+    'Access-Control-Allow-Headers',
+    'X-Requested-With,content-type'
   );
-  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
 
-app.set("port", process.env.PORT || port);
+app.set('port', process.env.PORT || port);
 
 app.post('/Register', (req, res) => {
   const usrId = req.body.usrId;
@@ -87,25 +86,18 @@ app.post('/api/login', (req, res) => {
 });
 
 app.post('/api/saveimage', upload.single('image'), (req, res) => {
-
   // const token = req.body.token;
   // const photo_date = req.body.day;
   // const plan_image = '/image/' + req.body.filename;
-
   // const id = jwt(token, YOUR_SECRET_KEY);
   // const user_id = id.userId;
-
-
   // const sql = `INSERT INTO management.photo VALUES (${user_id}, ${photo_date}, ${plan_image})`;
-
   // db.query(sql, (err, rows, fields) =>{
   //   res.send(rows);
   // })
+});
 
-
-})
-
-app.post("/api/feed", (req, res) => {
+app.post('/api/feed', (req, res) => {
   const token = req.body.token;
   let nickname;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
@@ -119,19 +111,18 @@ app.post("/api/feed", (req, res) => {
       nickname = row[0].nickname;
     }
     res.status(201).json({
-      result: "ok",
+      result: 'ok',
       nickname: nickname,
       id: id.userId,
     });
-
   });
 });
 
-app.post("/api/friendpage", (req, res) => {
+app.post('/api/friendpage', (req, res) => {
   const friend = req.body.friend;
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
-  console.log("api/friendpage", friend);
+  console.log('api/friendpage', friend);
 
   let list;
 
@@ -147,12 +138,10 @@ app.post("/api/friendpage", (req, res) => {
     res.status(201).json({
       result: list,
     });
-
-
   });
 });
 
-app.post("/api/friends", (req, res) => {
+app.post('/api/friends', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
@@ -174,9 +163,9 @@ app.post("/api/friends", (req, res) => {
   });
 });
 
-app.post("/api/friendtodolist" , (req, res) => {
+app.post('/api/friendtodolist', (req, res) => {
   const name = req.body.name;
-  let day = req.body.day.split("T")[0];
+  let day = req.body.day.split('T')[0];
   let list;
 
   console.log(name);
@@ -187,7 +176,7 @@ app.post("/api/friendtodolist" , (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log( 'todolist', row);
+      console.log('todolist', row);
       list = row;
       console.log('list', list);
     }
@@ -195,12 +184,9 @@ app.post("/api/friendtodolist" , (req, res) => {
       result: list,
     });
   });
+});
 
-})
-
-
-app.post("/api/savecomment", (req, res) => {
-  
+app.post('/api/savecomment', (req, res) => {
   const token = req.body.token;
   const friend = req.body.friend;
   const day = req.body.day;
@@ -208,25 +194,22 @@ app.post("/api/savecomment", (req, res) => {
 
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
-  console.log("api/savecomment", id.userId, friend, day, comment)
+  console.log('api/savecomment', id.userId, friend, day, comment);
   db.query(
     `INSERT INTO management.comment (commented_nickname, comment, comment_user_id, comment_date) VALUES ("${friend}", "${comment}", "${id.userId}", "${day}") `
   );
+});
 
-
-})
-
-
-app.post("/api/todolist", (req, res) => {
+app.post('/api/todolist', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
   let list;
-  let day = req.body.day.split("T")[0];
+  let day = req.body.day.split('T')[0];
 
-  console.log("/api/todolist", day, id.userId);
+  console.log('/api/todolist', day, id.userId);
 
   // const sql = `SELECT * FROM management.plan WHERE user_id = "${id.userId}" AND plan_date.substring(10) = "${day}"`;
-  
+
   const sql = `SELECT * FROM management.plan WHERE user_id = "${id.userId}" AND DATE(plan_date) = "${day}" `;
 
   db.query(sql, (err, row, fields) => {
@@ -242,11 +225,11 @@ app.post("/api/todolist", (req, res) => {
   });
 });
 
-app.post("/upload", (req, res) => {
+app.post('/upload', (req, res) => {
   const files = req.body.files;
 });
 
-app.post("/api/photolist", (req, res) => {
+app.post('/api/photolist', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
   const date = req.body.date;
@@ -266,21 +249,20 @@ app.post("/api/photolist", (req, res) => {
   });
 });
 
-app.post("/api/todo", (req, res) => {
+app.post('/api/todo', (req, res) => {
   const todo = req.body.todo;
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
   const day = req.body.day;
-  console.log("api/todo/day", day);
+  console.log('api/todo/day', day);
 
-  
-  const sql =  `INSERT INTO management.plan (plan_date, plan_todo, plan_check, user_id) VALUES ("${day}", "${todo}", "false", "${id.userId}") `
-  
+  const sql = `INSERT INTO management.plan (plan_date, plan_todo, plan_check, user_id) VALUES ("${day}", "${todo}", "false", "${id.userId}") `;
+
   db.query(sql);
 });
 
-app.post("/api/delete", (req, res) => {
+app.post('/api/delete', (req, res) => {
   const user = req.body.user;
   const idx = req.body.idx;
 
@@ -295,12 +277,12 @@ app.post("/api/delete", (req, res) => {
   });
 });
 
-app.post("/api/check", (req, res) => {
+app.post('/api/check', (req, res) => {
   const user = req.body.user;
   const checked = req.body.checked;
   const idx = req.body.idx;
 
-  console.log(idx, "/api/check", checked);
+  console.log(idx, '/api/check', checked);
 
   const sql = `UPDATE management.plan SET plan_check="${checked}" WHERE idx="${idx}" AND user_id="${user}"`;
 
@@ -358,16 +340,14 @@ app.post('/api/login', (req, res) => {
   });
 });
 
+app.post('/api/upLoadChallenge', upload.single('image'), (req, res) => {
+  console.log('?');
 
-
-app.post('/api/upLoadChallenge', upload.single('image'), (req, res) =>{
-  console.log("?");
-  
   const body = req.body.params;
-  
-  const image = '/image/' + req.file.filename ;
+
+  const image = '/image/' + req.file.filename;
   const token = req.body.token;
-  const id = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
+  const id = jwt.decode(token, YOUR_SECRET_KEY)['userId'];
   const name = req.body.Name;
   const StartDate = req.body.StartDate;
   const EndDate = req.body.EndDate;
@@ -379,125 +359,139 @@ app.post('/api/upLoadChallenge', upload.single('image'), (req, res) =>{
   db.query(`INSERT INTO management.challenge_info (challenge_name, date_finish, date_start, category, 
     participation_fee, max_participants, challenge_image, current_participants) VALUES 
   ("${name}","${EndDate}", "${StartDate}","${type}","${Fee}","${Num}", "${image}", "${1}" )`);
-  db.query(`INSERT INTO management.challenge (user_id, challenge_id) SELECT "${id}", challenge_id FROM management.challenge_info WHERE challenge_name = "${name}" `);
-  
+  db.query(
+    `INSERT INTO management.challenge (user_id, challenge_id) SELECT "${id}", challenge_id FROM management.challenge_info WHERE challenge_name = "${name}" `
+  );
+
   const banking_query = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id}' ORDER BY idx DESC`;
   db.query(banking_query, (err, rows, fields) => {
-    if (err){
-      console.log(err);
-    }else{
-      const token = req.body.token;
-      const fee = req.body.EntryFee;
-      
-      const id = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
-   
-      const current_money = rows[0]['current_balance'];
-      console.log(rows);
-      console.log(current_money);
-      var info_sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id}", NOW(), "${-fee}", "${current_money -fee}", 2)`;
-      console.log(current_money);
-      console.log(fee);
-      if(current_money > fee){
-        db.query(info_sql);
-      }
-     
-    }
-  });
-})
-
-
-app.post('/api/enrollChallenge', (req, res) =>{
-  const token = req.body.token;
-  const data = req.body.data;
-  const fee = req.body.Fee;
-  const id = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
-  db.query(`INSERT INTO management.challenge (user_id, challenge_id) VALUES ("${id}","${data['id']}")`);
-  db.query(`UPDATE management.challenge_info SET current_participants = current_participants + 1 WHERE challenge_id = ${data['id']}`);
-  const banking_query = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id}' ORDER BY transaction_date DESC`;
-  db.query(banking_query, (err, rows, fields) => {
-    if (err){
-      console.log(err);
-    }else{
-      const token = req.body.token;
-      const fee = req.body.data.fee;
-      
-      const id = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
-   
-      const current_money = rows[0]['current_balance'];
-      var info_sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id}", NOW(), "${-fee}", "${current_money -fee}", 2)`;
-      console.log(current_money);
-      console.log(fee);
-      if(current_money > fee){
-        db.query(info_sql);
-      }
-     
-    }
-  });
-  
-})
-
-app.get('/api/getMyChallengeList', (req, res) =>{
-  challenge =[]
-  const token = req.query['token'];
-  const userId = jwt.decode(token,YOUR_SECRET_KEY )['userId'];
-  const sql_query = `SELECT * FROM management.challenge_info WHERE challenge_id IN (SELECT challenge_id FROM management.challenge WHERE user_id = "${userId}" ) `
-  db.query(sql_query, (err, rows, fields)=>{
     if (err) {
       console.log(err);
     } else {
-      rows.forEach((info) => {
-          challenge.push({"img" : info["challenge_image"], "id" : info["challenge_id"], "name" : info['challenge_name'], "startDate" : info['date_start'],
-           "endDate" : info['date_finish'], "category": info['category'],
-          "max_participants" : info['max_participants'], "fee" : info["participation_fee"],
-          "current_participants" : info[`current_participants`]
-          })
-      });
+      const token = req.body.token;
+      const fee = req.body.EntryFee;
+
+      const id = jwt.decode(token, YOUR_SECRET_KEY)['userId'];
+
+      const current_money = rows[0]['current_balance'];
+      console.log(rows);
+      console.log(current_money);
+      var info_sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id}", NOW(), "${-fee}", "${
+        current_money - fee
+      }", 2)`;
+      console.log(current_money);
+      console.log(fee);
+      if (current_money > fee) {
+        db.query(info_sql);
+      }
+    }
+  });
+});
+
+app.post('/api/enrollChallenge', (req, res) => {
+  const token = req.body.token;
+  const data = req.body.data;
+  const fee = req.body.Fee;
+  const id = jwt.decode(token, YOUR_SECRET_KEY)['userId'];
+  db.query(
+    `INSERT INTO management.challenge (user_id, challenge_id) VALUES ("${id}","${data['id']}")`
+  );
+  db.query(
+    `UPDATE management.challenge_info SET current_participants = current_participants + 1 WHERE challenge_id = ${data['id']}`
+  );
+  const banking_query = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id}' ORDER BY transaction_date DESC`;
+  db.query(banking_query, (err, rows, fields) => {
+    if (err) {
+      console.log(err);
+    } else {
+      const token = req.body.token;
+      const fee = req.body.data.fee;
+
+      const id = jwt.decode(token, YOUR_SECRET_KEY)['userId'];
+
+      const current_money = rows[0]['current_balance'];
+      var info_sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id}", NOW(), "${-fee}", "${
+        current_money - fee
+      }", 2)`;
+      console.log(current_money);
+      console.log(fee);
+      if (current_money > fee) {
+        db.query(info_sql);
+      }
+    }
+  });
+});
+
+app.get('/api/getMyChallengeList', (req, res) => {
+  const token = req.query['token'];
+  const userId = jwt.decode(token, YOUR_SECRET_KEY)['userId'];
+  const sql_query = `SELECT * FROM management.challenge_info WHERE challenge_id IN (SELECT challenge_id FROM management.challenge WHERE user_id = "${userId}" ) `;
+  db.query(sql_query, (err, rows, fields) => {
+    if (err) {
+      console.log(err);
+    } else {
+      challenge = [];
+
+      for (let i = 0; i < rows.length; i++) {
+        challenge.push({
+          img: rows[i]['challenge_image'],
+          id: rows[i]['challenge_id'],
+          name: rows[i]['challenge_name'],
+          startDate: rows[i]['date_start'],
+          current_participants: rows[i]['current_participants'],
+          endDate: rows[i]['date_finish'],
+          category: rows[i]['category'],
+          max_participants: rows[i]['max_participants'],
+          fee: rows[i]['participation_fee'],
+        });
+      }
     }
     res.status(201).json({
-      data : challenge,
-      result: "ok",
+      data: challenge,
+      result: 'ok',
     });
   });
 });
 
-
-app.get('/api/HotgetChallengeList', (req, res) =>{
+app.get('/api/HotgetChallengeList', (req, res) => {
   // if(req.query['flagged'] === 1){
   //   return;
   // }
-  console.log("전체 목록 호출")
-  
+  console.log('전체 목록 호출');
+
   const sql = 'SELECT * FROM management.challenge_info';
-  db.query(sql, (err, rows, fields)=>{
+  db.query(sql, (err, rows, fields) => {
     if (err) {
       res.status(400);
-    } 
-    else {
-      challenge =[]
-      
-      for(let i = 0; i < rows.length; i ++){
-        challenge.push({"img" : rows[i]['challenge_image'], "id" : rows[i]["challenge_id"],
-        "name" : rows[i]['challenge_name'], "startDate" : rows[i]['date_start'], 
-        "current_participants" : rows[i]['current_participants'],
-        "endDate" : rows[i]['date_finish'], "category": rows[i]['category'],
-        "max_participants" : rows[i]['max_participants'], "fee" : rows[i]["participation_fee"]
-        })
+    } else {
+      challenge = [];
+
+      for (let i = 0; i < rows.length; i++) {
+        challenge.push({
+          img: rows[i]['challenge_image'],
+          id: rows[i]['challenge_id'],
+          name: rows[i]['challenge_name'],
+          startDate: rows[i]['date_start'],
+          current_participants: rows[i]['current_participants'],
+          endDate: rows[i]['date_finish'],
+          category: rows[i]['category'],
+          max_participants: rows[i]['max_participants'],
+          fee: rows[i]['participation_fee'],
+        });
       }
-    
-    res.status(200).json({
-      data : challenge,
-      result: "ok",
-    });
-    return;
-  };
-   
+
+      res.status(200).json({
+        data: challenge,
+        result: 'ok',
+      });
+      return;
+    }
   });
   return;
-})
-
+});
 
 /* mypage의 Info 불러오기 */
-app.post("/api/mypage/info", (req, res) => {
+app.post('/api/mypage/info', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
@@ -505,7 +499,7 @@ app.post("/api/mypage/info", (req, res) => {
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
-      res.status(400).json({ error: "sql error" });
+      res.status(400).json({ error: 'sql error' });
     } else {
       console.log(row[0]);
       const name = row[0].name;
@@ -517,7 +511,7 @@ app.post("/api/mypage/info", (req, res) => {
       console.log(phone_number);
 
       res.status(201).json({
-        result: "ok",
+        result: 'ok',
         name: name,
         nickname: nickname,
         birth: birth,
@@ -528,37 +522,37 @@ app.post("/api/mypage/info", (req, res) => {
   });
 });
 
-
-
-app.get('/api/getChallengeList', (req, res) =>{
-
-  challenge =[]
+app.get('/api/getChallengeList', (req, res) => {
+  challenge = [];
   const sql = 'SELECT * FROM management.challenge_info';
-  db.query(sql, (err, rows, fields)=>{
+  db.query(sql, (err, rows, fields) => {
     if (err) {
       res.status(400);
-    } 
-    else {
-      challenge =[]
-      
-      for(let i = 0; i < rows.length; i ++){
-        challenge.push({"img" : rows[i]['challenge_image'], "id" : rows[i]["challenge_id"],
-        "name" : rows[i]['challenge_name'], "startDate" : rows[i]['date_start'], 
-        "current_participants" : rows[i]['current_participants'],
-        "endDate" : rows[i]['date_finish'], "category": rows[i]['category'],
-        "max_participants" : rows[i]['max_participants'], "fee" : rows[i]["participation_fee"]
-        })
+    } else {
+      challenge = [];
+
+      for (let i = 0; i < rows.length; i++) {
+        challenge.push({
+          img: rows[i]['challenge_image'],
+          id: rows[i]['challenge_id'],
+          name: rows[i]['challenge_name'],
+          startDate: rows[i]['date_start'],
+          current_participants: rows[i]['current_participants'],
+          endDate: rows[i]['date_finish'],
+          category: rows[i]['category'],
+          max_participants: rows[i]['max_participants'],
+          fee: rows[i]['participation_fee'],
+        });
       }
-    res.status(200).json({
-      data : challenge,
-      result: "ok",
-    });
-    return;
-  };
-   
+      res.status(200).json({
+        data: challenge,
+        result: 'ok',
+      });
+      return;
+    }
   });
   return;
-})
+});
 
 /* Info 저장하기 */
 app.post('/api/mypage/saveInfo', (req, res) => {
@@ -585,7 +579,6 @@ app.post('/api/mypage/saveInfo', (req, res) => {
 
 /* mypage UserBlock에서 닉네임, 이미지 불러오기 */
 app.post('/api/mypage/nickname', (req, res) => {
-
   const token = req.body.token;
   let nickname;
 
@@ -605,7 +598,6 @@ app.post('/api/mypage/nickname', (req, res) => {
     }
   });
 });
-
 
 /* 닉네임 변경 or 등록 */
 app.post('/api/mypage/saveNickname', (req, res) => {
@@ -641,12 +633,10 @@ app.post('/api/mypage/savePhoto', upload.single('image'), (req, res) => {
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
-      res.status(400).json({ error: "sql error" });
+      res.status(400).json({ error: 'sql error' });
     } else {
       res.status(201).json({
-
         result: 'ok',
-
       });
       console.log(row);
     }
@@ -654,7 +644,7 @@ app.post('/api/mypage/savePhoto', upload.single('image'), (req, res) => {
 });
 
 /* challenge 세부정보 불러오기*/
-app.post("/api/challenge_ing", (req, res) => {
+app.post('/api/challenge_ing', (req, res) => {
   const token = req.body.token;
   const cid = req.body.challenge_id;
 
@@ -673,7 +663,6 @@ app.post("/api/challenge_ing", (req, res) => {
       //console.log(err);
 
       res.status(201).json({
-
         result: 'not ok',
       });
     } else {
@@ -722,12 +711,10 @@ app.post("/api/challenge_ing", (req, res) => {
             cert: false,
 
             date: '2000-01-01',
-
           });
         }
       }
       res.status(201).json({
-
         result: 'ok',
         rows: infos,
       });
@@ -735,10 +722,8 @@ app.post("/api/challenge_ing", (req, res) => {
   });
 });
 
-
 /* (임시) challenge 이미지, 날짜 불러오기*/
 app.post('/api/challenge_info', (req, res) => {
-
   const token = req.body.token;
   const challenge_id = req.body.challenge_id;
 
@@ -761,7 +746,7 @@ app.post('/api/challenge_info', (req, res) => {
       cname = row[0].challenge_name;
     }
     res.status(201).json({
-      result: "ok",
+      result: 'ok',
       image: challenge_image,
       start: cstart,
       end: cend,
@@ -771,7 +756,7 @@ app.post('/api/challenge_info', (req, res) => {
 });
 
 /* challenge todo*/
-app.post("/api/challenge_todo", (req, res) => {
+app.post('/api/challenge_todo', (req, res) => {
   const token = req.body.token;
   const challenge_id = req.body.challenge_id;
   const user_id = req.body.user_id;
@@ -786,23 +771,22 @@ app.post("/api/challenge_todo", (req, res) => {
     if (err) {
       console.log(err);
     } else {
+      for (let i = 0; i < rows.length; i++) {
+        date = rows[i].challenge_date;
+        todo = rows[i].challenge_todo;
+        if (rows[i].todo_check === 1) {
+          check = true;
+        } else {
+          check = false;
+        }
 
-      for ( let i = 0; i < rows.length; i++) 
-            {
-              date = rows[i].challenge_date;
-              todo = rows[i].challenge_todo;
-              if(rows[i].todo_check === 1){ check = true;}
-              else{check = false;}
-              
-
-              infos.push({
-                id: i+1,
-                text: todo,
-                checked: check,
-                date: date
-              });
-            };
-
+        infos.push({
+          id: i + 1,
+          text: todo,
+          checked: check,
+          date: date,
+        });
+      }
     }
     res.status(201).json({
       result: 'ok',
@@ -812,18 +796,16 @@ app.post("/api/challenge_todo", (req, res) => {
 });
 
 /* cert업로드 조정필요함*/
-app.post('/api/certupload',upload.single('img'), (req, res) => {
-
+app.post('/api/certupload', upload.single('img'), (req, res) => {
   const body = req.body;
   const challenge_id = body['challenge_id'];
   const img = '/image/' + req.file.filename;
   const user_id = body['user_id'];
   const challenge_date = body['challenge_date'];
 
-
-//const sql = `UPDATE management.challenge_ing SET is_cert = 0 `; 모든 is_cert 1로
-const sql = `UPDATE management.challenge_ing SET challenge_image = '${img}' WHERE user_id = '${user_id}' AND challenge_id = '${challenge_id}' AND challenge_date = '${challenge_date}'`;
-//const sql = `INSERT INTO management.challenge_ing (challenge_date, user_id, challenge_image, mate_check, challenge_id,is_cert) VALUES ('${challenge_date}','${user_id}', "${img}", 0, ${challenge_id},0) `
+  //const sql = `UPDATE management.challenge_ing SET is_cert = 0 `; 모든 is_cert 1로
+  const sql = `UPDATE management.challenge_ing SET challenge_image = '${img}' WHERE user_id = '${user_id}' AND challenge_id = '${challenge_id}' AND challenge_date = '${challenge_date}'`;
+  //const sql = `INSERT INTO management.challenge_ing (challenge_date, user_id, challenge_image, mate_check, challenge_id,is_cert) VALUES ('${challenge_date}','${user_id}', "${img}", 0, ${challenge_id},0) `
 
   db.query(sql, (err, rows, fields) => {
     if (err) {
@@ -847,10 +829,8 @@ app.post('/api/ctodoupload', (req, res) => {
 
   db.query(
     `INSERT INTO management.challenge_todo (challenge_date, user_id, challenge_todo, todo_check, challenge_id) VALUES ('${challenge_date}','${user_id.userId}', "${todo}", 0, ${challenge_id}) `
-
-  )});
-
-
+  );
+});
 
 /* cert 이미지 불러오기 */
 app.post('/api/challenge_ing_img', (req, res) => {
@@ -958,8 +938,6 @@ app.post('/api/mypage/penalty', (req, res) => {
   });
 });
 
-
-
 /* cert 이미지 불러오기 */
 app.post('/api/challenge_ing_img', (req, res) => {
   const token = req.body.token;
@@ -977,35 +955,30 @@ app.post('/api/challenge_ing_img', (req, res) => {
   db.query(sql, (err, rows, fields) => {
     if (err) {
       //console.log(err);
-      
+
       res.status(201).json({
         result: 'not ok',
-      })
-
+      });
     } else {
-      
-      for ( let i = 0; i < rows.length; i++) 
-            {
+      for (let i = 0; i < rows.length; i++) {
+        date = rows[i].challenge_date;
+        img = rows[i].challenge_image;
+        ischecked = rows[i].mate_check;
 
-              date = rows[i].challenge_date;
-              img = rows[i].challenge_image;
-              ischecked = rows[i].mate_check;
-
-              infos.push({
-                id: i,
-                img: img,
-                date: date,
-                ischecked: ischecked
-              });
-            };
+        infos.push({
+          id: i,
+          img: img,
+          date: date,
+          ischecked: ischecked,
+        });
+      }
       res.status(201).json({
         result: 'ok',
-        rows: infos
+        rows: infos,
       });
     }
   });
 });
-
 
 // reward
 app.post('/api/mypage/rewards', (req, res) => {
@@ -1041,11 +1014,11 @@ app.post('/api/mypage/setting', (req, res) => {
         result: 'ok',
         permission_friend: row[0].permission_friend,
         permission_id: row[0].permission_id,
-        permission_challenge: row[0].permission_challenge,      });
-      }
-    });
+        permission_challenge: row[0].permission_challenge,
+      });
+    }
   });
-
+});
 
 /* Setting 정보 저장 */
 app.post('/api/mypage/saveSetting', (req, res) => {
@@ -1065,11 +1038,9 @@ app.post('/api/mypage/saveSetting', (req, res) => {
       res.status(201).json({
         result: 'ok',
       });
-
     }
   });
 });
-
 
 /* mate 불러오기 */
 app.post('/api/challenge_mate', (req, res) => {
@@ -1084,7 +1055,6 @@ app.post('/api/challenge_mate', (req, res) => {
   let ischecked;
   let iscert;
   let date;
-  
 
   let todo;
   let check;
@@ -1094,7 +1064,6 @@ app.post('/api/challenge_mate', (req, res) => {
   let img;
 
   let nickname;
-
 
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
@@ -1114,7 +1083,6 @@ app.post('/api/challenge_mate', (req, res) => {
         if (err) {
           console.log(err);
         } else {
-    
           for (let i = 0; i < rows.length; i++) {
             /*if(오늘 날짜와 비교){
                     isstate = true; 회색?
@@ -1139,7 +1107,7 @@ app.post('/api/challenge_mate', (req, res) => {
               ischecked = true;
               isdone = false;
             }
-    
+
             infos.push({
               //{ id: 1, done: true, state: true, checked: true, cert: true }
               id: i,
@@ -1167,61 +1135,57 @@ app.post('/api/challenge_mate', (req, res) => {
             if (err) {
               console.log(err);
             } else {
-              for ( let i = 0; i < rows.length; i++) 
-                    {
-                      date = rows[i].challenge_date;
-                      todo = rows[i].challenge_todo;
-                      if(rows[i].todo_check === 1){ check = true;}
-                      else{check = false;}
-                      
-        
-                      infos2.push({
-                        id: i+1,
-                        text: todo,
-                        checked: check,
-                        date: date,
-                        matenick: mateid
-                      });
-                    };
-                    sql4 = `SELECT * FROM management.challenge_ing WHERE user_id = '${mateid}' AND challenge_id = ${cid}`;
-                    db.query(sql4, (err, rows, fields) => {
-                      if (err) {
-                        console.log(err);
-                  
-                      } else {
-                        
-                        for ( let i = 0; i < rows.length; i++) 
-                              {
-                  
-                                date = rows[i].challenge_date;
-                                img = rows[i].challenge_image;
-                                ischecked = rows[i].mate_check;
-                  
-                                infos3.push({
-                                  id: i,
-                                  img: img,
-                                  date: date,
-                                  ischecked: ischecked
-                                });
-                              };
-                              sql5 = `SELECT nickname FROM management.user_info WHERE user_id = '${mateid}'`;
-                              db.query(sql5, (err, row, fields) => {
-                                if (err) {
-                                  console.log(err);
-                                } else {
-                                  nickname = row[0].nickname;
-                                }
-                                res.status(201).json({
-                                  result: 'ok',
-                                mcinfo: infos,
-                                mctodo: infos2,
-                                mcimg: infos3,
-                                matenick: nickname
-                                });
-                              });
-                      }
-                      
+              for (let i = 0; i < rows.length; i++) {
+                date = rows[i].challenge_date;
+                todo = rows[i].challenge_todo;
+                if (rows[i].todo_check === 1) {
+                  check = true;
+                } else {
+                  check = false;
+                }
+
+                infos2.push({
+                  id: i + 1,
+                  text: todo,
+                  checked: check,
+                  date: date,
+                  matenick: mateid,
+                });
+              }
+              sql4 = `SELECT * FROM management.challenge_ing WHERE user_id = '${mateid}' AND challenge_id = ${cid}`;
+              db.query(sql4, (err, rows, fields) => {
+                if (err) {
+                  console.log(err);
+                } else {
+                  for (let i = 0; i < rows.length; i++) {
+                    date = rows[i].challenge_date;
+                    img = rows[i].challenge_image;
+                    ischecked = rows[i].mate_check;
+
+                    infos3.push({
+                      id: i,
+                      img: img,
+                      date: date,
+                      ischecked: ischecked,
                     });
+                  }
+                  sql5 = `SELECT nickname FROM management.user_info WHERE user_id = '${mateid}'`;
+                  db.query(sql5, (err, row, fields) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      nickname = row[0].nickname;
+                    }
+                    res.status(201).json({
+                      result: 'ok',
+                      mcinfo: infos,
+                      mctodo: infos2,
+                      mcimg: infos3,
+                      matenick: nickname,
+                    });
+                  });
+                }
+              });
             }
           });
         }
@@ -1232,6 +1196,4 @@ app.post('/api/challenge_mate', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Connect at http://localhost:${port}`);
-
 });
-
