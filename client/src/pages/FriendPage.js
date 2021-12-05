@@ -1,4 +1,4 @@
-import react, { useEffect, useState, useHistory } from "react";
+import react, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import axios from "axios";
 import styled from "styled-components";
@@ -11,11 +11,8 @@ import Thumbnail from "../components/Thumbnail";
 import { Link } from "react-router-dom";
 import { getCookie } from "../cookie";
 
-
-export default function FriendPage({ friendpage }) {
-
-    let token = getCookie("myToken");
-
+export default function FriendPage({ friendpage, history }) {
+  let token = getCookie("myToken");
 
   const FeedWrap = styled.div`
     display: flex;
@@ -74,6 +71,16 @@ export default function FriendPage({ friendpage }) {
     console.log(token, friend_name);
   });
 
+  // const loadComment = () => {
+  //   history.push({
+  //     pathname: "./",
+  //     state: {
+  //       date: `${value}`,
+  //       token: `${token}`,
+  //     },
+  //   });
+  // };
+
   return (
     <FeedWrap>
       <CalendarWrap>
@@ -90,8 +97,10 @@ export default function FriendPage({ friendpage }) {
             displayStaticWrapperAs="desktop"
             value={value}
             onChange={(newValue) => {
+              
               setValue(newValue);
 
+              console.log("friendpage", typeof({value}));
               // todolist post
               async function loadList() {
                 await axios
@@ -132,16 +141,26 @@ export default function FriendPage({ friendpage }) {
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
-        <Link to={{
+        {/* <Link to={{
             pathname: "/feed/image",
             state:{
                 token: {token},
                 friend: {friend_name},
                 date: {value}
             }
-        }}>
-            <Thumbnail slides={photos} num={3} onClcik={()=>{console.log("click")}}/>
-          </Link>
+        }}> */}
+        <Thumbnail slides={photos} num={3} />
+        {/* </Link> */}
+
+        {/* 버튼 클릭하면 history.push로 전달 */}
+        <button
+          onClick={() => {
+            history.push(`/feed/image?friend_name=${friend_name} &date=${format(value,"yyyy-MM-dd")}&token=${token}`);
+          }}
+          style={{ margin: "40px" , textAlign:"end", fontWeight:"bold", border:"none", fontSize:"18px", backgroundColor:"transparent", marginTop:"20px",}}
+        >
+          ⍈ comments
+        </button>
       </CalendarWrap>
       <CheckboxListWrap>
         <h1>Todo</h1>

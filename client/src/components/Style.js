@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const Id = styled.text`
   padding-left: 10px;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: bold;
 `;
 
@@ -26,7 +26,7 @@ const PageWrap = styled.div`
 export default function AvatarHeader({ id, src }) {
   return (
     <FlexRow>
-      <Avatar src={src}></Avatar>
+      {/* <Avatar src={src}></Avatar> */}
       <Id>{id}</Id>
     </FlexRow>
   );

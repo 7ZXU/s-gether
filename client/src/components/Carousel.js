@@ -1,7 +1,8 @@
-import React from 'react';
-import Slider from 'react-slick';
-import img from '../assets/friend3.png';
-import styled from 'styled-components';
+import React from "react";
+import Slider from "react-slick";
+import styled from "styled-components";
+import {useState} from "react";
+
 const settings = {
   dots: true,
   infinite: true,
@@ -14,22 +15,22 @@ const settings = {
 
 const Image = styled.img`
   src: ${(props) => props.src};
-  width: 100%;
+  width: 300px;
+  height: 600px;
+  border-radius: 10px;
 `;
 
-export default function Carousel() {
+export default function Carousel({ photos }) {
+
+  
   return (
     <div>
       <Slider {...settings}>
-        <div>
-          <Image src={img} alt="img" />
-        </div>
-        <div>
-          <Image src={img} alt="img" />
-        </div>
-        <div>
-          <Image src={img} alt="img" />
-        </div>
+        {photos.map((photo) => (
+
+            <Image src={photo} alt="img" />
+
+        ))}
       </Slider>
     </div>
   );
