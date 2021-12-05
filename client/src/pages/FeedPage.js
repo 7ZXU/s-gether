@@ -369,6 +369,7 @@ function FeedPage({ history }) {
               );
             }}
             style={{
+              marginTop:"20px",
               backgroundColor: "transparent",
               textAlign: "end",
               fontWeight: "bold",

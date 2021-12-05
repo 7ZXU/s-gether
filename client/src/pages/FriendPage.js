@@ -157,7 +157,7 @@ export default function FriendPage({ friendpage, history }) {
           onClick={() => {
             history.push(`/feed/image?friend_name=${friend_name} &date=${format(value,"yyyy-MM-dd")}&token=${token}`);
           }}
-          style={{ margin: "40px" , textAlign:"end", fontWeight:"bold", border:"none", fontSize:"18px", backgroundColor:"transparent"}}
+          style={{ margin: "40px" , textAlign:"end", fontWeight:"bold", border:"none", fontSize:"18px", backgroundColor:"transparent", marginTop:"20px",}}
         >
           ⍈ comments
         </button>
