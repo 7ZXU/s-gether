@@ -8,7 +8,6 @@ function Header() {
         <div className="header-items">
           <nav>
             <a href="/feed">Feed</a>
-            <a href="/myChallenge">My Challenge</a>
             <a href="/challenges">Search Challenge</a>
             <a href="/mypage">My page</a>
           </nav>
