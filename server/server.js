@@ -876,6 +876,25 @@ app.post('/api/challenge_ing_img', (req, res) => {
 
 /* mypage의 Charge 불러오기 */
 // todo: 스터디 참여(type = 2)할 경우 잔액에서 - 해줘야 함.
+app.post('/api/mypage/currentBalance', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  const sql = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id.userId}' ORDER BY idx DESC LIMIT 1`;
+  db.query(sql, (err, row, fields) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: 'sql error' });
+    } else {
+      console.log(row);
+      res.status(201).json({
+        result: 'ok',
+        balance: row[0].current_balance,
+      });
+    }
+  });
+});
+
 app.post('/api/mypage/charge', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
@@ -886,7 +905,7 @@ app.post('/api/mypage/charge', (req, res) => {
       console.log(err);
       res.status(400).json({ error: 'sql error' });
     } else {
-      console.log(row);
+      // console.log(row);
       // history = row;
       res.status(201).json({
         result: 'ok',
