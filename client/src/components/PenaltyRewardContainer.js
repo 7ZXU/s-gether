@@ -2,15 +2,42 @@ import React, { useEffect, useState } from 'react';
 import '../css/PenaltyRewardContainer.css';
 import { getCookie } from '../cookie.js';
 import axios from 'axios';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
 
 function PenaltyRewardContainer() {
   const [penaltyHistory, setPenaltyHistory] = useState('');
   const [rewardHistory, setRewardHistory] = useState('');
+
+  const [penaltyPage, setPenaltyPage] = React.useState(0);
+  const [penaltyRowsPerPage, setPenaltyRowsPerPage] = React.useState(3);
+
+  const handlePenaltyChangePage = (event, newPage) => {
+    setPenaltyPage(newPage);
+  };
+
+  const handlePenaltyChangeRowsPerPage = (event) => {
+    setPenaltyRowsPerPage(+event.target.value);
+    setPenaltyPage(0);
+  };
+
+  const [rewardsPage, setRewardsPage] = React.useState(0);
+  const [rewardsRowsPerPage, setRewardsRowsPerPage] = React.useState(3);
+
+  const handleRewardsChangePage = (event, newPage) => {
+    setRewardsPage(newPage);
+  };
+
+  const handleRewardsChangeRowsPerPage = (event) => {
+    setRewardsRowsPerPage(+event.target.value);
+    setRewardsPage(0);
+  };
 
   const token = getCookie('myToken');
 
@@ -87,75 +114,124 @@ function PenaltyRewardContainer() {
   return (
     <div className="penalty_reward__container">
       <section className="penalty__container">
-        <h1>Penalty</h1>
+        <div className="penalty__container__title">
+          <h1>Penalty</h1>
+          <span>총 패널티: {penaltyHistory ? calPenalty() : 0} 원</span>
+        </div>
+
         <div className="penalty__container">
-          <div className="item clearfix">
-            <label for="penalty" class="penalty__money">
-              총 패널티:
-            </label>
-            <span>{penaltyHistory ? calPenalty() : 0} 원</span>
-          </div>
           <div className="penalty__history">
-            <Table className="penalty_history_table">
-              <TableBody>
-                {penaltyHistory ? (
-                  penaltyHistory.map((cur, index) => {
-                    return (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          '&:last-child td, &:last-child th': { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">
-                          {cur.transaction_date}
-                        </TableCell>
-                        <TableCell align="center">{cur.money}</TableCell>
-                      </TableRow>
-                    );
-                  })
-                ) : (
-                  <p>내역 불러오는 중...</p>
-                )}
-              </TableBody>
-            </Table>
+            <Paper sx={{ overflow: 'hidden' }}>
+              <TableContainer sx={{ maxHeight: 300 }}>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center" sx={{ 'font-weight': 'bold' }}>
+                        날짜
+                      </TableCell>
+                      <TableCell align="center" sx={{ 'font-weight': 'bold' }}>
+                        금액
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {penaltyHistory ? (
+                      penaltyHistory
+                        .slice(
+                          penaltyPage * penaltyRowsPerPage,
+                          penaltyPage * penaltyRowsPerPage + penaltyRowsPerPage
+                        )
+                        .map((cur, index) => {
+                          return (
+                            <TableRow
+                              hover
+                              tabIndex={-1}
+                              role="checkbox"
+                              key={index}
+                            >
+                              <TableCell align="center" key="index">
+                                {cur.transaction_date}
+                              </TableCell>
+                              <TableCell align="center">{cur.money}</TableCell>
+                            </TableRow>
+                          );
+                        })
+                    ) : (
+                      <p>내역 불러오는 중...</p>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[3]}
+                component="div"
+                count={penaltyHistory.length}
+                rowsPerPage={penaltyRowsPerPage}
+                page={penaltyPage}
+                onPageChange={handlePenaltyChangePage}
+                onRowsPerPageChange={handlePenaltyChangeRowsPerPage}
+              />
+            </Paper>
           </div>
         </div>
       </section>
       <section className="reward__container">
-        <h1>Reward</h1>
-        <div className="reward__container ">
-          <div className="item clearfix">
-            <label for="reward" class="reward__money">
-              총 상금:
-            </label>
-            <span>{rewardHistory ? calRewards() : 0} 원</span>
-          </div>
-          <div className="reward__history">
-            <Table className="reward_history_table">
-              <TableBody>
-                {rewardHistory ? (
-                  rewardHistory.map((cur, index) => {
-                    return (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          '&:last-child td, &:last-child th': { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center">
-                          {cur.transaction_date}
-                        </TableCell>
-                        <TableCell align="center">{cur.money}</TableCell>
-                      </TableRow>
-                    );
-                  })
-                ) : (
-                  <p>내역 불러오는 중...</p>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+        <div className="reward__container__title">
+          <h1>Reward</h1>
+          <span>총 상금: {rewardHistory ? calRewards() : 0} 원</span>
+        </div>
+        <div className="reward__history">
+          <Paper sx={{ overflow: 'hidden' }}>
+            <TableContainer sx={{ maxHeight: 300 }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" sx={{ 'font-weight': 'bold' }}>
+                      날짜
+                    </TableCell>
+                    <TableCell align="center" sx={{ 'font-weight': 'bold' }}>
+                      금액
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rewardHistory ? (
+                    rewardHistory
+                      .slice(
+                        rewardsPage * rewardsRowsPerPage,
+                        rewardsPage * rewardsRowsPerPage + rewardsRowsPerPage
+                      )
+                      .map((cur, index) => {
+                        return (
+                          <TableRow
+                            hover
+                            tabIndex={-1}
+                            role="checkbox"
+                            key={index}
+                          >
+                            <TableCell align="center" key="index">
+                              {cur.transaction_date}
+                            </TableCell>
+                            <TableCell align="center">{cur.money}</TableCell>
+                          </TableRow>
+                        );
+                      })
+                  ) : (
+                    <p>내역 불러오는 중...</p>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[3]}
+              component="div"
+              count={rewardHistory.length}
+              rowsPerPage={rewardsRowsPerPage}
+              page={rewardsPage}
+              onPageChange={handleRewardsChangePage}
+              onRowsPerPageChange={handleRewardsChangeRowsPerPage}
+            />
+          </Paper>
         </div>
       </section>
     </div>

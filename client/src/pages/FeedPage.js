@@ -2,23 +2,24 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import MyCard from "../components/MyCard";
 import Calendar from "../components/Calendar";
 import CheckboxList from "../components/CheckboxList";
 import Thumbnail from "../components/Thumbnail";
 import ChallengeCard from "../components/ChallengeCard";
 import axios from "axios";
 import { Button, Modal, Fade, Box, Backdrop, List } from "@mui/material";
-import { getCookie } from "../cookie";
+import { getCookie, removeCookie } from "../cookie";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import StaticDatePicker from "@mui/lab/StaticDatePicker";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import Avatar from "@mui/material/Avatar";
 import FriendPage from "./FriendPage";
 import Header from "../components/Header";
 import defaultimage from "../assets/upLoadImage.png";
-import MyCard from "../components/MyCard";
 
 const FeedWrap = styled.div`
   display: flex;
@@ -66,6 +67,11 @@ const ChallengeWrap = styled.div`
   width: 20%;
 `;
 
+const Login = styled(AccountCircleIcon)``;
+const Logout = styled(LogoutIcon)`
+  padding-left: 10px;
+`;
+
 function FeedPage({ history }) {
   // useState 변수
   const [user, setUser] = useState("");
@@ -73,6 +79,7 @@ function FeedPage({ history }) {
   const [lists, setLists] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [todo, setTodo] = useState("");
+
   const [friends, setFriends] = useState([]);
   // const [challenges, setChallenges] = useState([]);
 
@@ -80,8 +87,6 @@ function FeedPage({ history }) {
   const [day, setDay] = useState(new Date()); // 오늘 날짜 설정
 
   const [imgSrc, setImgSrc] = useState(""); // thumbnail에 띄울 이미지 배열 받아옴
-
-  // async 함수
 
   // 캘린더에 선택한 날짜에 따라 todo 불러옴
   async function loadList(date) {
@@ -124,42 +129,49 @@ function FeedPage({ history }) {
   //     });
   // }
 
+  async function loadData() {
+    await axios
+      .post("http://localhost:5000/api/feed", {
+        token: token,
+      })
+      .then((res) => {
+        if (res.data.nickname == null) {
+          setUser(res.data.id);
+        } else {
+          setUser(res.data.nickname);
+        }
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  async function loadFriends() {
+    await axios
+      .post("http://localhost:5000/api/friends", {
+        token: token,
+      })
+      .then((res) => {
+        setFriends(res.data.result);
+        console.log("friends", friends);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   useEffect(() => {
-    console.log(token);
-    async function loadData() {
-      await axios
-        .post("http://localhost:5000/api/feed", {
-          token: token,
-        })
-        .then((res) => {
-          if (res.data.nickname == null) {
-            setUser(res.data.id);
-          } else {
-            setUser(res.data.nickname);
-          }
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-
-    loadData();
-
-    loadList(day);
-
-    async function loadFriends() {
-      await axios
-        .post("http://localhost:5000/api/friends", {
-          token: token,
-        })
-        .then((res) => {
-          setFriends(res.data.result);
-          console.log("friends", friends);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (token) {
+      console.log("토큰 있음");
+      console.log(token);
+      loadData();
+      loadList(day);
+      loadFriends();
+    } else {
+      window.location.replace("/");
+      console.log("쿠키 없음");
     }
 
     loadFriends();
@@ -201,9 +213,16 @@ function FeedPage({ history }) {
     p: 4,
   };
 
+  const onClickLogout = () => {
+    console.log("로그아웃 클릭");
+
+    // 쿠키 삭제
+    removeCookie("myToken");
+    window.location.replace("/"); // 메인 페이지로 이동
+  };
+
   const onClick = () => {
     console.log(token);
-
     async function saveData() {
       await axios
         .post("http://localhost:5000/api/todo", {
@@ -260,7 +279,13 @@ function FeedPage({ history }) {
 
   return (
     <FeedWrap>
-      <Header />
+      <div style={{ display: "flex", "justify-content": "space-between" }}>
+        <Header />
+        <Logout
+          sx={{ fontSize: 50, cursor: "pointer" }}
+          onClick={onClickLogout}
+        ></Logout>
+      </div>
 
       <Navbar>
         <div style={{ display: "flex", flexDirection: "row" }}>

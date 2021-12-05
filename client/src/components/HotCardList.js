@@ -32,9 +32,10 @@ function HotCardList() {
     data();
   },[]);
 
-  
+  console.log(dataList);
   let card = dataList.map((data, key) => 
   <SpecificItem key = {key}>
+    
     <img
       className="studyBackground-img"
       src={data['img'] ? data['img'] : studyBackground }

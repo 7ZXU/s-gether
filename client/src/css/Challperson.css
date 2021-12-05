@@ -1,9 +1,8 @@
-.Background {
+#Bac {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0px;
+  left: 0px;
   z-index: 980;
-  top: 0;
   overflow: hidden;
   width: 100vw;
   height: 100vh;

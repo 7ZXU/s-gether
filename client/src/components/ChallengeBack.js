@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
-const ChallengeBack = ({onInsertToggle, da}) => {
+const ChallengeBack = ({onInsertToggle, da, challengeId}) => {
   const [fileUrl, setFileUrl] = useState(null);
 
 const [files, setfiles] = useState('');
@@ -51,7 +51,7 @@ const onChangeHandle = (evt)=>{
 const onHandleUpload = async () => {
 
   const user_id = 'snow'; //임시
-  const challenge_id = 10;
+  const challenge_id = challengeId;
   const formData = new FormData();
 
   formData.append('img', uploadFile.file);

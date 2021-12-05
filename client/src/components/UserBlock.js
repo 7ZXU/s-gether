@@ -72,11 +72,6 @@ function UserBlock() {
       });
   }
 
-  // useEffect(() => {
-  //   console.log('이미지 정보');
-  //   console.log(uploadFile.file, uploadFile.fileName);
-  // }, [uploadFile]);
-
   const onLoadImage = (e) => {
     if (e.target.files.length) {
       const imgTarget = e.target.files[0];
@@ -123,7 +118,11 @@ function UserBlock() {
   return (
     <div className="user-container-box">
       <div className="user-photo">
-        <label className="input-profile-img" for="input-file">
+        <label
+          className="input-profile-img"
+          for="input-file"
+          style={{ cursor: 'pointer' }}
+        >
           <img src={userImage ? userImage : defaultUser} alt="사용자 이미지" />
         </label>
         <input
@@ -135,11 +134,15 @@ function UserBlock() {
           style={{ display: 'none' }}
         ></input>
       </div>
-      <SaveAltIcon className="save-icon" onClick={saveImage} />
+      <SaveAltIcon
+        className="save-icon"
+        onClick={saveImage}
+        sx={{ cursor: 'pointer' }}
+      />
 
       <div className="user-name">
         <p>{username}</p>
-        <ModeEditIcon onClick={openModal} />
+        <ModeEditIcon onClick={openModal} sx={{ cursor: 'pointer' }} />
         <Modal
           open={modalOpen}
           close={closeModal}
