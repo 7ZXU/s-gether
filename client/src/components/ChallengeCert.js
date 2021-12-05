@@ -35,7 +35,7 @@ const Form = styled.form`
   background: white;
 `;
 
-const Cert = ({ Cday, cert, sday,t2,update,challengeId, mid}) => {
+const Cert = ({ Cday, cert, sday,t2,update,challengeId, mid, whoare}) => {
   const token = getCookie('myToken');
 
 
@@ -171,7 +171,7 @@ const certupdate = () => {
     };
   return (
     <div className="ChallengeCerts">
-      {!cert && (
+      {!cert && whoare == 1&&(
         <div className="add-button" onClick={onInsertToggle}>
           <MdAddCircle />
         </div>
@@ -200,9 +200,9 @@ const certupdate = () => {
               </div>
             </ImageListItem>
           : ""))}
-          <div className="add-button2" onClick={onInsertToggle}>
+          {whoare === 1 &&<div className="add-button2" onClick={onInsertToggle}>
             <MdAddCircle />
-          </div>
+          </div>}
         </ImageList>
       )}
       {insertToggle && <ChallengeBack onInsertToggle={onInsertToggle} da={sday} challengeId={challengeId}/>}

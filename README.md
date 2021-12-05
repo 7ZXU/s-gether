@@ -1,74 +1,119 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
+# Team B Capstone Project S-gether
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## 프로젝트 배경
+인스타그램에서 공스타그램 관련 해시태그를 가진 게시물은 640만개로 공스타 그램에 대한 수요는 여전히 뜨겁다. 공스타그램을 하는 사람들은 해당 게시글이 자신들의 목표나 계획을 이행하는데 동기부여가 된다고 한다. 
+또한 팬데믹으로 인한 비대면 스터디가 대학가를 휩쓸고 있다. 이에 우리 팀은 사용자들이 자신들의 공스타그램, 스터디 모집, Todo list작성을 모두 할 수 있는 플랫폼을 만들고자 했다.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 프로그램 초기 설정
+```
+git clone https://github.com/7ZXU/SWE3028-TeamB.git
+cd .\SWE3028-TeamB\
+npm install
+cd client
+npm install
+```
+---
+## 프로젝트 실행
+```
+cd .\SWE3028-TeamB\
+yarn dev
+```
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## S-gether 프로젝트 설명
+---
+###[로그인 기능]
+<img src = "./Picture/로그인 페이지.png">
+1. 회원 가입 기능
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+    처음 로그인 페이지에서 아이디가 없으신가요? 라는 부분을 클릭하면 사용자 회원가입 페이지로 넘어간다.
+2. 로그인 기능
 
-### `npm test`
+    사용자가 올바른 아이디와 비밀번호를 입력하면 jwt방식 토큰이 사용자에게 발급되고 이를 이용하여 사용자의 정보가 인증된다.
+---
+### [사용자 정보 페이지]
+<img src = "./Picture/User info.png">
+1. 사용자 정보 수정
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    사용자 정보를 수정할 수 있는 페이지이다.
 
-### `npm run build`
+2. 사용자 포인트 충전
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    사용자가 챌린지를 참여하고 보상이나 패널티를 받을 때 포인트를 받는다. 이를 충전 할 수 있는 페이지이다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. 보상, 패널티 목록
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    사용자가 받은 보상과 패널티 관련 정보를 보여주는 페이지 부분이다.
 
-### `npm run eject`
+4. Setting
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    
+---
+### [Challenge Page]
+<img src = ".\Picture\Challenge Search Page.png" >
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. 사용자 참여 챌린지 정보
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+    사용자가 참여하고 있는 챌린지 목록을 왼쪽과 같이 보여준다.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+2. Hot Challenges
 
-## Learn More
+    현재 진행 중인 챌린지에 대한 챌린지 카드를 보여준다.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. Looking for a challenge Members
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    현재 사람들을 모집하는 챌린지 목록을 보여준다.
+    해당 오른쪽에는 해당 챌린지 카드를 보여준다.
+    챌린지 카드를 클릭하면 해당 챌린지에 참여할지에 관한 팝업이 뜬다.
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+    <img src = "./Picture/enrollChallenge.png" width="300" height="300">
 
-### Analyzing the Bundle Size
+4. Add Challenge
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+    사용자가 하고자 하는 챌린지를 등록할 수 있다.
 
-### Making a Progressive Web App
+    
+    <img src = "./Picture/UploadChallenge.png" width="300" height="300">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
+### [My Challenge Page]
+<img src = ".\Picture\My challenge.png" >
 
-### Advanced Configuration
+1. Challenge info
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+   현재 challenge의 사진과 정보를 보여준다.
+2. Challenge list
 
-### Deployment
+   
+   각 날짜의 성공이나 실패여부를 보여준다. 누르면 각 날짜의 Day todo 와 Certification을 보여준다.
+3. User & mate name
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+   
+   참가자를 보여준다. 누르면 진행상황을 Pie차트로 보여준다.
+   <img src = ".\Picture\pie.png" >
+4. Day todo
+   
 
-### `npm run build` fails to minify
+   선택한 날짜의 todolist를 보여준다.
+   <img src = ".\Picture\challengetodo.png" >
+   선택한 날짜의 todo를 추가할 수 있다.
+5. Certification
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
-# SWE3028-TeamB
->>>>>>> 0baf841d0dc1e9405a687f8874760f286caec3c8
+   
+   선택한 날짜의 인증사진을 보여준다.
+   <img src = ".\Picture\cert.png" >
+   사진을 누르면 challenge를 잘 수행했는지 선택할 수 있다.
+
+   
+   <img src = ".\Picture\certupload.png" >
+   선택한 날짜의 인증사진을 업로드할 수 있다.
+
+
+
+
+
+

@@ -832,23 +832,21 @@ app.post("/api/ctodoupload", (req, res) => {
   const token = body["token"];
   const user_id = jwt.decode(token, YOUR_SECRET_KEY);
 
-  const sql = `SELECT * FROM management.challenge_ing WHERE user_id = '${user_id.userId}' AND challenge_id = '${challenge_id}' AND challenge_date = '${challenge_date}'`;
+  const sql = `SELECT * FROM management.challenge_ing WHERE user_id = '${user_id.userId}' AND challenge_id = '${challenge_id}' AND challenge_date = '${challenge_date.substring(0,10)}'`;
   
   db.query(sql, (err, rows, fields) => {
     if (err) {
       console.log('DB저장 실패');
       console.log(err);
     } else {
-      if(rows === []){ //안먹혀서 둘다넣음음
-        let sql2 = `INSERT INTO management.challenge_ing (challenge_date, user_id, challenge_image, mate_check, challenge_id, is_cert) VALUES ('${challenge_date}','${user_id.userId}', "", 0, ${challenge_id}, 1) `
+      if(rows.length === 0){
+        let sql2 = `INSERT INTO management.challenge_ing (challenge_date, user_id, challenge_image, mate_check, challenge_id, is_cert) VALUES ('${challenge_date}','${user_id.userId}', "/image/3b152de8c557655879479a3ab94aeb89", 0, ${challenge_id}, 1) `
         db.query(sql2);
         db.query(
           `INSERT INTO management.challenge_todo (challenge_date, user_id, challenge_todo, todo_check, challenge_id) VALUES ('${challenge_date}','${user_id.userId}', "${todo}", 0, ${challenge_id}) `
         );
       }
       else{
-        let sql2 = `INSERT INTO management.challenge_ing (challenge_date, user_id, challenge_image, mate_check, challenge_id, is_cert) VALUES ('${challenge_date}','${user_id.userId}', "/image/3b152de8c557655879479a3ab94aeb89", 0, ${challenge_id}, 1) `
-        db.query(sql2);
         db.query(
           `INSERT INTO management.challenge_todo (challenge_date, user_id, challenge_todo, todo_check, challenge_id) VALUES ('${challenge_date}','${user_id.userId}', "${todo}", 0, ${challenge_id}) `
         );

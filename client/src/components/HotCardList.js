@@ -32,10 +32,21 @@ function HotCardList() {
     data();
   },[]);
 
-  console.log(dataList);
-  let card = dataList.map((data, key) => 
+  
+  var selectedData = [];
+  var now = new Date();
+  
+  for(var i = 0 ;  i < dataList.length; i++){
+    const startDate = new Date(dataList[i]['startDate']);
+    const endDate = new Date(dataList[i]['endDate']);
+    if(dataList[i]['current_participants'] > 2 && startDate < now && endDate > now){
+      selectedData.push(dataList[i]);
+    }
+  }
+
+  console.log(selectedData);
+  let card = selectedData.map((data, key) => 
   <SpecificItem key = {key}>
-    
     <img
       className="studyBackground-img"
       src={data['img'] ? data['img'] : studyBackground }
@@ -64,7 +75,7 @@ function HotCardList() {
   return (
     <div className="HotCardList">
       <Carousel breakPoints={breakPoints}>
-        {dataList ? dataList.map((data, key) => {return (<SpecificItem key = {key}>
+        {selectedData ? selectedData.map((data, key) => {return (<SpecificItem key = {key}>
     <img
       className="studyBackground-img"
       src={data['img'] ? data['img'] : studyBackground }
