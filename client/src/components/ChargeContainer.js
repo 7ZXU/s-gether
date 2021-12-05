@@ -39,8 +39,33 @@ function ChargeContainer() {
     setPage(0);
   };
 
-  // 잔액 불러오기
-  async function loadCharge() {
+  // 현재 잔액 불러오기
+  async function loadCurrentBalance() {
+    console.log('현재 금액: ' + money);
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (!token) {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    } else {
+      await axios
+        .post('http://localhost:5000/api/mypage/currentBalance', {
+          token: token,
+        })
+        .then((res) => {
+          console.log(res.data.result);
+          console.log(res.data.balance);
+          if (res.data.balance !== 0) {
+            setMoney(res.data.balance);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
+  // 잔액 내역 불러오기
+  async function loadChargeHistory() {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (!token) {
       window.location.replace('/');
@@ -73,26 +98,18 @@ function ChargeContainer() {
       })
       .then((res) => {
         console.log(res.data.result);
-        loadCharge();
+        loadCurrentBalance();
+        loadChargeHistory();
       })
       .catch((err) => {
         console.log(err);
       });
   }
-
   useEffect(() => {
-    console.log('charge: ' + token);
-    loadCharge();
+    console.log(money);
+    loadChargeHistory();
+    loadCurrentBalance();
   }, []);
-
-  useEffect(() => {
-    if (history !== '' || history.length !== 0) {
-      console.log('내역: ' + history[0].money);
-      setMoney(history[history.length - 1].current_balance);
-    } else {
-      console.log('내역: ' + typeof history);
-    }
-  }, [history]);
 
   return (
     <div className="charge__container ">
