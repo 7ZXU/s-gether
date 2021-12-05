@@ -55,6 +55,20 @@ export default function FriendPage({ friendpage, history }) {
   // api/friends 는 친구 아이디를 가져옴
   // id 가 아니라 닉네임 띄워야 함
 
+  async function loadPhoto() {
+    await axios
+      .post("http://localhost:5000/api/friendPhotolist", {
+        nickname: friend_name,
+        date: format(value, "yyyy-MM-dd"),
+      })
+      .then((res) => {
+        setPhotos(res.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   useEffect(() => {
     token = getCookie("myToken");
 
@@ -69,7 +83,9 @@ export default function FriendPage({ friendpage, history }) {
     loadFriendPage();
 
     console.log(token, friend_name);
-  });
+
+    loadPhoto();
+  }, []);
 
   // const loadComment = () => {
   //   history.push({
@@ -118,6 +134,21 @@ export default function FriendPage({ friendpage, history }) {
 
               loadList();
 
+              async function loadPhoto() {
+                await axios
+                  .post("http://localhost:5000/api/friendPhotolist", {
+                    nickname: friend_name,
+                    date: format(newValue, "yyyy-MM-dd"),
+                  })
+                  .then((res) => {
+                    setPhotos(res.data.result);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
+              loadPhoto();
+
               // async function loadPhoto() {
               //   await axios
               //     .post("http://localhost:5000/api/photolist", {
@@ -155,7 +186,7 @@ export default function FriendPage({ friendpage, history }) {
         {/* 버튼 클릭하면 history.push로 전달 */}
         <button
           onClick={() => {
-            history.push(`/feed/image?friend_name=${friend_name} &date=${format(value,"yyyy-MM-dd")}&token=${token}`);
+            history.push(`/feed/image?friend_name=${friend_name}&date=${format(value,"yyyy-MM-dd")}&token=${token}&slides=${photos}`);
           }}
           style={{ margin: "40px" , textAlign:"end", fontWeight:"bold", border:"none", fontSize:"18px", backgroundColor:"transparent", marginTop:"20px",}}
         >

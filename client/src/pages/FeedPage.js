@@ -88,6 +88,11 @@ function FeedPage({ history }) {
 
   const [imgSrc, setImgSrc] = useState(""); // thumbnail에 띄울 이미지 배열 받아옴
 
+  const [search, setSearch] = useState("");
+
+  const [searchedId, setSearchedId] = useState("");
+  const [searched, setSearched] = useState(0);
+
   // 캘린더에 선택한 날짜에 따라 todo 불러옴
   async function loadList(date) {
     await axios
@@ -103,6 +108,7 @@ function FeedPage({ history }) {
         console.log(err);
       });
   }
+  
   async function loadPhoto() {
     await axios
       .post("http://localhost:5000/api/photolist", {
@@ -148,6 +154,8 @@ function FeedPage({ history }) {
   }
 
   async function loadFriends() {
+
+
     await axios
       .post("http://localhost:5000/api/friends", {
         token: token,
@@ -158,6 +166,17 @@ function FeedPage({ history }) {
       })
       .catch((err) => {
         console.log(err);
+      });
+  }
+  async function loadSendingFriend() {
+    await axios
+      .post("http://localhost:5000/api/loadSendingFriend", {
+        token: token,
+      })
+      .then((res) => {
+        // 친구 요청 리스트 받아오기
+        console.log("Feed/nicknames", res.data.result);
+        setNicknames(res.data.result);
       });
   }
 
@@ -177,11 +196,36 @@ function FeedPage({ history }) {
     loadFriends();
 
     loadPhoto();
+    loadSendingFriend();
     // loadChallenge();
   }, []);
 
   const SLIDE_COUNT = 10;
   const slides = Array.from(Array(SLIDE_COUNT).keys());
+
+  const [nicknames, setNicknames] = useState([]);
+
+
+
+  const [open3, setOpen3] = useState(false);
+  const handleOpen3 = () => {
+    setOpen3(true);
+
+    loadSendingFriend();
+  };
+  const handleClose3 = () => {
+    setOpen3(false);
+  };
+
+  const [open2, setOpen2] = useState(false);
+  const handleOpen2 = () => {
+    setSearched(0);
+    setOpen2(true);
+  };
+  const handleClose2 = () => {
+
+    setOpen2(false);
+  };
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -231,7 +275,7 @@ function FeedPage({ history }) {
           token: token,
           day: format(value, "yyyy-MM-dd"),
         })
-        .then(loadList(value));
+        .then(loadList(format(value, "yyyy-MM-dd")));
     }
 
     setOpen(false);
@@ -263,7 +307,7 @@ function FeedPage({ history }) {
       .post("http://localhost:5000/api/uploadimage", {
         params: {
           img: imgSrc,
-          date: value,
+          date: format(value, "yyyy-MM-dd"),
           token: token,
         },
       })
@@ -277,6 +321,18 @@ function FeedPage({ history }) {
     };
   }
 
+  const handleSearch = async () => {
+    await axios
+      .post("http://localhost:5000/api/searchFriend", {
+        search_friend: search,
+      })
+      .then((res) => {
+        console.log("FeedPage/handleSearch", res.data.result);
+        setSearchedId(res.data.result);
+        res.data.result !== "null" ? setSearched(1) : setSearched(0);
+      });
+  };
+
   return (
     <FeedWrap>
       <div style={{ display: "flex", "justify-content": "space-between" }}>
@@ -288,7 +344,19 @@ function FeedPage({ history }) {
       </div>
 
       <Navbar>
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Button onClick={handleOpen3} style={{ fontSize: "20px" }}>
+            📧
+          </Button>
+          <Button onClick={handleOpen2} style={{ fontSize: "20px" }}>
+            ➕
+          </Button>
           {friends.map((friend, index) => (
             <Avatar
               {...stringAvatar(friend)}
@@ -369,7 +437,7 @@ function FeedPage({ history }) {
               );
             }}
             style={{
-              marginTop:"20px",
+              marginTop: "20px",
               backgroundColor: "transparent",
               textAlign: "end",
               fontWeight: "bold",
@@ -404,12 +472,13 @@ function FeedPage({ history }) {
                 key={index}
                 show={"1"}
                 loadList={loadList}
-                value={value}
+                value={format(value, "yyyy-MM-dd")}
               /> //idx 멎나??
             ))}
           </CheckboxListWrap>
 
           <div>
+            {/* todo 추가 모달 */}
             <Modal
               aria-labelledby="transition-modal-title"
               aria-describedby="transition-modal-description"
@@ -472,6 +541,168 @@ function FeedPage({ history }) {
                       ❍
                     </button>
                   </div>
+                </Box>
+              </Fade>
+            </Modal>
+
+            {/* 친구 추가 모달 */}
+            <Modal
+              aria-labelledby="transition-modal-title"
+              aria-describedby="transition-modal-description"
+              open={open2}
+              onClose={handleClose2}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={open2}>
+                <Box sx={style}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <h1>친구 요청 보내기</h1>
+                    <button
+                      style={{
+                        fontSize: "25px",
+                        fontWeight: "bold",
+                        backgroundColor: "transparent",
+                        border: "none",
+                      }}
+                      onClick={handleClose2}
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input
+                      type="text"
+                      onBlur={(e) => {
+                        setSearch(e.target.value);
+                      }}
+                      placeholder="찾고 싶은 친구 이름을 입력하세요"
+                      style={{
+                        fontSize: "20px",
+                        borderTop: "none",
+                        borderLeft: "none",
+                        borderRight: "none",
+                        width: "80%",
+                      }}
+                    />
+
+                    <button
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bold",
+                        backgroundColor: "transparent",
+                        border: "none",
+                      }}
+                      onClick={handleSearch}
+                    >
+                      검색
+                    </button>
+                  </div>
+
+                  {searched === 1 ? (
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <p style={{ marginRight: "10px" }}>
+                        친구 신청을 보내시겠습니까?
+                      </p>
+                      <button
+                        onClick={async () => {
+                          await axios
+                            .post("http://localhost:5000/api/sendingFriend", {
+                              target_mem_id: searchedId,
+                              mem_token: token,
+                            })
+                            .then(
+                              handleClose2(), setSearched(0)
+                            );
+                        }}
+                      >
+                        YES
+                      </button>
+                      <button
+                        onClick={() => {
+
+                          setSearched(0);
+                          setSearchedId("");
+                        }}
+                      >
+                        NO
+                      </button>
+                    </div>
+                  ) : (
+                    <p>찾을 수 없는 사용자입니다.</p>
+                  )}
+                </Box>
+              </Fade>
+            </Modal>
+
+            {/* 친구 요청 모달 */}
+            <Modal
+              aria-labelledby="transition-modal-title"
+              aria-describedby="transition-modal-description"
+              open={open3}
+              onClose={handleClose3}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 500,
+              }}
+            >
+              <Fade in={open3}>
+                <Box sx={style}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <h1>친구 요청 받기</h1>
+                    <button
+                      style={{
+                        fontSize: "25px",
+                        fontWeight: "bold",
+                        backgroundColor: "transparent",
+                        border: "none",
+                      }}
+                      onClick={handleClose3}
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  {/* 친구 요청 목록 불러오기 */}
+                  {nicknames.map((nickname) => (
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent:"space-between" }}>
+                      <p>{nickname}</p>
+                      <button
+                        onClick={async () => {
+                          const agreeName = nickname;
+                          await axios
+                            .post("http://localhost:5000/api/setAgree", {
+                              nickname: agreeName,
+                            })
+                            .then(
+                              (res)=>{
+                                handleClose3();
+                                loadFriends();
+                              }
+
+                            );
+                        }}
+                      >
+                        ✔️
+                      </button>
+                    </div>
+                  ))}
                 </Box>
               </Fade>
             </Modal>

@@ -94,12 +94,32 @@ export default function ImagePage({ history }) {
         console.log(err);
       });
   }
+  async function loadFriendPhoto() {
+    await axios
+      .post("http://localhost:5000/api/friendPhotolist", {
+        nickname: friend_name,
+        date: date,
+      })
+      .then((res) => {
+        setPhotos(res.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
 
   // useEffect
   useEffect(() => {
     loadComment();
-    loadPhoto();;
+    if (friend_name===null){
+      loadPhoto();
+    } else {
+      loadFriendPhoto();
+    }
+
+
+
   }, []);
 
   const handleClick = () => {

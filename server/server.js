@@ -1187,7 +1187,7 @@ app.post("/api/loadcomment", (req, res) => {
   let sql;
 
   if (friend_name !== null) {
-    sql = `SELECT comment_user_id, comment FROM management.comment WHERE commented_nickname = "${friend_name}"`;
+    sql = `SELECT comment_user_id, comment FROM management.comment WHERE commented_nickname = "${friend_name}" AND comment_date = "${date}"`;
   } else {
     console.log("else");
     sql = `SELECT comment_user_id, comment FROM management.comment WHERE commented_nickname IN (SELECT nickname FROM management.user_info WHERE user_id = "${id.userId}")`;
@@ -1251,6 +1251,106 @@ app.post("/api/cert", (req, res) => {
     } else {
       console.log("DB저장 성공");
     }
+  });
+});
+
+app.post('/api/searchFriend', (req, res) => {
+  const search_friend = req.body.search_friend;
+  const sql = `SELECT user_id FROM management.user_info WHERE nickname = "${search_friend}"`
+
+  let searched_id = "";
+
+  db.query(sql, (err, row, fields)=>{
+    if( row === null ){
+      searched_id = "null";
+    } else {
+      console.log("api/searchFriend", row[0].user_id);
+      searched_id= row[0].user_id;
+    } res.status(201).json({
+      result: searched_id
+    })
+  })
+})
+
+app.post('/api/sendingFriend', (req, res) => {
+  const target_mem_id = req.body.target_mem_id;
+  const token = req.body.mem_token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+
+  // `INSERT INTO management.challenge (user_id, challenge_id) VALUES ("${id}","${data["id"]}")`
+
+  const sql = `INSERT INTO management.follow (mem_id, target_mem_id, agree) VALUES ("${id.userId}", "${target_mem_id}", 0)`
+
+  db.query(sql, (err, row, fields) => {
+    if (err){
+      console.log(err);
+    } else {
+      console.log('api/sendingFriend', target_mem_id);
+    }
+  })
+})
+
+app.post('/api/loadSendingFriend', (req, res) => {
+  const token = req.body.token;
+  const id = jwt.decode(token, YOUR_SECRET_KEY);
+  let nicknames = [];
+
+  const sql = `SELECT nickname FROM management.user_info WHERE user_id IN (SELECT mem_id FROM management.follow WHERE target_mem_id = "${id.userId}" AND agree = 0 ) `
+
+  db.query(sql, (err, rows, fields)=>{
+    if(err){
+      console.log(err);
+    } else{
+      console.log(rows);
+      rows.forEach((row) => {
+        nicknames.push(row['nickname']);
+      })
+    }res.status(201).json({
+      result: nicknames
+    })
+  })
+
+
+})
+
+// const sql = `UPDATE management.plan SET plan_check="${checked}" WHERE idx="${idx}" AND user_id="${user}"`;
+
+app.post("/api/setAgree", (req, res) => {
+  const nickname = req.body.nickname;
+
+  const sql  = `UPDATE management.follow SET agree = 1 WHERE mem_id IN (SELECT user_id FROM management.user_info WHERE nickname="${nickname}")`
+
+  db.query(sql, (err, row, fields) => {
+    if(err){
+      console.log(err);
+    } else{
+      console.log("api/setAgree",nickname);
+    }res.status(201).json({
+      message: "ok"
+    })
+  })
+
+})
+
+app.post("/api/friendPhotolist", (req, res) => {
+  const nickname = req.body.nickname;
+  const date = req.body.date;
+  let photo = [];
+
+  const sql = `SELECT plan_image FROM management.photo WHERE photo_user_id = (SELECT user_id FROM management.user_info WHERE nickname="${nickname}") AND DATE(photo_date) = "${date}"`;
+
+  db.query(sql, (err, rows, fields) => {
+    if (err) {
+      console.log(err);
+    } else {
+      rows.forEach((row) => {
+        photo.push(row.plan_image);
+      });
+    }
+    res.status(201).json({
+      result: photo,
+    });
   });
 });
 
