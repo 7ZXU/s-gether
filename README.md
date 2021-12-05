@@ -25,7 +25,7 @@ yarn dev
 
 ## S-gether 프로젝트 설명
 ---
-[로그인 기능]
+###[로그인 기능]
 <img src = "./Picture/로그인 페이지.png">
 1. 회원 가입 기능
 
@@ -34,7 +34,7 @@ yarn dev
 
     사용자가 올바른 아이디와 비밀번호를 입력하면 jwt방식 토큰이 사용자에게 발급되고 이를 이용하여 사용자의 정보가 인증된다.
 ---
-[사용자 정보 페이지]
+### [사용자 정보 페이지]
 <img src = "./Picture/User info.png">
 1. 사용자 정보 수정
 
@@ -52,7 +52,7 @@ yarn dev
 
     
 ---
-[Challenge Page]
+### [Challenge Page]
 <img src = ".\Picture\Challenge Search Page.png" >
 
 1. 사용자 참여 챌린지 정보
@@ -68,16 +68,19 @@ yarn dev
     현재 사람들을 모집하는 챌린지 목록을 보여준다.
     해당 오른쪽에는 해당 챌린지 카드를 보여준다.
     챌린지 카드를 클릭하면 해당 챌린지에 참여할지에 관한 팝업이 뜬다.
+    ```
     ##### 팝업 사진 추가!!!!!!
+    ```
 
 4. Add Challenge
 
     사용자가 하고자 하는 챌린지를 등록할 수 있다.
-
+    ```
     ##### 팝업 사진 추가!!!!!
+    ```
 
 ---
-[My Challenge Page]
+### [My Challenge Page]
 <img src = ".\Picture\My challenge Page.png" >
 
 
