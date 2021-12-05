@@ -4,11 +4,17 @@ import '../css/ChallengeFinishModal.css';
 import axios from 'axios';
 
 function ChallengeFinishModal(props) {
-  const { open, close, challengeId, challengeName, penaltyFee, userId } = props;
+  const {
+    open,
+    close,
+    challengeId,
+    challengeName,
+    penaltyFee,
+    userId,
+    currentBalance,
+  } = props;
   console.log(props);
   const [isWinner, setIsWinner] = useState(false);
-  const [NumOfWinner, setNumOfWinner] = useState(1);
-  const [totalPenalty, setTotalPenalty] = useState(0);
   const [result, setResult] = useState({
     success: 0,
     fail: 0,
@@ -17,12 +23,7 @@ function ChallengeFinishModal(props) {
   const [receive, setReceive] = useState(false);
   const token = getCookie('myToken');
 
-  const onClickClose = () => {
-    // 상금 받고 닫을 때
-    close();
-  };
-
-  console.log(`open: ${open}`);
+  console.log(`open: ${open}, ${currentBalance}`);
   console.log(userId);
 
   async function total() {
@@ -59,7 +60,6 @@ function ChallengeFinishModal(props) {
       })
       .then((res) => {
         console.log(res.data.totalFee);
-        setTotalPenalty(res.data.totalFee);
         return res.data.totalFee;
       })
       .catch((error) => {
@@ -93,6 +93,31 @@ function ChallengeFinishModal(props) {
 
     console.log(`5. ${receive}`);
   }
+
+  // 우승자일 경우, 우승자가 아닐 경우 구분 해야 함.
+  async function saveData() {
+    await axios
+      .post('http://localhost:5000/api/saveFee', {
+        token: token,
+        challengeId: challengeId,
+        returnFee: result.success,
+        penalty: result.fail,
+        rewards: result.rewards,
+        isWinner: isWinner,
+        currentBalance: currentBalance,
+      })
+      .then((res) => {
+        console.log(res.data.result);
+        close();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  const onClickClose = () => {
+    close();
+  };
 
   useEffect(() => {
     if (open) {
@@ -132,7 +157,7 @@ function ChallengeFinishModal(props) {
             ) : null}
           </main>
           <footer>
-            <button className="close" onClick={onClickClose}>
+            <button className="close" onClick={saveData}>
               정산받기
             </button>
           </footer>

@@ -27,6 +27,7 @@ function Modal(props) {
 
     if (setValue) {
       setValue(input);
+      console.log('input: ' + input);
     }
 
     saveValue(input);

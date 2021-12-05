@@ -23,7 +23,7 @@ function MyCard() {
   const [dataList, setdata] = useState([]);
   const token = getCookie('myToken');
   const [userId, setUserID] = useState('');
-
+  const [currentBalance, setCurrentBalance] = useState(-1);
   const [modalOpen, setModalOpen] = useState(false);
   const [challengeModalOpen, setChallengeModalOpen] = useState(false);
 
@@ -33,6 +33,7 @@ function MyCard() {
 
   const closeModal = () => {
     setModalOpen(false);
+    callChallengeList();
   };
 
   const openChallengeModal = () => {
@@ -41,7 +42,32 @@ function MyCard() {
 
   const closeChallengeModal = () => {
     setChallengeModalOpen(false);
+    callChallengeList();
   };
+
+  // 현재 잔액 불러오기
+  async function loadCurrentBalance() {
+    // 쿠키가 없으면 로그인 페이지로 이동
+    if (!token) {
+      window.location.replace('/');
+      console.log('쿠키 없음');
+    } else {
+      await axios
+        .post('http://localhost:5000/api/mypage/currentBalance', {
+          token: token,
+        })
+        .then((res) => {
+          console.log(res.data.result);
+          console.log('잔액: ' + res.data.balance);
+          if (res.data.balance !== 0) {
+            setCurrentBalance(res.data.balance);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
 
   async function callChallengeList() {
     console.log('call challenge');
@@ -61,13 +87,14 @@ function MyCard() {
   }
 
   useEffect(() => {
+    loadCurrentBalance();
     callChallengeList();
   }, []);
 
   // 데이터 값으로 변수 설정
   const now = new Date();
 
-  if (dataList.length !== 0) {
+  if (dataList.length !== 0 && currentBalance !== -1) {
     return (
       <div className="card">
         <Carousel breakPoints={breakPoints}>
@@ -156,6 +183,7 @@ function MyCard() {
                         challengeName={data.name}
                         penaltyFee={penaltyFee}
                         userId={userId}
+                        currentBalance={currentBalance}
                       ></ChallengeFinishModal>
                       <Typography variant="h6" component="div" align="center">
                         {data['name']}

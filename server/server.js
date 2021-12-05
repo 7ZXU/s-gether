@@ -880,6 +880,8 @@ app.post('/api/mypage/currentBalance', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
+  console.log('잔액');
+
   const sql = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id.userId}' ORDER BY idx DESC LIMIT 1`;
   db.query(sql, (err, row, fields) => {
     if (err) {
@@ -887,10 +889,18 @@ app.post('/api/mypage/currentBalance', (req, res) => {
       res.status(400).json({ error: 'sql error' });
     } else {
       console.log(row);
-      res.status(201).json({
-        result: 'ok',
-        balance: row[0].current_balance,
-      });
+      console.log(row.length);
+      if (row.length !== 0) {
+        res.status(201).json({
+          result: 'ok',
+          balance: row[0].current_balance,
+        });
+      } else {
+        res.status(201).json({
+          result: 'ok',
+          balance: 0,
+        });
+      }
     }
   });
 });
@@ -898,6 +908,8 @@ app.post('/api/mypage/currentBalance', (req, res) => {
 app.post('/api/mypage/charge', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
+
+  console.log('내역');
 
   const sql = `SELECT transaction_date, money, current_balance FROM management.transaction_history WHERE user_id= '${id.userId}' AND transaction_type = 0 ORDER BY transaction_date`;
   db.query(sql, (err, row, fields) => {
@@ -917,11 +929,13 @@ app.post('/api/mypage/charge', (req, res) => {
 
 /* 충전하기 */
 app.post('/api/mypage/chargeMoney', (req, res) => {
+  console.log('충전');
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
   const chargeMoney = Number(req.body.chargeMoney);
   const currentBalance = Number(req.body.currentBalance) + chargeMoney;
-  const sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id.userId}", DATE_FORMAT(now(),'%Y-%m-%d'), ${chargeMoney}, ${currentBalance}, 0)`;
+  console.log(currentBalance);
+  const sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id.userId}", NOW(), ${chargeMoney}, ${currentBalance}, 0)`;
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
@@ -1288,6 +1302,58 @@ app.post('/api/getChallengeResult', (req, res) => {
     }
   });
 });
+
+/* 저장하기 */
+app.post('/api/saveFee', (req, res) => {
+  const token = req.body.token;
+  const challenge_id = req.body.challengeId;
+  const userId = jwt.decode(token, YOUR_SECRET_KEY).userId;
+  const returnFee = Number(req.body.returnFee);
+  const penalty = -Number(req.body.penalty);
+  const rewards = Number(req.body.rewards);
+  const isWinner = req.body.isWinner;
+  const current_balance = Number(req.body.currentBalance);
+
+  if (isWinner) {
+    // 상금 저장하기
+    db.query(
+      `INSERT INTO management.transaction_history (user_id, transaction_date, money, transaction_type) VALUES ("${userId}", NOW(), ${rewards}, 1)`
+    );
+
+    // 패널티 저장
+    db.query(
+      `INSERT INTO management.transaction_history (user_id, transaction_date, money, transaction_type) VALUES ("${userId}", NOW(), ${penalty}, 3)`
+    );
+
+    // 환급금액 저장
+    db.query(
+      `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${userId}", NOW(), ${returnFee}, ${
+        current_balance + rewards + returnFee
+      }, 4)`
+    );
+  } else {
+    // 패널티 저장
+    db.query(
+      `INSERT INTO management.transaction_history (user_id, transaction_date, money, transaction_type) VALUES ("${userId}", NOW(), ${penalty}, 3)`
+    );
+
+    // 환급금액 저장
+    db.query(
+      `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${userId}", NOW(), ${returnFee}, ${
+        current_balance + returnFee
+      }, 4)`
+    );
+  }
+  // 챌린지 테이블에서 false로 변경하기
+  db.query(
+    `UPDATE management.challenge SET reward_check = 1 WHERE user_id= '${userId}' AND challenge_id = ${challenge_id}`
+  );
+  res.status(201).json({
+    result: 'ok',
+  });
+});
+
+/* challenge 테이블에서 false로 업데이트하기 */
 
 app.listen(port, () => {
   console.log(`Connect at http://localhost:${port}`);

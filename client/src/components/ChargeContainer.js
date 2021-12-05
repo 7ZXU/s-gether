@@ -41,6 +41,7 @@ function ChargeContainer() {
 
   // 현재 잔액 불러오기
   async function loadCurrentBalance() {
+    console.log('현재 금액: ' + money);
     // 쿠키가 없으면 로그인 페이지로 이동
     if (!token) {
       window.location.replace('/');
@@ -104,21 +105,11 @@ function ChargeContainer() {
         console.log(err);
       });
   }
-
   useEffect(() => {
-    console.log('charge: ' + token);
+    console.log(money);
     loadChargeHistory();
     loadCurrentBalance();
   }, []);
-
-  // useEffect(() => {
-  //   if (history !== '' || history.length !== 0) {
-  //     console.log('내역: ' + history[0].money);
-  //     setMoney(history[history.length - 1].current_balance);
-  //   } else {
-  //     console.log('내역: ' + typeof history);
-  //   }
-  // }, [history]);
 
   return (
     <div className="charge__container ">
