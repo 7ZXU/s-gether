@@ -23,8 +23,7 @@ const Template = ({ match }) => {
   let day = time.getDay;
   let month = time.getMonth;
 
-  console.log('현재 선택한 챌린지');
-  console.log(match.params);
+
   const challengeId = Number(match.params.index.substring(1));
 
   const [insertToggle, setInsertToggle] = useState(false);
@@ -193,7 +192,7 @@ const Template = ({ match }) => {
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
-            console.log("no progress");
+            
           }
           else{
             setchallenges(
@@ -213,10 +212,9 @@ const Template = ({ match }) => {
           challenge_id: challengeId //실험용
         })
         .then((res) => {
-          //console.log("-------------challenge_image---------------");
-          //console.log(res.data);
+     
           setcimg(res.data.image);
-          //console.log("-------------challenge_image---------------");
+
           setCinfo({
             name: res.data.name,
             date: res.data.start.substring(0,10) + ' ~ ' + res.data.end.substring(0,10)
@@ -253,7 +251,7 @@ const Template = ({ match }) => {
           setallTodos(
             res.data.rows
             );
-            console.log(res.data.rows);
+           
         })
         .catch((err) => {
           console.log(err);
@@ -268,10 +266,10 @@ const Template = ({ match }) => {
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
-            console.log("no progress");
+         
           }
           else{
-            console.log(res.data.rows);
+           
             setallitemdata(
               res.data.rows
             );
@@ -291,10 +289,10 @@ const Template = ({ match }) => {
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
-            console.log("no mate");
+       
           }
           else{
-            console.log(res.data);
+         
             setmatechallenges(
               res.data.mcinfo,
               );
@@ -336,7 +334,7 @@ const Template = ({ match }) => {
         })
         .then((res) => {
           if (res.data.result === 'not ok') {
-            console.log('no progress');
+          
           } else {
             setchallenges(res.data.rows);
           }
@@ -353,10 +351,9 @@ const Template = ({ match }) => {
           challenge_id: challengeId, //실험용
         })
         .then((res) => {
-          //console.log("-------------challenge_image---------------");
-          //console.log(res.data);
+
           setcimg(res.data.image);
-          //console.log("-------------challenge_image---------------");
+
           setCinfo({
             name: res.data.name,
             date:
@@ -393,7 +390,7 @@ const Template = ({ match }) => {
         })
         .then((res) => {
           setallTodos(res.data.rows);
-          console.log(res.data.rows);
+          
         })
         .catch((err) => {
           console.log(err);
@@ -408,9 +405,9 @@ const Template = ({ match }) => {
         })
         .then((res) => {
           if (res.data.result === 'not ok') {
-            console.log('no progress');
+            
           } else {
-            console.log(res.data.rows);
+            
             setallitemdata(
               res.data.rows
             );
@@ -430,9 +427,9 @@ const Template = ({ match }) => {
         })
         .then((res) => {
           if (res.data.result === 'not ok') {
-            console.log('no mate');
+           ;
           } else {
-            console.log(res.data);
+           
             setmatechallenges(res.data.mcinfo);
             const matenickname = res.data.matenick;
             setmateUser(matenickname);

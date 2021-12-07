@@ -101,7 +101,7 @@ function FeedPage({ history }) {
         day: date,
       })
       .then((res) => {
-        console.log("FeedPage", res.data.result);
+       
         setLists(res.data.result);
       })
       .catch((err) => {
@@ -123,17 +123,7 @@ function FeedPage({ history }) {
       });
   }
 
-  // async function loadChallenge() {
-  //   await axios
-  //     .post("http://localhost:5000/api/loadChallenge", {
-  //       token: token,
-  //     })
-  //     .then((res) => {
-  //       console.log("feedpage", res.data.result);
-  //       setChallenges(res.data.result);
-  //       // console.log("feedpage/challenge", challenges);
-  //     });
-  // }
+
 
   async function loadData() {
     await axios
@@ -146,7 +136,7 @@ function FeedPage({ history }) {
         } else {
           setUser(res.data.nickname);
         }
-        console.log(res.data);
+        
       })
       .catch((err) => {
         console.log(err);
@@ -162,7 +152,7 @@ function FeedPage({ history }) {
       })
       .then((res) => {
         setFriends(res.data.result);
-        console.log("friends", friends);
+  
       })
       .catch((err) => {
         console.log(err);
@@ -175,7 +165,7 @@ function FeedPage({ history }) {
       })
       .then((res) => {
         // 친구 요청 리스트 받아오기
-        console.log("Feed/nicknames", res.data.result);
+
         setNicknames(res.data.result);
       });
   }
@@ -183,14 +173,14 @@ function FeedPage({ history }) {
   useEffect(() => {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (token) {
-      console.log("토큰 있음");
-      console.log(token);
+  
+
       loadData();
       loadList(day);
       loadFriends();
     } else {
       window.location.replace("/");
-      console.log("쿠키 없음");
+
     }
 
     loadFriends();
@@ -258,7 +248,7 @@ function FeedPage({ history }) {
   };
 
   const onClickLogout = () => {
-    console.log("로그아웃 클릭");
+
 
     // 쿠키 삭제
     removeCookie("myToken");
@@ -266,7 +256,7 @@ function FeedPage({ history }) {
   };
 
   const onClick = () => {
-    console.log(token);
+
     async function saveData() {
       await axios
         .post("http://localhost:5000/api/todo", {
@@ -301,7 +291,7 @@ function FeedPage({ history }) {
   };
 
   const onUploadImage = async () => {
-    console.log("Feedpage/onLoadImage", photos);
+
 
     axios
       .post("http://localhost:5000/api/uploadimage", {
@@ -327,7 +317,7 @@ function FeedPage({ history }) {
         search_friend: search,
       })
       .then((res) => {
-        console.log("FeedPage/handleSearch", res.data.result);
+
         setSearchedId(res.data.result);
         res.data.result !== "null" ? setSearched(1) : setSearched(0);
       });
@@ -362,7 +352,7 @@ function FeedPage({ history }) {
               {...stringAvatar(friend)}
               friend={friend}
               onClick={() => {
-                console.log(friend);
+ 
                 history.push(`/friendpage?friend_name=${friend}`); // 친구 페이지로 렌더링 // 쿼리로 친구 이름 전달
               }}
             />

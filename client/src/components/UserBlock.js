@@ -39,8 +39,8 @@ function UserBlock() {
             setUsername(res.data.nickname);
             setUserImage(res.data.image);
           }
-          console.log('이미지: ' + res.data.image);
-          console.log(res.data);
+
+
         })
         .catch((err) => {
           console.log(err);
@@ -50,7 +50,7 @@ function UserBlock() {
   }, []);
 
   useEffect(() => {
-    console.log('닉네임 변경');
+    
   }, [username]);
 
   async function saveNickname(input) {
@@ -60,11 +60,11 @@ function UserBlock() {
         nickname: input,
       })
       .then((res) => {
-        console.log(res.data.result);
+       
         if (res.status === 201) {
-          console.log('저장 완료');
+        
         } else {
-          console.log('저장 실패');
+     
         }
       })
       .catch((err) => {
@@ -79,22 +79,22 @@ function UserBlock() {
         file: e.target.files[0],
         fileName: e.target.value,
       });
-      console.log(e.target.files[0]);
-      console.log('fileName: ' + e.target.value);
+
+
       const fileReader = new FileReader();
       fileReader.readAsDataURL(imgTarget);
       fileReader.onload = function (e) {
         setUserImage(e.target.result);
         setUploadImage(true);
       };
-      console.log('이미지 업로드');
+   
     } else {
-      console.log('이미지추가 x');
+      
     }
   };
 
   function saveImage() {
-    console.log('이미지 저장 호출');
+   
     const url = 'http://localhost:5000/api/mypage/savePhoto';
     const formData = new FormData();
     formData.append('token', token);
@@ -109,9 +109,9 @@ function UserBlock() {
     if (uploadImage) {
       axios
         .post(url, formData, config)
-        .then((res) => console.log(res.data.result));
+
     } else {
-      console.log('이미지 안올림');
+   
     }
   }
 

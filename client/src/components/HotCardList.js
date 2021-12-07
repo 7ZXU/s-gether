@@ -18,7 +18,7 @@ function HotCardList() {
   
 
   async function data() {
-    console.log("카드리스트 호출");
+
     await axios.get('http://localhost:5000/api/HotgetChallengeList', {
 
     }).then((res) => {
@@ -44,7 +44,7 @@ function HotCardList() {
     }
   }
 
-  console.log(selectedData);
+
   let card = selectedData.map((data, key) => 
   <SpecificItem key = {key}>
     <img

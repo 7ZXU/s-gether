@@ -50,7 +50,7 @@ export default function FriendPage({ friendpage, history }) {
   const params = new URLSearchParams(sch);
   const friend_name = params.get("friend_name"); // 쿼리에서 friend_id 변수 받아옴
 
-  console.log(friend_name);
+
 
   // api/friends 는 친구 아이디를 가져옴
   // id 가 아니라 닉네임 띄워야 함
@@ -82,7 +82,7 @@ export default function FriendPage({ friendpage, history }) {
     }
     loadFriendPage();
 
-    console.log(token, friend_name);
+
 
     loadPhoto();
   }, []);
@@ -116,7 +116,7 @@ export default function FriendPage({ friendpage, history }) {
               
               setValue(newValue);
 
-              console.log("friendpage", typeof({value}));
+          
               // todolist post
               async function loadList() {
                 await axios
@@ -149,39 +149,15 @@ export default function FriendPage({ friendpage, history }) {
               }
               loadPhoto();
 
-              // async function loadPhoto() {
-              //   await axios
-              //     .post("http://localhost:5000/api/photolist", {
-              //       token: token,
-              //       date: format(newValue, "yyyy-MM-dd"),
-              //     })
-              //     .then((res) => {
-              //       setPhotos(res.data.result);
-              //       console.log(photos);
-              //     })
-              //     .catch((err) => {
-              //       console.log(err);
-              //     });
-              // }
-              // loadPhoto();
-
-              // 해당 날짜를 feed 페이지에 보내야 함
             }}
-            // Wed Dec 22 2021 21:10:22 GMT+0900 (한국 표준시)
+      
 
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
-        {/* <Link to={{
-            pathname: "/feed/image",
-            state:{
-                token: {token},
-                friend: {friend_name},
-                date: {value}
-            }
-        }}> */}
+
         <Thumbnail slides={photos} num={3} />
-        {/* </Link> */}
+
 
         {/* 버튼 클릭하면 history.push로 전달 */}
         <button

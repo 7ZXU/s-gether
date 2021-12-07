@@ -16,7 +16,7 @@ let sai = (date2.getTime() - date1.getTime())/ 1000 / 60 / 60 / 24;
       display: false,
       position: 'right',
       legendCallback: function (chart) {
-        console.log(chart);
+   
         return [
           <ul>
             <li>z</li>

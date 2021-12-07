@@ -46,14 +46,14 @@ function PenaltyRewardContainer() {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (!token) {
       window.location.replace('/');
-      console.log('쿠키 없음');
+      
     } else {
       await axios
         .post('http://localhost:5000/api/mypage/penalty', {
           token: token,
         })
         .then((res) => {
-          console.log(res.data.penalty);
+        
           if (res.data.penalty !== 0) {
             setPenaltyHistory(res.data.penalty);
           }
@@ -69,14 +69,14 @@ function PenaltyRewardContainer() {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (!token) {
       window.location.replace('/');
-      console.log('쿠키 없음');
+      
     } else {
       await axios
         .post('http://localhost:5000/api/mypage/rewards', {
           token: token,
         })
         .then((res) => {
-          console.log(res.data.rewards);
+          
           if (res.data.rewards !== 0) {
             setRewardHistory(res.data.rewards);
           }
@@ -96,7 +96,7 @@ function PenaltyRewardContainer() {
     return penaltyHistory
       .map((item) => item.money)
       .reduce((currentTotal, nextScore, currentIndex) => {
-        console.log('penalty index: ' + currentIndex);
+     
         return currentTotal + nextScore;
       }, 0);
   };
@@ -106,7 +106,7 @@ function PenaltyRewardContainer() {
     return rewardHistory
       .map((item) => item.money)
       .reduce((currentTotal, nextScore, currentIndex) => {
-        console.log('reward index: ' + currentIndex);
+       
         return currentTotal + nextScore;
       }, 0);
   };

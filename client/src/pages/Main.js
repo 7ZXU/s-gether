@@ -11,10 +11,10 @@ function Main() {
   useEffect(() => {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (token) {
-      console.log('토큰 있음');
+
       window.location.replace('/feed');
     } else {
-      console.log('쿠키 없음');
+
     }
   }, []);
 

@@ -73,14 +73,14 @@ const Cert = ({ Cday, cert, sday,t2,update,challengeId, mid, whoare}) => {
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
-            console.log("no progress");
+       
           }
           else{
-            console.log(res.data.rows);
+            
             setallitemdata(
               res.data.rows
             );
-            //console.log(allitemData);
+            
           }
         })
         .catch((err) => {
@@ -88,17 +88,10 @@ const Cert = ({ Cday, cert, sday,t2,update,challengeId, mid, whoare}) => {
         });
     }
     loadData();
-    console.log(t2);
+    
   },[]);
 
-  /*useEffect(() => {
-    daycheck();
-  });*/
 
-  /*allitemData.map((all) => (
-                  (all.date.substring(0,10) === sday.substring(0,10) ? itemData.push(all) : console.log(all.date.substring(0,10) +", "+sday)) //2021-11-29T15:00:00.000Z => e.target.date
-                ))
-                 */
 
   const daycheck = () => {
     setitemdata([]);

@@ -33,7 +33,7 @@ function WorkoutList(props) {
 
     const handleClick = (rows, key) => {
         setCard(rows[key])
-        console.log(rows[key])
+    
     }
     let now = new Date();
 
@@ -51,7 +51,7 @@ function WorkoutList(props) {
             }
         }
     }
-    console.log(rows)
+
 
     return (
         <TableContainer component={Paper}>

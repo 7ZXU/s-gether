@@ -18,14 +18,14 @@ function InfoContainer() {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (!token) {
       window.location.replace('/');
-      console.log('쿠키 없음');
+
     } else {
       await axios
         .post('http://localhost:5000/api/mypage/info', {
           token: token,
         })
         .then((res) => {
-          console.log('Info data: ' + res.data);
+      
           setInfo({
             name: res.data.name,
             birth: res.data.birth,
@@ -44,7 +44,7 @@ function InfoContainer() {
   }, []);
 
   async function saveInfo() {
-    console.log('email: ' + info.email);
+
     await axios
       .post('http://localhost:5000/api/mypage/saveInfo', {
         token: token,
@@ -54,11 +54,11 @@ function InfoContainer() {
         email: info.email,
       })
       .then((res) => {
-        console.log(res.data.result);
+
         if (res.status === 201) {
-          console.log('저장 완료');
+     
         } else {
-          console.log('저장 실패');
+
         }
       })
       .catch((err) => {

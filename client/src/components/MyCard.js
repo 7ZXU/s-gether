@@ -50,15 +50,14 @@ function MyCard() {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (!token) {
       window.location.replace('/');
-      console.log('쿠키 없음');
+  
     } else {
       await axios
         .post('http://localhost:5000/api/mypage/currentBalance', {
           token: token,
         })
         .then((res) => {
-          console.log(res.data.result);
-          console.log('잔액: ' + res.data.balance);
+
           if (res.data.balance !== 0) {
             setCurrentBalance(res.data.balance);
           }
@@ -70,7 +69,7 @@ function MyCard() {
   }
 
   async function callChallengeList() {
-    console.log('call challenge');
+   
     await axios
       .get('http://localhost:5000/api/getMyChallengeList', {
         params: {
@@ -161,7 +160,7 @@ function MyCard() {
                   const DateIntervalDay =
                     dateIntervalMs / (1000 * 60 * 60 * 24) + 1;
                   const penaltyFee = Math.ceil(data.fee / DateIntervalDay);
-                  console.log(penaltyFee);
+     
                   // 스터디 기간을 지났을 경우
                   // reward 안받은 애들만 불러온다.
                   return (

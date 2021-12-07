@@ -101,7 +101,7 @@ app.post('/api/feed', (req, res) => {
   const token = req.body.token;
   let nickname;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
-  //console.log("디코드", jwt.decode(token, YOUR_SECRET_KEY));
+
 
   const sql = `SELECT nickname FROM management.user_info WHERE user_id = '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
@@ -147,7 +147,7 @@ app.post('/api/friendtodolist', (req, res) => {
   let day = req.body.day.split('T')[0];
   let list;
 
-  console.log(name);
+
 
   const sql = `SELECT * from management.plan WHERE user_id IN (SELECT user_id FROM management.user_info WHERE nickname = "${name}") AND DATE(plan_date) = "${day}"`;
 
@@ -155,9 +155,9 @@ app.post('/api/friendtodolist', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('todolist', row);
+    
       list = row;
-      console.log('list', list);
+
     }
     res.status(201).json({
       result: list,
@@ -179,7 +179,7 @@ app.post('/api/savecomment', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('api/savecomment', id.userId, friend, day, comment);
+
     }
   });
 });
@@ -190,7 +190,7 @@ app.post('/api/todolist', (req, res) => {
   let list;
   let day = req.body.day.split('T')[0];
 
-  console.log('/api/todolist', day, id.userId);
+
 
   // const sql = `SELECT * FROM management.plan WHERE user_id = "${id.userId}" AND plan_date.substring(10) = "${day}"`;
 
@@ -200,7 +200,7 @@ app.post('/api/todolist', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      // console.log( 'todolist', row);
+
       list = row;
     }
     res.status(201).json({
@@ -241,7 +241,7 @@ app.post('/api/todo', (req, res) => {
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
   const day = req.body.day;
-  console.log('api/todo/day', day);
+
 
   const sql = `INSERT INTO management.plan (plan_date, plan_todo, plan_check, user_id) VALUES ("${day}", "${todo}", "false", "${id.userId}") `;
 
@@ -258,7 +258,7 @@ app.post('/api/delete', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('delete', idx);
+
     }
   });
 });
@@ -268,7 +268,7 @@ app.post('/api/check', (req, res) => {
   const checked = req.body.checked;
   const idx = req.body.idx;
 
-  console.log(idx, '/api/check', checked);
+
 
   const sql = `UPDATE management.plan SET plan_check="${checked}" WHERE idx="${idx}" AND user_id="${user}"`;
 
@@ -276,7 +276,7 @@ app.post('/api/check', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('무한대');
+
     }
   });
 
@@ -293,7 +293,7 @@ app.post('/api/uploadimage', (req, res) => {
   const token = body['token'];
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
-  console.log('api/upload', date, id.userId);
+
 
   const sql = `INSERT INTO management.photo (photo_user_id, photo_date, plan_image) VALUES ("${id.userId}", "${date}", "${img}")`;
 
@@ -301,7 +301,7 @@ app.post('/api/uploadimage', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      // console.log(row);
+    
     }
   });
 });
@@ -348,7 +348,6 @@ app.post('/api/login', (req, res) => {
 });
 
 app.post('/api/upLoadChallenge', upload.single('image'), (req, res) => {
-  console.log('?');
 
   const body = req.body.params;
 
@@ -362,7 +361,7 @@ app.post('/api/upLoadChallenge', upload.single('image'), (req, res) => {
   const Fee = req.body.EntryFee;
 
   const type = req.body.type;
-  console.log(image);
+
   db.query(`INSERT INTO management.challenge_info (challenge_name, date_finish, date_start, category, 
     participation_fee, max_participants, challenge_image, current_participants) VALUES 
   ("${name}","${EndDate}", "${StartDate}","${type}","${Fee}","${Num}", "${image}", "${1}" )`);
@@ -381,13 +380,11 @@ app.post('/api/upLoadChallenge', upload.single('image'), (req, res) => {
       const id = jwt.decode(token, YOUR_SECRET_KEY)['userId'];
 
       const current_money = rows[0]['current_balance'];
-      console.log(rows);
-      console.log(current_money);
+
       var info_sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id}", NOW(), "${-fee}", "${
         current_money - fee
       }", 2)`;
-      console.log(current_money);
-      console.log(fee);
+
       if (current_money > fee) {
         db.query(info_sql);
       }
@@ -420,8 +417,8 @@ app.post('/api/enrollChallenge', (req, res) => {
       var info_sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id}", NOW(), "${-fee}", "${
         current_money - fee
       }", 2)`;
-      console.log(current_money);
-      console.log(fee);
+
+
       if (current_money > fee) {
         db.query(info_sql);
       }
@@ -464,7 +461,7 @@ app.get('/api/HotgetChallengeList', (req, res) => {
   // if(req.query['flagged'] === 1){
   //   return;
   // }
-  console.log('전체 목록 호출');
+
 
   const sql = 'SELECT * FROM management.challenge_info';
   db.query(sql, (err, rows, fields) => {
@@ -508,14 +505,14 @@ app.post('/api/mypage/info', (req, res) => {
       console.log(err);
       res.status(400).json({ error: 'sql error' });
     } else {
-      console.log(row[0]);
+
       const name = row[0].name;
       const nickname = row[0].nickname;
       const birth = row[0].birth;
       const email = row[0].email;
       const phone_number = row[0].phone_number;
 
-      console.log(phone_number);
+
 
       res.status(201).json({
         result: 'ok',
@@ -595,7 +592,7 @@ app.post('/api/mypage/nickname', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(nickname);
+
       res.status(201).json({
         result: 'ok',
         nickname: row[0].nickname,
@@ -610,7 +607,7 @@ app.post('/api/mypage/nickname', (req, res) => {
 app.post('/api/mypage/saveNickname', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
-  console.log(req.body.nickname);
+
 
   const nickname = req.body.nickname ? "'" + req.body.nickname + "'" : null;
 
@@ -634,7 +631,7 @@ app.post('/api/mypage/savePhoto', upload.single('image'), (req, res) => {
 
   // const image = req.body.image ? "'" + req.body.image + "'" : null;
   const image = "'" + '/image/' + req.file.filename + "'";
-  console.log(image);
+
 
   const sql = `UPDATE management.user_info SET user_image = ${image} WHERE user_id= '${id.userId}'`;
   db.query(sql, (err, row, fields) => {
@@ -645,7 +642,7 @@ app.post('/api/mypage/savePhoto', upload.single('image'), (req, res) => {
       res.status(201).json({
         result: 'ok',
       });
-      console.log(row);
+
     }
   });
 });
@@ -668,7 +665,7 @@ app.post('/api/challenge_ing', (req, res) => {
 
   db.query(sql, (err, rows, fields) => {
     if (err) {
-      //console.log(err);
+
 
       res.status(201).json({
         result: 'not ok',
@@ -741,9 +738,7 @@ app.post('/api/challenge_info', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      /*console.log('-------------------------------------------------');
-      console.log(substr(row[0].date_start,0,10));
-      console.log('-------------------------------------------------');*/
+
       challenge_image = row[0].challenge_image;
       cstart = row[0].date_start;
       cend = row[0].date_finish;
@@ -814,10 +809,10 @@ app.post('/api/certupload', upload.single('img'), (req, res) => {
 
   db.query(sql, (err, rows, fields) => {
     if (err) {
-      console.log('DB저장 실패');
+  
       console.log(err);
     } else {
-      console.log('DB저장 성공');
+
     }
   });
 });
@@ -841,7 +836,7 @@ app.post('/api/ctodoupload', (req, res) => {
 
   db.query(sql, (err, rows, fields) => {
     if (err) {
-      console.log('DB저장 실패');
+
       console.log(err);
     } else {
       if (rows.length === 0) {
@@ -855,7 +850,7 @@ app.post('/api/ctodoupload', (req, res) => {
           `INSERT INTO management.challenge_todo (challenge_date, user_id, challenge_todo, todo_check, challenge_id) VALUES ('${challenge_date}','${user_id.userId}', "${todo}", 0, ${challenge_id}) `
         );
       }
-      console.log('DB저장 성공');
+      
     }
   });
 });
@@ -876,8 +871,7 @@ app.post('/api/challenge_ing_img', (req, res) => {
 
   db.query(sql, (err, rows, fields) => {
     if (err) {
-      //console.log(err);
-
+    
       res.status(201).json({
         result: 'not ok',
       });
@@ -906,7 +900,6 @@ app.post('/api/mypage/currentBalance', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
-  console.log('잔액');
 
   const sql = `SELECT current_balance FROM management.transaction_history WHERE user_id='${id.userId}' ORDER BY idx DESC LIMIT 1`;
   db.query(sql, (err, row, fields) => {
@@ -914,8 +907,7 @@ app.post('/api/mypage/currentBalance', (req, res) => {
       console.log(err);
       res.status(400).json({ error: 'sql error' });
     } else {
-      console.log(row);
-      console.log(row.length);
+
       if (row.length !== 0) {
         res.status(201).json({
           result: 'ok',
@@ -937,7 +929,7 @@ app.post('/api/mypage/charge', (req, res) => {
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
 
-  console.log('내역');
+
 
   const sql = `SELECT transaction_date, money, current_balance FROM management.transaction_history WHERE user_id= '${id.userId}' AND transaction_type = 0 ORDER BY transaction_date`;
   db.query(sql, (err, row, fields) => {
@@ -945,8 +937,7 @@ app.post('/api/mypage/charge', (req, res) => {
       console.log(err);
       res.status(400).json({ error: 'sql error' });
     } else {
-      // console.log(row);
-      // history = row;
+
       res.status(201).json({
         result: 'ok',
         history: row,
@@ -957,19 +948,19 @@ app.post('/api/mypage/charge', (req, res) => {
 
 /* 충전하기 */
 app.post('/api/mypage/chargeMoney', (req, res) => {
-  console.log('충전');
+
   const token = req.body.token;
   const id = jwt.decode(token, YOUR_SECRET_KEY);
   const chargeMoney = Number(req.body.chargeMoney);
   const currentBalance = Number(req.body.currentBalance) + chargeMoney;
-  console.log(currentBalance);
+
   const sql = `INSERT INTO management.transaction_history (user_id, transaction_date, money, current_balance, transaction_type) VALUES ("${id.userId}", NOW(), ${chargeMoney}, ${currentBalance}, 0)`;
   db.query(sql, (err, row, fields) => {
     if (err) {
       console.log(err);
       res.status(400).json({ error: 'sql error' });
     } else {
-      console.log(row);
+
       res.status(201).json({
         result: 'ok',
       });
@@ -989,8 +980,7 @@ app.post('/api/mypage/penalty', (req, res) => {
       console.log(err);
       res.status(400).json({ error: 'sql error' });
     } else {
-      console.log('penalty: ' + row);
-      // const penalty = row; // penalty 내역
+
       res.status(201).json({
         result: 'ok',
         penalty: row,
@@ -1009,7 +999,7 @@ app.post('/api/mypage/rewards', (req, res) => {
       console.log(err);
       res.status(400).json({ error: 'sql error' });
     } else {
-      console.log('reward: ' + row);
+     
       res.status(201).json({
         result: 'ok',
         rewards: row,
@@ -1028,7 +1018,7 @@ app.post('/api/mypage/setting', (req, res) => {
       console.log(err);
       res.status(400).json({ error: 'sql error' });
     } else {
-      console.log(row[0]);
+   
       res.status(201).json({
         result: 'ok',
         permission_friend: row[0].permission_friend,
@@ -1224,7 +1214,7 @@ app.post('/api/loadcomment', (req, res) => {
   if (friend_name !== null) {
     sql = `SELECT comment_user_id, comment FROM management.comment WHERE commented_nickname = "${friend_name}" AND comment_date = "${date}"`;
   } else {
-    console.log('else');
+   
     sql = `SELECT comment_user_id, comment FROM management.comment WHERE commented_nickname IN (SELECT nickname FROM management.user_info WHERE user_id = "${id.userId}")`;
   }
 
@@ -1244,7 +1234,7 @@ app.post('/api/loadcomment', (req, res) => {
 /* 1등 id 받아오기 */
 app.get('/api/getChallengeWinner', (req, res) => {
   const challenge_id = req.query.challengeId;
-  console.log(challenge_id);
+  
 
   const sql = `SELECT user_id FROM management.challenge WHERE challenge_id = ${challenge_id} AND success=(SELECT max(success) FROM management.challenge WHERE challenge_id = ${challenge_id})`;
 
@@ -1269,15 +1259,14 @@ app.get('/api/getChallengeTotalPenalty', (req, res) => {
   const challenge_id = req.query.challengeId;
   const penaltyFee = Number(req.query.penaltyFee);
 
-  console.log(penaltyFee);
-  console.log(typeof penaltyFee);
+
   // 패널티 횟수 불러옴
   const sql = `SELECT sum(fail) as total FROM management.challenge WHERE challenge_id = ${challenge_id}`;
   db.query(sql, (err, rows, fields) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(rows[0].total);
+      
       total = rows[0].total * penaltyFee;
     }
     res.status(201).json({
@@ -1295,7 +1284,7 @@ app.post('/api/getChallengeResult', (req, res) => {
   const NumOfWinner = Number(req.body.NumOfWinner);
   const totalPenalty = Number(req.body.totalPenalty);
 
-  console.log(NumOfWinner, totalPenalty);
+  
 
   const sql = `SELECT success, fail FROM management.challenge WHERE challenge_id = ${challenge_id} AND user_id = '${userId}'`;
   db.query(sql, (err, rows, fields) => {
@@ -1305,7 +1294,7 @@ app.post('/api/getChallengeResult', (req, res) => {
         result: err,
       });
     } else {
-      console.log(Math.ceil(totalPenalty / NumOfWinner));
+      
       res.status(201).json({
         result: 'ok',
         success: rows[0].success,
@@ -1326,7 +1315,7 @@ app.post('/api/loadChallenge', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      // console.log("api/loadC", rows);
+      
       rows.forEach((row) => {
         challenges.push({
           challenge_id: row['challenge_id'],
@@ -1335,7 +1324,7 @@ app.post('/api/loadChallenge', (req, res) => {
         });
       });
     }
-    console.log('api/loadC', challenges);
+    
     res.status(201).json({
       result: challenges,
     });
@@ -1349,17 +1338,14 @@ app.post('/api/cert', (req, res) => {
   const user_id = body['user_id'];
   const challenge_date = body['challenge_date'];
 
-  console.log(
-    challenge_id + ', ' + cert + ', ' + user_id + ', ' + challenge_date
-  );
 
   const sql = `UPDATE management.challenge_ing SET mate_check = ${cert} WHERE user_id = '${user_id}' AND challenge_id = ${challenge_id} AND challenge_date = '${challenge_date}'`;
   db.query(sql, (err, rows, fields) => {
     if (err) {
-      console.log('DB저장 실패');
+      
       console.log(err);
     } else {
-      console.log('DB저장 성공');
+      
     }
   });
 });
@@ -1374,7 +1360,7 @@ app.post('/api/searchFriend', (req, res) => {
     if (row === null) {
       searched_id = 'null';
     } else {
-      console.log('api/searchFriend', row[0].user_id);
+      
       searched_id = row[0].user_id;
     }
     res.status(201).json({
@@ -1396,7 +1382,7 @@ app.post('/api/sendingFriend', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('api/sendingFriend', target_mem_id);
+      
     }
   });
 });
@@ -1412,7 +1398,7 @@ app.post('/api/loadSendingFriend', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(rows);
+      
       rows.forEach((row) => {
         nicknames.push(row['nickname']);
       });
@@ -1434,7 +1420,7 @@ app.post('/api/setAgree', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('api/setAgree', nickname);
+      
     }
     res.status(201).json({
       message: 'ok',

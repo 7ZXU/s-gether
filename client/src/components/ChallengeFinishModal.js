@@ -13,7 +13,7 @@ function ChallengeFinishModal(props) {
     userId,
     currentBalance,
   } = props;
-  console.log(props);
+
   const [isWinner, setIsWinner] = useState(false);
   const [result, setResult] = useState({
     success: 0,
@@ -23,12 +23,9 @@ function ChallengeFinishModal(props) {
   const [receive, setReceive] = useState(false);
   const token = getCookie('myToken');
 
-  console.log(`open: ${open}, ${currentBalance}`);
-  console.log(userId);
 
   async function total() {
-    console.log(`1. ${receive}`);
-    console.log('1등 누군지 뽑기');
+
     let winnerNum = await axios
       .get('http://localhost:5000/api/getChallengeWinner', {
         params: {
@@ -36,8 +33,7 @@ function ChallengeFinishModal(props) {
         },
       })
       .then((res) => {
-        console.log(res.data.result);
-        console.log(res.data.winners);
+
         // 받은 배열에 본인이 속하는지 판단한다.
         res.data.winners.includes(userId)
           ? setIsWinner(true)
@@ -47,10 +43,7 @@ function ChallengeFinishModal(props) {
       .catch((error) => {
         console.log(error);
       });
-    console.log(winnerNum);
 
-    console.log(`2. ${receive}`);
-    console.log('전체 패널티값 계산');
     let sumPenalty = await axios
       .get('http://localhost:5000/api/getChallengeTotalPenalty', {
         params: {
@@ -59,16 +52,13 @@ function ChallengeFinishModal(props) {
         },
       })
       .then((res) => {
-        console.log(res.data.totalFee);
+     
         return res.data.totalFee;
       })
       .catch((error) => {
         console.log(error);
       });
-    console.log(sumPenalty);
 
-    console.log(`3. ${receive}`);
-    console.log('전체 결과 불러오기');
     await axios
       .post('http://localhost:5000/api/getChallengeResult', {
         token: token,
@@ -77,7 +67,7 @@ function ChallengeFinishModal(props) {
         totalPenalty: sumPenalty,
       })
       .then((res) => {
-        console.log(res.data.success, res.data.fail, res.data.rewards);
+       
         setResult({
           success: res.data.success * penaltyFee,
           fail: res.data.fail * penaltyFee,
@@ -89,9 +79,7 @@ function ChallengeFinishModal(props) {
         console.log(error);
       });
 
-    console.log(`4. ${receive}`);
 
-    console.log(`5. ${receive}`);
   }
 
   // 우승자일 경우, 우승자가 아닐 경우 구분 해야 함.
@@ -107,7 +95,7 @@ function ChallengeFinishModal(props) {
         currentBalance: currentBalance,
       })
       .then((res) => {
-        console.log(res.data.result);
+     
         close();
       })
       .catch((err) => {
@@ -124,8 +112,7 @@ function ChallengeFinishModal(props) {
       total();
     }
   }, [open]);
-
-  console.log(`챌린지 1회 패널티: ${penaltyFee}, 챌린지아이디: ${challengeId}`);
+;
 
   return (
     <div className={open ? 'openModal modal' : 'modal'}>

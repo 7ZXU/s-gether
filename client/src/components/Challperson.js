@@ -81,7 +81,7 @@ const Challperson = ({onInsertToggle, name, challengeId}) => {
         })
         .then((res) => {
           if(res.data.result === 'not ok'){
-            console.log("no progress");
+          
           }
           else{
             let tnum = 0;
@@ -90,7 +90,7 @@ const Challperson = ({onInsertToggle, name, challengeId}) => {
               ? tnum++
               : ''
             )
-            console.log(tnum);
+           
             setdnum(tnum);
           }
         })
@@ -106,10 +106,9 @@ const Challperson = ({onInsertToggle, name, challengeId}) => {
           challenge_id: challengeId //실험용
         })
         .then((res) => {
-          //console.log("-------------challenge_image---------------");
-          //console.log(res.data);
+   
           setcimg(res.data.image);
-          //console.log("-------------challenge_image---------------");
+      
           setCinfo({
             name: res.data.name,
             date_start: res.data.start.substring(0,10),

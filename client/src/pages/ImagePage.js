@@ -55,12 +55,11 @@ export default function ImagePage({ history }) {
   const sch = location.search; // 받아온 쿼리 sch 저장
 
   const params = new URLSearchParams(sch);
-  console.log("imagepage_sch", sch);
+
   const friend_name = params.get("friend_name"); // 쿼리에서 friend_id 변수 받아옴
   const date = params.get("date").toString();
   const token = params.get("token");
 
-  console.log("imagepage", friend_name, typeof date, date, token);
 
   const [lists, setLists] = useState([]);
 
@@ -74,7 +73,7 @@ export default function ImagePage({ history }) {
       })
       .then((res) => {
         setLists(res.data.result);
-        console.log("ImagePage", lists);
+
       })
       .catch((err) => {
         console.log(err);
@@ -124,7 +123,7 @@ export default function ImagePage({ history }) {
 
   const handleClick = () => {
     async function saveComment() {
-      console.log("savecomment", token, friend_name, comment);
+
       await axios
         .post("http://localhost:5000/api/savecomment", {
           token: token,

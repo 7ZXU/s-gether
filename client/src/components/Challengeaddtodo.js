@@ -39,7 +39,7 @@ import { setCookie, getCookie } from '../cookie';
     
         const onClick = ()=>{
     
-            console.log(token); //challenge_date: year+"-"+month+"-"+day,
+    
       
             async function saveData(){
                 await axios

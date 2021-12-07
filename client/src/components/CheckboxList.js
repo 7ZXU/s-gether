@@ -12,25 +12,8 @@ export default function CheckboxList({ list, show, loadList, value }) {
   const [idx, setIdx] = useState(list.idx);
   const [date, setDate] = useState(list.plan_date);
   const token = getCookie("myToken");
-  console.log(show);
+
   
-
-  console.log("CheckboxList/date", date);
-
-  // useEffect(()=>{
-  //   async function saveCheck() {
-      
-  //     console.log("saved check", checked);
-
-  //     await axios.post("http://localhost:5000/api/check", {
-  //       user: user,
-  //       checked: checked,
-  //       idx: idx,
-  //     });
-  //   }
-
-  //   saveCheck();
-  // })
 
   const onClick = () => {
     async function DeleteTodo() {
@@ -43,7 +26,6 @@ export default function CheckboxList({ list, show, loadList, value }) {
     }
 
     DeleteTodo();
-    // loadlist();
 
 
 
@@ -53,7 +35,7 @@ export default function CheckboxList({ list, show, loadList, value }) {
 
     async function saveCheck() {
       
-      console.log("saved check", checked);
+
       let isChecked;
 
       checked? isChecked = 0 : isChecked = 1  ; 
@@ -67,13 +49,13 @@ export default function CheckboxList({ list, show, loadList, value }) {
 
     saveCheck();
 
-    console.log("before", checked);
+
     // 누르면 db에 plan_check 값 바꿔야되는 거잖아
     // api 연결해야 할 듯
     
     checked ? setChecked(0) : setChecked(1)  ;
 
-    console.log("after", checked);
+
 
     
 

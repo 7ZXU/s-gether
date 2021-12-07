@@ -20,7 +20,7 @@ function AddMyChallenge(props)  {
     const token = getCookie('myToken');
 
     const AddButtonClick = () => {
-        console.log("Test")
+ 
         axios.post("http://localhost:5000/api/enrollChallenge", {
             token: token,
             data : cardData
@@ -29,13 +29,11 @@ function AddMyChallenge(props)  {
             
         })
         .catch((error) => {
-            console.log(error);
+          
         });
         onClose(false)
     }
-    console.log("-------");
-    console.log(cardData);
-    console.log("-------");
+
     return(
         <div className="popup">
                 <Stack direction="column" spacing={2} alignItems="center">

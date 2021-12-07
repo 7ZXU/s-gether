@@ -19,15 +19,15 @@ function Modal(props) {
   const onChangeNickname = (e) => {
     setInput(e.target.value);
     // setName(e.target.value);
-    console.log(e.target.value);
+ 
   };
 
   const onClickSave = () => {
-    console.log(input);
+
 
     if (setValue) {
       setValue(input);
-      console.log('input: ' + input);
+ 
     }
 
     saveValue(input);

@@ -51,14 +51,14 @@ function LoginForm({ to }) {
       })
       .then((response) => {
         const token = response['data']['accessToken'];
-        console.log(token);
+   
 
         setCookie('myToken', token);
-        console.log(getCookie('myToken'));
+ 
         onInsertToggle();
       })
       .catch((error) => {
-        console.log(error);
+
         onInsertToggle2();
       });
   };

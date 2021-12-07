@@ -54,7 +54,7 @@ function ChanllengePage() {
   });
   
   const CardList = () =>{
-    console.log("카드리스트 챌린지 ")
+
     return(
       <Box
           sx={{

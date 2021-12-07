@@ -23,14 +23,14 @@ function SettingContainer() {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (!token) {
       window.location.replace('/');
-      console.log('쿠키 없음');
+      
     } else {
       await axios
         .post('http://localhost:5000/api/mypage/setting', {
           token: token,
         })
         .then((res) => {
-          console.log(res.data.result);
+       
           setChecked({
             permission_friend: res.data.permission_friend === 1 ? true : false,
             permission_id: res.data.permission_id === 1 ? true : false,
@@ -49,29 +49,28 @@ function SettingContainer() {
   }, []);
 
   useEffect(() => {
-    console.log('설정 변경');
+    
   }, [checked]);
 
   // 체크 박스 클릭 변경
   const check = (e) => {
-    console.log('누른 항목: ');
-    console.log(e.target.tabIndex);
+   
     switch (e.target.tabIndex) {
       case 1:
-        console.log('1');
+    
         setChecked({
           permission_friend: !checked.permission_friend,
         });
         break;
       case 2:
-        console.log('2');
+       
         setChecked({
           ...checked,
           permission_id: !checked.permission_id,
         });
         break;
       case 3:
-        console.log('3');
+       
         setChecked({
           ...checked,
           permission_challenge: !checked.permission_challenge,
@@ -84,8 +83,8 @@ function SettingContainer() {
 
   // 설정 저장
   async function saveSetting() {
-    console.log('설정 저장');
-    console.log(checked);
+  
+
     await axios
       .post('http://localhost:5000/api/mypage/saveSetting', {
         token: token,
@@ -94,7 +93,7 @@ function SettingContainer() {
         permission_challenge: checked.permission_challenge,
       })
       .then((res) => {
-        console.log(res.data.result);
+    
         loadSetting();
       })
       .catch((err) => {

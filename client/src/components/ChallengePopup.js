@@ -40,8 +40,7 @@ function ChallengePopup(props)  {
                 file: evt.target.files[0],
                 fileName: evt.target.value,
             });
-            console.log("??");
-            console.log(evt.target.files[0]);
+            
         }else{
             setImgSrc(defaultimage);
         }
@@ -50,10 +49,7 @@ function ChallengePopup(props)  {
     
     const onHandleUpload = async () => {
         var type = "";
-        console.log(categoryProject);
-        console.log(categoryworkOut);
-        console.log(categoryStudy);
-        console.log(categoryRoutine);
+
         if(categoryProject === false){
             type = "Project";
         }
