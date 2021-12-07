@@ -82,7 +82,7 @@ const Template = ({ match }) => {
     matealltodos.map(
       (all) => (all.date === getday.date ? matetemptodos.push(all) : '') //2021-11-29T15:00:00.000Z => e.target.date
     );
-    setmateTodos(matetemptodos);
+    setTodos(matetemptodos);
   };
 
   const [alltodos, setallTodos] = useState([

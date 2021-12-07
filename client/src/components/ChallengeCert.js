@@ -171,7 +171,7 @@ const certupdate = () => {
     };
   return (
     <div className="ChallengeCerts">
-      {!cert && whoare == 1&&(
+      {!cert && whoare == 0&&(
         <div className="add-button" onClick={onInsertToggle}>
           <MdAddCircle />
         </div>
@@ -200,7 +200,7 @@ const certupdate = () => {
               </div>
             </ImageListItem>
           : ""))}
-          {whoare === 1 &&<div className="add-button2" onClick={onInsertToggle}>
+          {whoare === 0 &&<div className="add-button2" onClick={onInsertToggle}>
             <MdAddCircle />
           </div>}
         </ImageList>
