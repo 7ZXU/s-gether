@@ -148,7 +148,7 @@ function ChallengeFinishModal(props) {
                   {receive ? `보증금 반환: ${result.success}` : ''}&nbsp;
                 </p>
                 <p style={{ fontSize: 16 }}>
-                  {receive ? `패널티: ${result.fail}` : ''}&nbsp;
+                  {receive ? `패널티: -${result.fail}` : ''}&nbsp;
                 </p>
                 <p style={{ fontSize: 16 }}>
                   {receive && isWinner ? `상금: ${result.rewards}` : ''}&nbsp;
