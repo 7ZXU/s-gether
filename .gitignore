@@ -1,13 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# upload
-/upload
-
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
-server/config/db.js
 # testing
 /coverage
 
