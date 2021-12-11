@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
-import MyCard from "../components/MyCard";
-import Calendar from "../components/Calendar";
 import CheckboxList from "../components/CheckboxList";
 import Thumbnail from "../components/Thumbnail";
-import ChallengeCard from "../components/ChallengeCard";
 import axios from "axios";
-import { Button, Modal, Fade, Box, Backdrop, List } from "@mui/material";
+import { Button, Modal, Fade, Box, Backdrop } from "@mui/material";
 import { getCookie, removeCookie } from "../cookie";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -17,10 +12,11 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import StaticDatePicker from "@mui/lab/StaticDatePicker";
 import { format } from "date-fns";
 import Avatar from "@mui/material/Avatar";
-import FriendPage from "./FriendPage";
-import Header from "../components/Header";
-import defaultimage from "../assets/upLoadImage.png";
 
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import {Link} from "react-router-dom";
+
+// styled component
 const FeedWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -60,17 +56,10 @@ const CheckboxListWrap = styled.div`
   width: 60%;
 `;
 
-const ChallengeWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 20px;
-  width: 20%;
-`;
-
-const Login = styled(AccountCircleIcon)``;
 const Logout = styled(LogoutIcon)`
   padding-left: 10px;
 `;
+
 
 function FeedPage({ history }) {
   // useState 변수
@@ -79,20 +68,16 @@ function FeedPage({ history }) {
   const [lists, setLists] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [todo, setTodo] = useState("");
-
   const [friends, setFriends] = useState([]);
-  // const [challenges, setChallenges] = useState([]);
-
   const [value, setValue] = useState(new Date()); // 캘린더 클릭 날짜 설정
   const [day, setDay] = useState(new Date()); // 오늘 날짜 설정
-
   const [imgSrc, setImgSrc] = useState(""); // thumbnail에 띄울 이미지 배열 받아옴
-
   const [search, setSearch] = useState("");
-
   const [searchedId, setSearchedId] = useState("");
   const [searched, setSearched] = useState(0);
 
+
+  // async function
   // 캘린더에 선택한 날짜에 따라 todo 불러옴
   async function loadList(date) {
     await axios
@@ -101,14 +86,14 @@ function FeedPage({ history }) {
         day: date,
       })
       .then((res) => {
-       
+        console.log("FeedPage", res.data.result);
         setLists(res.data.result);
       })
       .catch((err) => {
         console.log(err);
       });
   }
-  
+
   async function loadPhoto() {
     await axios
       .post("http://localhost:5000/api/photolist", {
@@ -123,8 +108,6 @@ function FeedPage({ history }) {
       });
   }
 
-
-
   async function loadData() {
     await axios
       .post("http://localhost:5000/api/feed", {
@@ -136,7 +119,7 @@ function FeedPage({ history }) {
         } else {
           setUser(res.data.nickname);
         }
-        
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -144,20 +127,19 @@ function FeedPage({ history }) {
   }
 
   async function loadFriends() {
-
-
     await axios
       .post("http://localhost:5000/api/friends", {
         token: token,
       })
       .then((res) => {
         setFriends(res.data.result);
-  
+        console.log("friends", friends);
       })
       .catch((err) => {
         console.log(err);
       });
   }
+
   async function loadSendingFriend() {
     await axios
       .post("http://localhost:5000/api/loadSendingFriend", {
@@ -165,22 +147,23 @@ function FeedPage({ history }) {
       })
       .then((res) => {
         // 친구 요청 리스트 받아오기
-
+        console.log("Feed/nicknames", res.data.result);
         setNicknames(res.data.result);
       });
   }
 
+  // useEffect 
   useEffect(() => {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (token) {
-  
-
+      console.log("토큰 있음");
+      console.log(token);
       loadData();
       loadList(day);
       loadFriends();
     } else {
       window.location.replace("/");
-
+      console.log("쿠키 없음");
     }
 
     loadFriends();
@@ -190,12 +173,7 @@ function FeedPage({ history }) {
     // loadChallenge();
   }, []);
 
-  const SLIDE_COUNT = 10;
-  const slides = Array.from(Array(SLIDE_COUNT).keys());
-
   const [nicknames, setNicknames] = useState([]);
-
-
 
   const [open3, setOpen3] = useState(false);
   const handleOpen3 = () => {
@@ -213,7 +191,6 @@ function FeedPage({ history }) {
     setOpen2(true);
   };
   const handleClose2 = () => {
-
     setOpen2(false);
   };
 
@@ -223,14 +200,6 @@ function FeedPage({ history }) {
   };
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const MyCardList = () => {
-    return (
-      <Box sx={{ border: 2, borderRadius: 1 }}>
-        <MyCard></MyCard>
-      </Box>
-    );
   };
 
   const style = {
@@ -248,7 +217,7 @@ function FeedPage({ history }) {
   };
 
   const onClickLogout = () => {
-
+    console.log("로그아웃 클릭");
 
     // 쿠키 삭제
     removeCookie("myToken");
@@ -256,7 +225,7 @@ function FeedPage({ history }) {
   };
 
   const onClick = () => {
-
+    console.log(token);
     async function saveData() {
       await axios
         .post("http://localhost:5000/api/todo", {
@@ -267,16 +236,10 @@ function FeedPage({ history }) {
         })
         .then(loadList(format(value, "yyyy-MM-dd")));
     }
-
     setOpen(false);
     saveData();
+    loadList(value);
   };
-
-  // 저장한 이미지 배열로 보내기
-  // 9개 제한?
-
-  // useEffect
-  // 날짜 클릭하면 이미지 배열 불러와서 업데이트
 
   const onLoadImage = (e) => {
     if (e.target.files.length) {
@@ -291,7 +254,7 @@ function FeedPage({ history }) {
   };
 
   const onUploadImage = async () => {
-
+    console.log("Feedpage/onLoadImage", photos);
 
     axios
       .post("http://localhost:5000/api/uploadimage", {
@@ -317,51 +280,71 @@ function FeedPage({ history }) {
         search_friend: search,
       })
       .then((res) => {
-
+        console.log("FeedPage/handleSearch", res.data.result);
         setSearchedId(res.data.result);
-        res.data.result !== "null" ? setSearched(1) : setSearched(0);
+        res.data.result !== "" ? setSearched(1) : setSearched(0);
       });
   };
 
   return (
     <FeedWrap>
-      <div style={{ display: "flex", "justify-content": "space-between" }}>
-        <Header />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "10px",
+          marginBottom: "20px",
+        }}
+      >
+        <PeopleOutlineIcon style={{ fontSize: "50px" }} />
+        <h1>s-gether</h1>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Navbar>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Button onClick={handleOpen3} style={{ fontSize: "20px" }}>
+              📧
+            </Button>
+            <Button onClick={handleOpen2} style={{ fontSize: "20px" }}>
+              ➕
+            </Button>
+            {friends.map((friend, index) => (
+              <Avatar
+                {...stringAvatar(friend)}
+                friend={friend}
+                onClick={() => {
+                  console.log(friend);
+                  history.push(`/friendpage?friend_name=${friend}`); // 친구 페이지로 렌더링 // 쿼리로 친구 이름 전달
+                }}
+              />
+            ))}
+          </div>
+        </Navbar>
+
         <Logout
-          sx={{ fontSize: 50, cursor: "pointer" }}
+          sx={{ fontSize: 30, cursor: "pointer" }}
           onClick={onClickLogout}
         ></Logout>
       </div>
 
-      <Navbar>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Button onClick={handleOpen3} style={{ fontSize: "20px" }}>
-            📧
-          </Button>
-          <Button onClick={handleOpen2} style={{ fontSize: "20px" }}>
-            ➕
-          </Button>
-          {friends.map((friend, index) => (
-            <Avatar
-              {...stringAvatar(friend)}
-              friend={friend}
-              onClick={() => {
- 
-                history.push(`/friendpage?friend_name=${friend}`); // 친구 페이지로 렌더링 // 쿼리로 친구 이름 전달
-              }}
-            />
-          ))}
-        </div>
-      </Navbar>
       <Body>
         <CalendarWrap>
+          <Link to = "/mypage" style={{textDecoration:"none" }} >
           <User>{user}</User>
+          </Link>
           <LocalizationProvider
             dateAdapter={AdapterDateFns}
             sx={{ width: 800 }}
@@ -483,7 +466,6 @@ function FeedPage({ history }) {
               <Fade in={open}>
                 <Box sx={style}>
                   <h1>Todo 추가 </h1>
-
                   <input
                     type="text"
                     onBlur={(e) => {
@@ -575,6 +557,7 @@ function FeedPage({ history }) {
                     }}
                   >
                     <input
+                      name="search"  
                       type="text"
                       onBlur={(e) => {
                         setSearch(e.target.value);
@@ -587,6 +570,7 @@ function FeedPage({ history }) {
                         borderRight: "none",
                         width: "80%",
                       }}
+           
                     />
 
                     <button
@@ -614,18 +598,16 @@ function FeedPage({ history }) {
                               target_mem_id: searchedId,
                               mem_token: token,
                             })
-                            .then(
-                              handleClose2(), setSearched(0)
-                            );
+                            .then(handleClose2(), setSearched(0));
                         }}
                       >
                         YES
                       </button>
                       <button
                         onClick={() => {
-
                           setSearched(0);
                           setSearchedId("");
+                          handleClose2();
                         }}
                       >
                         NO
@@ -671,7 +653,13 @@ function FeedPage({ history }) {
 
                   {/* 친구 요청 목록 불러오기 */}
                   {nicknames.map((nickname) => (
-                    <div style={{ display: "flex", flexDirection: "row", justifyContent:"space-between" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       <p>{nickname}</p>
                       <button
                         onClick={async () => {
@@ -680,13 +668,10 @@ function FeedPage({ history }) {
                             .post("http://localhost:5000/api/setAgree", {
                               nickname: agreeName,
                             })
-                            .then(
-                              (res)=>{
-                                handleClose3();
-                                loadFriends();
-                              }
-
-                            );
+                            .then((res) => {
+                              handleClose3();
+                              loadFriends();
+                            });
                         }}
                       >
                         ✔️
@@ -721,11 +706,6 @@ function FeedPage({ history }) {
             </div>
           </div>
         </div>
-
-        <ChallengeWrap>
-          <h1>Challenge</h1>
-          <MyCardList />
-        </ChallengeWrap>
       </Body>
     </FeedWrap>
   );

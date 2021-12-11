@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router";
+import { useLocation } from "react-router";
 import axios from "axios";
 import styled from "styled-components";
 import { LocalizationProvider, StaticDatePicker } from "@mui/lab";
@@ -8,7 +8,6 @@ import { TextField } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import CheckboxList from "../components/CheckboxList";
 import Thumbnail from "../components/Thumbnail";
-import { Link } from "react-router-dom";
 import { getCookie } from "../cookie";
 
 export default function FriendPage({ friendpage, history }) {

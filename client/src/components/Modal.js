@@ -45,12 +45,14 @@ function Modal(props) {
               &times;{' '}
             </button>
           </header>
-          <main>
-            <InputText
+          <main style={{paddingRight:"20px"}}>
+            <input
               defaultValue={username}
               placeholder={placeholder}
               onChange={onChangeNickname}
-            ></InputText>
+              style={{  fontSize: "1.5rem", width:"300px"}}
+              
+            ></input>
           </main>
           <footer>
             <button className="close" onClick={onClickSave}>

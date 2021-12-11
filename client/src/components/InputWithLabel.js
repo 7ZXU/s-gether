@@ -3,9 +3,11 @@ import styled from 'styled-components';
 
 // 두개가 함께 있을땐 상단 (그 사이) 에 여백을 준다
 const Wrapper = styled.div`
-  & + & {
+    width: 80%;
     margin-top: 1rem;
-  }
+    display: flex;
+    justify-content: space-between;
+  
 `;
 
 const Label = styled.div`

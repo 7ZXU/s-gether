@@ -3,6 +3,14 @@ import InputWithLabel from './InputWithLabel';
 import '../css/InfoContainer.css';
 import { getCookie } from '../cookie.js';
 import axios from 'axios';
+import styled from "styled-components";
+
+const InfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 100px 50px;
+  align-items: center;
+`;
 
 function InfoContainer() {
   const token = getCookie('myToken');
@@ -54,12 +62,7 @@ function InfoContainer() {
         email: info.email,
       })
       .then((res) => {
-
-        if (res.status === 201) {
-     
-        } else {
-
-        }
+        alert('정보가 수정되었습니다.');
       })
       .catch((err) => {
         console.log(err);
@@ -98,7 +101,7 @@ function InfoContainer() {
   return (
     <div className="info__container">
       <h1>Info</h1>
-      <div className="userInfo__box">
+      <InfoBox>
         <InputWithLabel
           label="이름"
           onChange={onChangeName}
@@ -131,10 +134,10 @@ function InfoContainer() {
           value={info.email ? info.email : ''}
           placeholder="이메일을 입력하세요"
         />
-        <button type="submit" className="btn-submit" onClick={saveInfo}>
-          저장하기
+        <button type="submit" className="btn-submit" onClick={saveInfo} style={{width:"80%",border:"1px solid"}}>
+          정보 수정하기
         </button>
-      </div>
+      </InfoBox>
     </div>
   );
 }

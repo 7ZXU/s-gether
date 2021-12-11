@@ -1,8 +1,0 @@
-.card{
-    background-color: black;
-    grid-area : navigator;
-    padding-left: 2%;
-    display : flex;
-    flex-direction: row;
-    align-items: center;
-}

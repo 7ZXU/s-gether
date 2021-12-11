@@ -1,35 +1,43 @@
-import React, { useEffect } from 'react';
-import box from '../assets/box.png';
-import logo from '../assets/logo.png';
-import '../css/Main.css';
-import { Link } from 'react-router-dom';
-import { getCookie } from '../cookie';
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { getCookie } from "../cookie";
+import styled from "styled-components";
+import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
+import Button from "@mui/material/Button";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 200px 200px;
+`;
 
 function Main() {
-  const token = getCookie('myToken');
+  const token = getCookie("myToken");
 
   useEffect(() => {
     // 쿠키가 없으면 로그인 페이지로 이동
     if (token) {
-
-      window.location.replace('/feed');
+      window.location.replace("/feed");
     } else {
-
     }
   }, []);
 
   return (
-    <div className="main__container">
-      <img className="box-img" src={box} alt="로고 박스" />
-      <img className="check-img" src={logo} alt="체크 로고" />
-
-      <div className="button__container">
-        <h1>함께 목표를 이루어봅시다!</h1>
-        <Link to="./Login">
-          <button className="join">이용하러 가기</button>
-        </Link>
-      </div>
-    </div>
+    <Container>
+      <CheckBoxOutlinedIcon sx={{ fontSize: 200 }} />
+      <h1>s-gether</h1>
+      <h1>함께 목표를 이루어봅시다!</h1>
+      <Link to="./Login" style={{textDecoration:"none"}}>
+        <Button
+          variant="contained"
+          color="inherit"
+          sx={{ backgroundColor: "black", fontSize: "20px", color: "white"}}
+        >
+          이용하러 가기
+        </Button>
+      </Link>
+    </Container>
   );
 }
 

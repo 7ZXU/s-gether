@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Comments from "../components/Comments";
-import CommentInput from "../components/CommentInput";
+import Comments from "../components/Comments.js";
 import Carousel from "../components/Carousel";
-
 import axios from "axios";
-import { format } from "date-fns";
-import { useLocation, useParams } from "react-router";
-import { getCookie } from "../cookie";
+import { useLocation } from "react-router";
 
 const ImagePageWrap = styled.div`
   display: flex;
@@ -27,12 +23,6 @@ const CommentsWrap = styled.div`
   overflow-y: scroll;
   align-items: flex-start;
 `;
-const Submit = styled.input``;
-
-// const CommentWrap = styled.div`
-//   display: flex;
-//   align-items: flex-end;
-// `;
 
 const TextInput = styled.textarea`
   margin-top: 10px;

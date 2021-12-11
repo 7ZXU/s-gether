@@ -26,6 +26,7 @@ export default function CheckboxList({ list, show, loadList, value }) {
     }
 
     DeleteTodo();
+    loadList(value);
 
 
 

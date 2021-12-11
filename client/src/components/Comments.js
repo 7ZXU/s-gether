@@ -1,8 +1,5 @@
-import { childElements } from "dom-helpers";
 import React, { useState } from "react";
 import styled from "styled-components";
-// import { Container, Grid } from '@material-ui/core';
-import Avatar from "@mui/material/Avatar";
 import AvatarHeader from "./Style";
 
 const Container = styled.div`
@@ -32,3 +29,4 @@ function Comments({id, comment}) {
 }
 
 export default Comments;
+

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Slider from "react-slick";
-import img1 from "../assets/friend1.jpeg";
 import styled from "styled-components";
 
 const Thumb = styled.img`

@@ -1,10 +1,10 @@
 const mysql = require('mysql');
 
 const db = mysql.createConnection({
-  host: 'psy-computer.crufy7yefjsc.us-east-2.rds.amazonaws.com',
+  host: 'zxudatabase.cf1cmurtwn05.ap-northeast-2.rds.amazonaws.com',
   port: '3306',
   user: 'admin',
-  password: 'teamBdatabase',
+  password: 'zxuDatabase',
   timezone: 'Asia/Seoul',
 });
 

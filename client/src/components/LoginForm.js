@@ -15,9 +15,7 @@ const Button = styled.button`
   border-radius: 10px;
   line-height: 2.5rem;
   font-size: 1.5rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  margin-top: 1.5rem;
+
 
   & > Link {
     color: #ffffff;
@@ -80,11 +78,11 @@ function LoginForm({ to }) {
   const [notvalid, setnotvalid] = useState(false);
 
   const onInsertToggle2 = () => {
-    setnotvalid((prev) => !prev);
+    setnotvalid((prev) => !prev)
   };
 
   return (
-    <>
+    <div style={{display:"flex", flexDirection:"column"}}>
       <InputText
         name="email"
         placeholder="ID..."
@@ -107,7 +105,7 @@ function LoginForm({ to }) {
       <Aligner>
         {/* <StyledLink to={to}>아이디가 없으신가요?</StyledLink> */}
       </Aligner>
-    </>
+    </div>
   );
 }
 

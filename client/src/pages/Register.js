@@ -1,26 +1,23 @@
-import React from 'react';
-import RegisterForm from '../components/RegisterForm';
-import box from '../assets/box.png';
-import logo from '../assets/logo.png';
-import '../css/Register.css';
-import { Link } from 'react-router-dom';
+import React from "react";
+import RegisterForm from "../components/RegisterForm";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 200px 200px;
+`;
 
 function Register() {
-  
   return (
-    <div className="container">
-      <div className="Logo">
-        <img className="box-img" src={box} alt="로고 박스" />
-        <img className="check-img" src={logo} alt="체크 로고" />
-      </div>
-      <div className="register-form">
-        <h1>Create Account</h1>
-        <RegisterForm to="./" />
-        <Link to="./Login" className="link__login">
-          로그인 하기
-        </Link>
-      </div>
-    </div>
+    <Container>
+      <CheckBoxOutlinedIcon sx={{ fontSize: 200 }} />
+      <h1>CREATE ACCOUNT</h1>
+      <RegisterForm to="./" />
+    </Container>
   );
 }
 
